@@ -167,7 +167,7 @@ def waiting():
 		now = datetime.datetime.now()
 		last_minute_digit = int(now.strftime('%M')[-1])
 		hours_now = int(now.strftime('%H'))
-		if hours_now in list(range(8, 23)):
+		if hours_now in list(range(8, 22)):
 			if last_minute_digit == 4 or last_minute_digit == 9:
 				break
 		time.sleep(0.1)
