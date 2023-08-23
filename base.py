@@ -63,11 +63,11 @@ def calculation(instr, volume_filter, atr_filter):
 			
 			if avgvolume_60 >= volume_filter and atr_60per >= atr_filter:
 				if '↗️' in sonic or '↘️' in sonic:
-					print(f"{symbol}. {sonic};")
-					bot1.send_message(662482931, f'{sonic}{symbol}, avg.ATR: {atr_60per}%')
+					print(f"{sonic} {symbol};")
+					bot1.send_message(662482931, f'{sonic} {symbol}, avg.ATR: {atr_60per}%')
 				
 				elif '🟢' in sonic or '🔴' in sonic:
-					print(f"-------> {symbol}. {sonic};")
+					print(f"---------------------> CHECK {symbol} !")
 					bot3.send_message(662482931, f'{sonic}{symbol}, avg.ATR: {atr_60per}%')
 					
 		except telebot.apihelper.ApiTelegramException as ex:
