@@ -32,12 +32,12 @@ def sonic_signal(cOpen, cHigh, cLow, cClose):
 	if dragon_distance_k > 1:
 		if rising_dragon and cloud_above == 0:
 			if ema34_high[-1] >= cLow[-1] >= ema89[-1]:
-				return 'Sonic RISE'
-			return 'Cloud above'
+				return '🟢'
+			return '↗️'
 		elif falling_dragon and cloud_below == 0:
 			if ema34_low[-1] <= cHigh[-1] <= ema89[-1]:
-				return 'Sonic FALL'
-			return 'Cloud below'
+				return '🔴'
+			return '↘️'
 		else:
 			return 'Sleep'
 	else:
