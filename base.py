@@ -67,7 +67,7 @@ def calculation(instr, volume_filter, atr_filter):
 					bot1.send_message(662482931, f'{sonic} {symbol}, avg.ATR: {atr_60per}%')
 				
 				elif '🟢' in sonic or '🔴' in sonic:
-					print(f"---------------------> CHECK {symbol} !")
+					print(f"---------------------> {symbol} !")
 					bot3.send_message(662482931, f'{sonic}{symbol}, avg.ATR: {atr_60per}%')
 					
 		except telebot.apihelper.ApiTelegramException as ex:
