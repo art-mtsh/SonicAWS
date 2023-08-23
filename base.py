@@ -67,7 +67,7 @@ def calculation(instr, volume_filter, atr_filter):
 					bot1.send_message(662482931, f'{sonic} {symbol}, avg.ATR: {atr_60per}%')
 				
 				elif '🟢' in sonic or '🔴' in sonic:
-					print(f"---------------------> {symbol} !")
+					print(f"---------------------> {symbol};")
 					bot3.send_message(662482931, f'{sonic}{symbol}, avg.ATR: {atr_60per}%')
 					
 		except telebot.apihelper.ApiTelegramException as ex:
@@ -167,10 +167,10 @@ def waiting():
 		now = datetime.datetime.now()
 		last_minute_digit = int(now.strftime('%M')[-1])
 		hours_now = int(now.strftime('%H'))
-		if hours_now in list(range(8, 22)):
+		if hours_now in list(range(8, 21)):
 			if last_minute_digit == 4 or last_minute_digit == 9:
 				break
-		time.sleep(0.1)
+		time.sleep(1)
 
 if __name__ == '__main__':
 	
