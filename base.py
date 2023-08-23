@@ -180,7 +180,7 @@ if __name__ == '__main__':
 	
 	price_filter = 1000 #int(input('Pice less than: '))
 	ticksize_filter = 0.02 #float(input('Ticksize less than: '))
-	volume_filter = 1 #int(input('Volume more than: '))
+	volume_filter = 10000 #int(input('Volume more than: '))
 	atr_filter = float(input('ATR more than: '))
 	
 	while True:
