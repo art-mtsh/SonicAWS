@@ -46,22 +46,22 @@ def calculation(instr, volume_filter, atr_filter):
 			df1['cHigh'] = df1['cHigh'].astype(float)
 			df1['cLow'] = df1['cLow'].astype(float)
 			df1['cClose'] = df1['cClose'].astype(float)
-			df1['cVolume'] = df1['cVolume'].astype(float)
+			# df1['cVolume'] = df1['cVolume'].astype(float)
 			
 			cOpen = df1['cOpen'].to_numpy()
 			cHigh = df1['cHigh'].to_numpy()
 			cLow = df1['cLow'].to_numpy()
 			cClose = df1['cClose'].to_numpy()
-			cVolume = df1['cVolume'].to_numpy()
+			# cVolume = df1['cVolume'].to_numpy()
 			
-			avgvolume_60 = float(((sum(cVolume[-1:-61:-1]) / len(cVolume[-1:-61:-1])) * cClose[-1]) / 1000)
+			# avgvolume_60 = float(((sum(cVolume[-1:-61:-1]) / len(cVolume[-1:-61:-1])) * cClose[-1]) / 1000)
 			atr_60m = (sum(sum([cHigh[-1:-61:-1] - cLow[-1:-61:-1]])) / len(cClose[-1:-61:-1]))
 			atr_60per = atr_60m / (cClose[-1] / 100)
 			atr_60per = float('{:.2f}'.format(atr_60per))
 			
 			sonic = sonic_signal(cOpen=cOpen, cHigh=cHigh, cLow=cLow, cClose=cClose)
 			
-			if avgvolume_60 >= volume_filter and atr_60per >= atr_filter:
+			if atr_60per >= atr_filter: #and avgvolume_60 >= volume_filter
 				if '↗️' in sonic or '↘️' in sonic:
 					print(f"{sonic} {symbol};")
 					bot1.send_message(662482931, f'{sonic} {symbol}, avg.ATR: {atr_60per}%')
@@ -174,9 +174,9 @@ def waiting():
 
 if __name__ == '__main__':
 	
-	price_filter = 1000 #int(input('Pice less than: '))
-	ticksize_filter = 0.02 #float(input('Ticksize less than: '))
-	volume_filter = 0.1 #int(input('Volume more than: '))
+	price_filter = 3000 #int(input('Pice less than: '))
+	ticksize_filter = 0.025 #float(input('Ticksize less than: '))
+	volume_filter = 1 #int(input('Volume more than: '))
 	atr_filter = float(input('ATR more than: '))
 	
 	while True:
