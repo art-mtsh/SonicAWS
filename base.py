@@ -69,13 +69,13 @@ def calculation(instr, volume_filter, atr_filter, cloud_filter):
 				elif '🟢' in sonic or '🔴' in sonic:
 					print(f"---------------------> {symbol};")
 					bot3.send_message(
-						662482931, f'{sonic}{symbol}, avg.ATR: {atr_60per}%'
-							f'sl 2.0%  = $5.1'
-							f'sl 1.75% = $6.2'
-							f'sl 1.5%  = $7.3'
-							f'sl 1.25% = $8.6'
-							f'sl 1.0%  = $10'
-							f'sl 0.75% = $14'
+						662482931, f'{sonic}{symbol}, avg.ATR: {atr_60per}%\n'
+							f'sl 2.0%  = $5.1\n'
+							f'sl 1.75% = $6.2\n'
+							f'sl 1.5%  = $7.3\n'
+							f'sl 1.25% = $8.6\n'
+							f'sl 1.0%  = $10\n'
+							f'sl 0.75% = $14\n'
 							f'sl 0.50% = $20'
 					)
 					
