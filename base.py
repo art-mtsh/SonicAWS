@@ -18,7 +18,7 @@ bot3 = telebot.TeleBot(TOKEN3)
 
 timeinterval = '5m'
 
-def calculation(instr, volume_filter, atr_filter):
+def calculation(instr, volume_filter, atr_filter, cloud_filter):
 
 	for symbol in instr:
 		try:
@@ -59,7 +59,7 @@ def calculation(instr, volume_filter, atr_filter):
 			atr_60per = atr_60m / (cClose[-1] / 100)
 			atr_60per = float('{:.2f}'.format(atr_60per))
 			
-			sonic = sonic_signal(cOpen=cOpen, cHigh=cHigh, cLow=cLow, cClose=cClose)
+			sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter)
 			
 			if atr_60per >= atr_filter: #and avgvolume_60 >= volume_filter
 				if '↗️' in sonic or '↘️' in sonic:
@@ -78,30 +78,30 @@ def calculation(instr, volume_filter, atr_filter):
 			print(f'Error main module for {symbol}: {exy}')
 			bot2.send_message(662482931, f'Error main module for {symbol}: {exy}')
 
-def search_activale(price_filter, ticksize_filter, volume_filter, atr_filter):
+def search_activale(price_filter, ticksize_filter, volume_filter, atr_filter, cloud_filter):
 	time1 = time.perf_counter()
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
 	instr = get_pairs(price_filter, ticksize_filter, num_chunks=8)
 	total_count = sum(len(sublist) for sublist in instr)
-	bot1.send_message(662482931, f'️️{total_count} coins: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%')
-	print(f"{total_count} coins: Price <= ${price_filter}, Tick <= {ticksize_filter}%, avg.ATR >= {atr_filter}%")
+	bot1.send_message(662482931, f'️️{total_count} coins: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, {cloud_filter} cds')
+	print(f"{total_count} coins: Price <= ${price_filter}, Tick <= {ticksize_filter}%, avg.ATR >= {atr_filter}%, Cloud >= {cloud_filter} candles")
 	
-	p1 = Process(target=calculation, args=(instr[0], volume_filter, atr_filter,))
-	p2 = Process(target=calculation, args=(instr[1], volume_filter, atr_filter,))
-	p3 = Process(target=calculation, args=(instr[2], volume_filter, atr_filter,))
-	p4 = Process(target=calculation, args=(instr[3], volume_filter, atr_filter,))
-	p5 = Process(target=calculation, args=(instr[4], volume_filter, atr_filter,))
-	p6 = Process(target=calculation, args=(instr[5], volume_filter, atr_filter,))
-	p7 = Process(target=calculation, args=(instr[6], volume_filter, atr_filter,))
-	p8 = Process(target=calculation, args=(instr[7], volume_filter, atr_filter,))
-	# p9 = Process(target=calculation, args=(instr[8], volume_filter, atr_filter,))
-	# p10 = Process(target=calculation, args=(instr[9], volume_filter, atr_filter,))
-	# p11 = Process(target=calculation, args=(instr[10], volume_filter, atr_filter,))
-	# p12 = Process(target=calculation, args=(instr[11], volume_filter, atr_filter,))
-	# p13 = Process(target=calculation, args=(instr[12], volume_filter, atr_filter,))
-	# p14 = Process(target=calculation, args=(instr[13], volume_filter, atr_filter,))
-	# p15 = Process(target=calculation, args=(instr[14], volume_filter, atr_filter,))
-	# p16 = Process(target=calculation, args=(instr[15], volume_filter, atr_filter,))
+	p1 = Process(target=calculation, args=(instr[0], volume_filter, atr_filter, cloud_filter,))
+	p2 = Process(target=calculation, args=(instr[1], volume_filter, atr_filter, cloud_filter,))
+	p3 = Process(target=calculation, args=(instr[2], volume_filter, atr_filter, cloud_filter,))
+	p4 = Process(target=calculation, args=(instr[3], volume_filter, atr_filter, cloud_filter,))
+	p5 = Process(target=calculation, args=(instr[4], volume_filter, atr_filter, cloud_filter,))
+	p6 = Process(target=calculation, args=(instr[5], volume_filter, atr_filter, cloud_filter,))
+	p7 = Process(target=calculation, args=(instr[6], volume_filter, atr_filter, cloud_filter,))
+	p8 = Process(target=calculation, args=(instr[7], volume_filter, atr_filter, cloud_filter,))
+	# p9 = Process(target=calculation, args=(instr[8], volume_filter, atr_filter, cloud_filter,))
+	# p10 = Process(target=calculation, args=(instr[9], volume_filter, atr_filter, cloud_filter,))
+	# p11 = Process(target=calculation, args=(instr[10], volume_filter, atr_filter, cloud_filter,))
+	# p12 = Process(target=calculation, args=(instr[11], volume_filter, atr_filter, cloud_filter,))
+	# p13 = Process(target=calculation, args=(instr[12], volume_filter, atr_filter, cloud_filter,))
+	# p14 = Process(target=calculation, args=(instr[13], volume_filter, atr_filter, cloud_filter,))
+	# p15 = Process(target=calculation, args=(instr[14], volume_filter, atr_filter, cloud_filter,))
+	# p16 = Process(target=calculation, args=(instr[15], volume_filter, atr_filter, cloud_filter,))
 	
 	p1.start()
 	p2.start()
@@ -178,13 +178,15 @@ if __name__ == '__main__':
 	ticksize_filter = 0.025 #float(input('Ticksize less than: '))
 	volume_filter = 1 #int(input('Volume more than: '))
 	atr_filter = float(input('ATR more than: '))
+	cloud_filter = int(input('Cloud length: '))
 	
 	while True:
 		search_activale(
 		    price_filter=price_filter,
 		    ticksize_filter=ticksize_filter,
 		    volume_filter=volume_filter,
-		    atr_filter=atr_filter
+		    atr_filter=atr_filter,
+			cloud_filter=cloud_filter
 		)
 		time.sleep(60)
 		waiting()

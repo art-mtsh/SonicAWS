@@ -1,7 +1,7 @@
 import talipp.indicators.EMA as ema
 
 
-def sonic_signal(cOpen, cHigh, cLow, cClose):
+def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 
 	ema34_basis = ema(period=34, input_values=cClose)
 	ema34_low = ema(period=34, input_values=cLow)
@@ -21,12 +21,12 @@ def sonic_signal(cOpen, cHigh, cLow, cClose):
 	cloud_above = 0
 	cloud_below = 0
 	
-	for i in range(2, 12):
-		if cLow[-i] < ema34_high[-i] or ema34_low[-i] < ema89[-i]: # or ema89[-i] < ema233[-i]:
+	for i in range(2, cloud_filter+2):
+		if cLow[-i] < ema34_high[-i] or ema34_low[-i] < ema89[-i] or ema89[-i] < ema233[-i]:
 			cloud_above += 1
 			
-	for i in range(2, 12):
-		if cHigh[-i] > ema34_low[-i] or ema34_high[-i] > ema89[-i]: # or ema89[-i] > ema233[-1]:
+	for i in range(2, cloud_filter+2):
+		if cHigh[-i] > ema34_low[-i] or ema34_high[-i] > ema89[-i] or ema89[-i] > ema233[-1]:
 			cloud_below += 1
 			
 	if dragon_distance_k > 1:
