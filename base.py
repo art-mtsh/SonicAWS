@@ -68,31 +68,7 @@ def calculation(instr, volume_filter, atr_filter, cloud_filter):
 				
 				elif '🟢' in sonic or '🔴' in sonic:
 					print(f"---------------------> {symbol};")
-					bot3.send_message(662482931, f'{sonic}{symbol}, avg.ATR: {atr_60per}%\n'
-						f'2,00 % = $5,25\n'
-						f'1,80 % = $5,83\n'
-						f'1,60 % = $6,56\n'
-						f'1,40 % = $7,50\n'
-						f'1,20 % = $8,75\n'
-						f'1,00 % = $10,50\n'
-						f'0,80 % = $13,13\n'
-						f'0,60 % = $17,50'
-						)
-					
-						# f'3,00%	5,33\n'
-						# f'2,80%	5,71\n'
-						# f'2,60%	6,15\n'
-						# f'2,40%	6,67\n'
-						# f'2,20%	7,27\n'
-						# f'2,00%	8,00\n'
-						# f'1,80%	8,89\n'
-						# f'1,60%	10,00\n'
-						# f'1,40%	11,43\n'
-						# f'1,20%	13,33\n'
-						# f'1,00%	16,00\n'
-						# f'0,80%	20,00\n'
-						# f'0,60%	26,67\n'
-						# )
+					bot3.send_message(662482931, f'{sonic}{symbol}, avg.ATR: {atr_60per}%\n')
 					
 		except telebot.apihelper.ApiTelegramException as ex:
 			print(f'Telegram error for {symbol}: {ex}')
