@@ -29,16 +29,21 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 		if cHigh[-i] > ema34_low[-i] or ema34_high[-i] > ema89[-i] or ema89[-i] > ema233[-1]:
 			cloud_below += 1
 			
+			
+	angle = abs(ema34_basis[-1] - ema34_basis[-25]) / (cClose[-1] / 100)
+	angle = float('{:.1f}'.format(angle))
+	
+	
 	if dragon_distance_k > 1:
 		if rising_dragon and cloud_above == 0:
 			if ema34_high[-1] >= cLow[-1] >= ema89[-1]:
-				return '🟢'
-			return '↗️'
+				return ['🟢', angle]
+			return ['↗️', angle]
 		elif falling_dragon and cloud_below == 0:
 			if ema34_low[-1] <= cHigh[-1] <= ema89[-1]:
-				return '🔴'
-			return '↘️'
+				return ['🔴', angle]
+			return ['↘️', angle]
 		else:
-			return 'Sleep'
+			return ['Sleep', angle]
 	else:
-		return 'Sleep'
+		return ['Sleep', angle]
