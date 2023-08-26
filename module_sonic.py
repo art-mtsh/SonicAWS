@@ -31,7 +31,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 			
 			
 	angle = abs(ema34_basis[-1] - ema34_basis[-25]) / (cClose[-1] / 100)
-	angle = float('{:.1f}'.format(angle))
+	angle = float('{:.2f}'.format(angle))
 	
 	
 	if dragon_distance_k > 1:
