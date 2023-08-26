@@ -63,7 +63,7 @@ def calculation(instr, volume_filter, atr_filter, cloud_filter):
 			
 			if atr_60per >= atr_filter: #and avgvolume_60 >= volume_filter
 				if '↗️' in sonic[0] or '↘️' in sonic[0]:
-					print(f"{sonic[0]} {symbol}, avg.ATR: {atr_60per}%, angle: {sonic[1]};")
+					print(f"{sonic[0]} {symbol}, avg.ATR: {atr_60per}%, angle: {sonic[1]}%;")
 					bot1.send_message(662482931, f'{sonic[0]} {symbol}, avg.ATR: {atr_60per}%, angle: {sonic[1]}%')
 				
 				elif '🟢' in sonic[0] or '🔴' in sonic[0]:
