@@ -61,7 +61,11 @@ def calculation(instr, volume_filter, atr_filter, cloud_filter):
 			
 			sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter)
 			
-			angle_index = sonic[1] / atr_24per
+			if atr_24per != 0:
+				angle_index = sonic[1] / atr_24per
+			else:
+				angle_index = sonic[1] / 1
+				
 			angle_index = float('{:.2f}'.format(angle_index))
 			
 			if atr_24per >= atr_filter: #and avgvolume_60 >= volume_filter
