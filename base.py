@@ -61,14 +61,17 @@ def calculation(instr, volume_filter, atr_filter, cloud_filter):
 			
 			sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter)
 			
+			angle_index = sonic[1] / atr_24per
+			angle_index = float('{:.2f}'.format(angle_index))
+			
 			if atr_24per >= atr_filter: #and avgvolume_60 >= volume_filter
 				if '↗️' in sonic[0] or '↘️' in sonic[0]:
-					print(f"{sonic[0]} {symbol}, avg.ATR: {atr_24per}%, angle: {sonic[1]}%, index: {sonic[1] / atr_24per};")
-					bot1.send_message(662482931, f'{sonic[0]} {symbol}, avg.ATR: {atr_24per}%, angle: {sonic[1]}%, index: {sonic[1] / atr_24per}')
+					print(f"{sonic[0]} {symbol}, avg.ATR: {atr_24per}%, angle: {sonic[1]}%, index: {angle_index};")
+					bot1.send_message(662482931, f'{sonic[0]} {symbol}, avg.ATR: {atr_24per}%, angle: {sonic[1]}%, index: {angle_index}')
 				
 				elif '🟢' in sonic[0] or '🔴' in sonic[0]:
 					print(f"---------------------> {symbol};")
-					bot3.send_message(662482931, f'{sonic[0]}{symbol}, avg.ATR: {atr_24per}%, angle: {sonic[1]}%, index: {sonic[1] / atr_24per}')
+					bot3.send_message(662482931, f'{sonic[0]}{symbol}, avg.ATR: {atr_24per}%, angle: {sonic[1]}%, index: {angle_index}')
 					
 		except telebot.apihelper.ApiTelegramException as ex:
 			print(f'Telegram error for {symbol}: {ex}')
