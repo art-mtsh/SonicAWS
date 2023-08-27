@@ -87,7 +87,7 @@ def search_activale(price_filter, ticksize_filter, volume_filter, atr_filter, cl
 	p5 = Process(target=calculation, args=(instr[4], atr_filter, cloud_filter,))
 	p6 = Process(target=calculation, args=(instr[5], atr_filter, cloud_filter,))
 	p7 = Process(target=calculation, args=(instr[6], atr_filter, cloud_filter,))
-	p8 = Process(target=calculation, args=(instr[7], 0.2atr_filter, cloud_filter,))
+	p8 = Process(target=calculation, args=(instr[7], atr_filter, cloud_filter,))
 	# p9 = Process(target=calculation, args=(instr[8], volume_filter, atr_filter, cloud_filter,))
 	# p10 = Process(target=calculation, args=(instr[9], volume_filter, atr_filter, cloud_filter,))
 	# p11 = Process(target=calculation, args=(instr[10], volume_filter, atr_filter, cloud_filter,))
