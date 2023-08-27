@@ -1,14 +1,14 @@
-import talipp.indicators.EMA as ema
+import talipp.indicators.EMA
 
 
 def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 
 	# INDICATORS
-	ema34_basis = ema(period=34, input_values=cClose)
-	ema34_low = ema(period=34, input_values=cLow)
-	ema34_high = ema(period=34, input_values=cHigh)
-	ema89 = ema(period=89, input_values=cClose)
-	ema233 = ema(period=233, input_values=cClose)
+	ema34_basis = talipp.indicators.EMA(period=34, input_values=cClose)
+	ema34_low = talipp.indicators.EMA(period=34, input_values=cLow)
+	ema34_high = talipp.indicators.EMA(period=34, input_values=cHigh)
+	ema89 = talipp.indicators.EMA(period=89, input_values=cClose)
+	ema233 = talipp.indicators.EMA(period=233, input_values=cClose)
 	
 	# TREND
 	rising_dragon = ema34_low[-1] > ema89[-1] > ema233[-1]
@@ -36,25 +36,25 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	angle = float('{:.2f}'.format(angle))
 	
 	# ANGLE COEFFICIENT
-	angle_coef: float
+	angle_coeficient: float
 	
 	if atr_per != 0:
-		angle_coef = angle / atr_per
+		angle_coeficient = angle / atr_per
 	else:
-		angle_coef = angle / 1
+		angle_coeficient = angle / 1
 
-	angle_coef = float('{:.2f}'.format(angle_coef))
+	angle_coeficient = float('{:.2f}'.format(angle_coeficient))
 	
 	# RESULT
 	if rising_dragon and cloud_above == 0:
 		if ema34_high[-1] >= cLow[-1] >= ema89[-1]:
-			return ['🟢', atr_per, angle_coef]
-		return ['↗️', atr_per, angle_coef]
+			return ['🟢', atr_per, angle_coeficient]
+		return ['↗️', atr_per, angle_coeficient]
 	
 	elif falling_dragon and cloud_below == 0:
 		if ema34_low[-1] <= cHigh[-1] <= ema89[-1]:
-			return ['🔴', atr_per, angle_coef]
-		return ['↘️', atr_per, angle_coef]
+			return ['🔴', atr_per, angle_coeficient]
+		return ['↘️', atr_per, angle_coeficient]
 	
 	else:
-		return ['Sleep', atr_per, angle_coef]
+		return ['Sleep', atr_per, angle_coeficient]

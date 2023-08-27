@@ -18,7 +18,8 @@ bot3 = telebot.TeleBot(TOKEN3)
 
 timeinterval = '5m'
 
-def calculation(instr, volume_filter, atr_filter, cloud_filter):
+
+def calculation(instr, atr_filter, cloud_filter):
 
 	for symbol in instr:
 		try:
@@ -46,15 +47,11 @@ def calculation(instr, volume_filter, atr_filter, cloud_filter):
 			df1['cHigh'] = df1['cHigh'].astype(float)
 			df1['cLow'] = df1['cLow'].astype(float)
 			df1['cClose'] = df1['cClose'].astype(float)
-			# df1['cVolume'] = df1['cVolume'].astype(float)
 			
 			cOpen = df1['cOpen'].to_numpy()
 			cHigh = df1['cHigh'].to_numpy()
 			cLow = df1['cLow'].to_numpy()
 			cClose = df1['cClose'].to_numpy()
-			# cVolume = df1['cVolume'].to_numpy()
-			
-			# avgvolume_60 = float(((sum(cVolume[-1:-61:-1]) / len(cVolume[-1:-61:-1])) * cClose[-1]) / 1000)
 			
 			sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter)
 			
