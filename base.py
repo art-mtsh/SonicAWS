@@ -171,7 +171,7 @@ if __name__ == '__main__':
 	price_filter = 3000 #int(input('Pice less than: '))
 	ticksize_filter = 0.025 #float(input('Ticksize less than: '))
 	volume_filter = 1 #int(input('Volume more than: '))
-	atr_filter = float(input('ATR more than: '))
+	atr_filter = 0.2 #float(input('ATR more than: '))
 	cloud_filter = int(input('Cloud length: '))
 	
 	while True:
