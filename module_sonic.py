@@ -95,12 +95,12 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	
 	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
 	if rising_dragon:
-		if closer_high != 0 and farer_high != 0 and farer_high >= closer_high:
+		if closer_high != 0 and farer_high != 0 and farer_high >= closer_high >= cHigh[-1]:
 			return ['🟢', atr_per, angle_coeficient]
 		# return ['↗️', atr_per, angle_coeficient]
 	
 	elif falling_dragon:
-		if closer_low != 0 and closer_high != 0 and farer_low <= closer_low:
+		if closer_low != 0 and closer_high != 0 and farer_low <= closer_low <= cLow[-1]:
 			return ['🔴', atr_per, angle_coeficient]
 		# return ['↘️', atr_per, angle_coeficient]
 	
