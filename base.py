@@ -159,12 +159,14 @@ def search_activale(price_filter, ticksize_filter, volume_filter, atr_filter, cl
 def waiting():
 	while True:
 		now = datetime.datetime.now()
+		last_hour_digit = int(now.strftime('%H'))
 		last_minute_digit = int(now.strftime('%M')[-1])
-		hours_now = int(now.strftime('%H'))
-		if hours_now in list(range(8, 21)):
+		last_second_digit = int(now.strftime('%S'))
+		if last_hour_digit in list(range(8, 21)):
 			if last_minute_digit == 4 or last_minute_digit == 9:
-				break
-		time.sleep(1)
+				if last_second_digit == 30:
+					break
+		time.sleep(0.1)
 
 if __name__ == '__main__':
 	
