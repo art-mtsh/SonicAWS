@@ -29,7 +29,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	fresh_above = False
 	fresh_below = False
 	
-	for i in range(2, cloud_filter*3 + 2):
+	for i in range(2, cloud_filter*2 + 2):
 		if ema34_high[-i] >= ema89[-i]:
 			fresh_above = True
 		
@@ -55,15 +55,25 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 
 	angle_coeficient = float('{:.2f}'.format(angle_coeficient))
 	
-	# RESULT
-	if rising_dragon and cloud_above == 0 and fresh_below:
-		if ema34_high[-1] >= cLow[-1] >= ema89[-1]:
-			return ['🟢', atr_per, angle_coeficient]
+	# RESULT. Варіант з опорою на мінімальний cloud, на ПРОДОВЖЕННЯ руху
+	# if rising_dragon and cloud_above == 0 and fresh_below:
+	# 	if ema34_high[-1] >= cLow[-1] >= ema89[-1]:
+	# 		return ['🟢', atr_per, angle_coeficient]
+	# 	return ['↗️', atr_per, angle_coeficient]
+	#
+	# elif falling_dragon and cloud_below == 0 and fresh_above:
+	# 	if ema34_low[-1] <= cHigh[-1] <= ema89[-1]:
+	# 		return ['🔴', atr_per, angle_coeficient]
+	# 	return ['↘️', atr_per, angle_coeficient]
+	#
+	# else:
+	# 	return ['Sleep', atr_per, angle_coeficient]
+	
+	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
+	if rising_dragon and fresh_below:
 		return ['↗️', atr_per, angle_coeficient]
 	
-	elif falling_dragon and cloud_below == 0 and fresh_above:
-		if ema34_low[-1] <= cHigh[-1] <= ema89[-1]:
-			return ['🔴', atr_per, angle_coeficient]
+	elif falling_dragon and fresh_above:
 		return ['↘️', atr_per, angle_coeficient]
 	
 	else:
