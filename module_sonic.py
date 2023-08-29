@@ -70,10 +70,10 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# 	return ['Sleep', atr_per, angle_coeficient]
 	
 	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
-	if rising_dragon and fresh_below and cLow[-1] >= ema34_high[-1]:
+	if rising_dragon and fresh_below and cLow[-1] >= ema89[-1]:
 		return ['↗️', atr_per, angle_coeficient]
 	
-	elif falling_dragon and fresh_above and cHigh[-1] <= ema34_low[-1]:
+	elif falling_dragon and fresh_above and cHigh[-1] <= ema89[-1]:
 		return ['↘️', atr_per, angle_coeficient]
 	
 	else:
