@@ -22,55 +22,55 @@ timeinterval = '5m'
 def calculation(instr, atr_filter, cloud_filter):
 
 	for symbol in instr:
-		try:
-			# --- DATA ---
-			url_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + timeinterval + '&limit=260'
-			data1 = get(url_klines).json()
+		# try:
+		# --- DATA ---
+		url_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + timeinterval + '&limit=500'
+		data1 = get(url_klines).json()
+		
+		d1 = pd.DataFrame(data1)
+		d1.columns = [
+			'open_time',
+			'cOpen',
+			'cHigh',
+			'cLow',
+			'cClose',
+			'cVolume',
+			'close_time',
+			'qav',
+			'num_trades',
+			'taker_base_vol',
+			'taker_quote_vol',
+			'is_best_match'
+		]
+		df1 = d1
+		df1['cOpen'] = df1['cOpen'].astype(float)
+		df1['cHigh'] = df1['cHigh'].astype(float)
+		df1['cLow'] = df1['cLow'].astype(float)
+		df1['cClose'] = df1['cClose'].astype(float)
+		
+		cOpen = df1['cOpen'].to_numpy()
+		cHigh = df1['cHigh'].to_numpy()
+		cLow = df1['cLow'].to_numpy()
+		cClose = df1['cClose'].to_numpy()
+		
+		sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter)
+		
+		if sonic[1] >= atr_filter: #and avgvolume_60 >= volume_filter
+			if '↗️' in sonic[0] or '↘️' in sonic[0]:
+				print(f"{sonic[0]} {symbol}, avg.ATR: {sonic[1]}%, index: {sonic[2]};")
+				bot1.send_message(662482931, f'{sonic[0]} {symbol}, avg.ATR: {sonic[1]}%, index: {sonic[2]}')
 			
-			d1 = pd.DataFrame(data1)
-			d1.columns = [
-				'open_time',
-				'cOpen',
-				'cHigh',
-				'cLow',
-				'cClose',
-				'cVolume',
-				'close_time',
-				'qav',
-				'num_trades',
-				'taker_base_vol',
-				'taker_quote_vol',
-				'is_best_match'
-			]
-			df1 = d1
-			df1['cOpen'] = df1['cOpen'].astype(float)
-			df1['cHigh'] = df1['cHigh'].astype(float)
-			df1['cLow'] = df1['cLow'].astype(float)
-			df1['cClose'] = df1['cClose'].astype(float)
-			
-			cOpen = df1['cOpen'].to_numpy()
-			cHigh = df1['cHigh'].to_numpy()
-			cLow = df1['cLow'].to_numpy()
-			cClose = df1['cClose'].to_numpy()
-			
-			sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter)
-			
-			if sonic[1] >= atr_filter: #and avgvolume_60 >= volume_filter
-				if '↗️' in sonic[0] or '↘️' in sonic[0]:
-					print(f"{sonic[0]} {symbol}, avg.ATR: {sonic[1]}%, index: {sonic[2]};")
-					bot1.send_message(662482931, f'{sonic[0]} {symbol}, avg.ATR: {sonic[1]}%, index: {sonic[2]}')
-				
-				elif '🟢' in sonic[0] or '🔴' in sonic[0]:
-					print(f"---------------------> {symbol};")
-					bot3.send_message(662482931, f'{sonic[0]}{symbol}, avg.ATR: {sonic[1]}%, index: {sonic[2]}')
+			elif '🟢' in sonic[0] or '🔴' in sonic[0]:
+				print(f"---------------------> {symbol};")
+				bot3.send_message(662482931, f'{sonic[0]}{symbol}, avg.ATR: {sonic[1]}%, index: {sonic[2]}')
 					
-		except telebot.apihelper.ApiTelegramException as ex:
-			print(f'Telegram error for {symbol}: {ex}')
-			bot2.send_message(662482931, f'Telegram error for {symbol}: {ex}')
-			
-		except Exception as exy:
-			print(f'Error main module for {symbol}: {exy}')
-			bot2.send_message(662482931, f'Error main module for {symbol}: {exy}')
+		# except telebot.apihelper.ApiTelegramException as ex:
+		# 	print(f'Telegram error for {symbol}: {ex}')
+		# 	bot2.send_message(662482931, f'Telegram error for {symbol}: {ex}')
+		#
+		# except Exception as exy:
+		# 	print(f'Error main module for {symbol}: {exy}')
+		# 	bot2.send_message(662482931, f'Error main module for {symbol}: {exy}')
 
 def search_activale(price_filter, ticksize_filter, volume_filter, atr_filter, cloud_filter):
 	time1 = time.perf_counter()
@@ -174,7 +174,7 @@ if __name__ == '__main__':
 	ticksize_filter = 0.025 #float(input('Ticksize less than: '))
 	volume_filter = 1 #int(input('Volume more than: '))
 	atr_filter = 0.2 #float(input('ATR more than: '))
-	cloud_filter = int(input('Cloud length: '))
+	cloud_filter = 10 #int(input('Cloud length: '))
 	
 	while True:
 		search_activale(

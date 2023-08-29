@@ -26,15 +26,15 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# 		cloud_below += 1
 	
 	# FRESH
-	fresh_above = False
-	fresh_below = False
-	
-	for i in range(2, cloud_filter*2 + 2):
-		if ema34_high[-i] >= ema89[-i]:
-			fresh_above = True
-		
-		if ema34_low[-i] <= ema89[-i]:
-			fresh_below = True
+	# fresh_above = False
+	# fresh_below = False
+	#
+	# for i in range(2, cloud_filter*2 + 2):
+	# 	if ema34_high[-i] >= ema89[-i]:
+	# 		fresh_above = True
+	#
+	# 	if ema34_low[-i] <= ema89[-i]:
+	# 		fresh_below = True
 			
 	# AVERAGE ATR
 	atr = (sum(sum([cHigh[-1:-cloud_filter * 2 - 1:-1] - cLow[-1:-cloud_filter * 2 - 1:-1]])) / len(cClose[-1:-cloud_filter * 2 - 1:-1]))
@@ -59,26 +59,33 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	closer_low = 0
 	farer_low = 0
 	
+	for i in range(5, cloud_filter*3):
+		if cLow[-i] <= min(cLow[-i+3:-i-4:-1]):
+			closer_low = cLow[-i]
+			for b in range(i+3+6, cloud_filter*3):
+				if cLow[-b] <= min(cLow[-b+2:-b-3:-1]):
+					farer_low = cLow[-b]
+					break
+			break
+	
 	closer_high = 0
 	farer_high = 0
 	
-	for i in range(4, cloud_filter*3):
-		if cLow[-i] <= min(cLow[-i+2:-i-3:-1]):
-			closer_low = cLow[-i]
-			for b in range(i+3+4, cloud_filter*6):
-				if cLow[b] <= min(cLow[-b+2:-b-3:-1]):
-					farer_low = cLow[b]
-					
-	for i in range(4, cloud_filter*3):
-		if cHigh[-i] <= max(cHigh[-i+2:-i-3:-1]):
+	for i in range(5, cloud_filter*3):
+		if cHigh[-i] >= max(cHigh[-i+3:-i-4:-1]):
 			closer_high = cHigh[-i]
-			for b in range(i+3+4, cloud_filter*6):
-				if cHigh[b] <= max(cHigh[-b+2:-b-3:-1]):
-					farer_high = cHigh[b]
+			for b in range(i+3+6, cloud_filter*3):
+				if cHigh[-b] >= max(cHigh[-b+2:-b-3:-1]):
+					farer_high = cHigh[-b]
+					break
+			break
 	
+	flag = closer_low != 0 and \
+		closer_high != 0 and \
+		farer_low != 0 and \
+		farer_high != 0 and \
+		farer_low <= closer_low <= cLow[-1] and farer_high >= closer_high >= cHigh[-1]
 			
-		
-	
 	# RESULT. Варіант з опорою на мінімальний cloud, на ПРОДОВЖЕННЯ руху
 	# if rising_dragon and cloud_above == 0 and fresh_below:
 	# 	if ema34_high[-1] >= cLow[-1] >= ema89[-1]:
@@ -94,15 +101,17 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# 	return ['Sleep', atr_per, angle_coeficient]
 	
 	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
-	if rising_dragon:
-		if closer_high != 0 and farer_high != 0 and farer_high >= closer_high >= cHigh[-1]:
-			return ['🟢', atr_per, angle_coeficient]
-		# return ['↗️', atr_per, angle_coeficient]
-	
-	elif falling_dragon:
-		if closer_low != 0 and closer_high != 0 and farer_low <= closer_low <= cLow[-1]:
-			return ['🔴', atr_per, angle_coeficient]
-		# return ['↘️', atr_per, angle_coeficient]
-	
+	if flag :
+		
+		if falling_dragon:
+			return ['🟢', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
+		
+		elif falling_dragon:
+			return ['🔴', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
+		
+		else:
+			return ['↘️', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
+		
 	else:
-		return ['Sleep', atr_per, angle_coeficient]
+		return ['Sleep', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
+	
