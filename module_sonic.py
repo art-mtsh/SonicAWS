@@ -60,10 +60,10 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	farer_low = 0
 	
 	for i in range(5, cloud_filter*3):
-		if cLow[-i] <= min(cLow[-i+3:-i-4:-1]):
+		if cLow[-i] <= min(cLow[-2:-i-4:-1]):
 			closer_low = cLow[-i]
 			for b in range(i+3+6, cloud_filter*3):
-				if cLow[-b] <= min(cLow[-b+2:-b-3:-1]):
+				if cLow[-b] <= min(cLow[-2:-b-3:-1]):
 					farer_low = cLow[-b]
 					break
 			break
@@ -72,10 +72,10 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	farer_high = 0
 	
 	for i in range(5, cloud_filter*3):
-		if cHigh[-i] >= max(cHigh[-i+3:-i-4:-1]):
+		if cHigh[-i] >= max(cHigh[-2:-i-4:-1]):
 			closer_high = cHigh[-i]
 			for b in range(i+3+6, cloud_filter*3):
-				if cHigh[-b] >= max(cHigh[-b+2:-b-3:-1]):
+				if cHigh[-b] >= max(cHigh[-2:-b-3:-1]):
 					farer_high = cHigh[-b]
 					break
 			break
@@ -99,6 +99,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	#
 	# else:
 	# 	return ['Sleep', atr_per, angle_coeficient]
+	
 	
 	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
 	if flag :
