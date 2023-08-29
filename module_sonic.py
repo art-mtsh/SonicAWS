@@ -42,17 +42,17 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	atr_per = float('{:.2f}'.format(atr_per))
 	
 	# ANGLE COEFFICIENT
-	angle = abs(ema34_basis[-1] - ema34_basis[-cloud_filter*2-1]) / (cClose[-1] / 100)
-	angle = float('{:.2f}'.format(angle))
-
-	angle_coeficient: float
-	
-	if atr_per != 0:
-		angle_coeficient = angle / atr_per
-	else:
-		angle_coeficient = angle / 1
-
-	angle_coeficient = float('{:.2f}'.format(angle_coeficient))
+	# angle = abs(ema34_basis[-1] - ema34_basis[-cloud_filter*2-1]) / (cClose[-1] / 100)
+	# angle = float('{:.2f}'.format(angle))
+	#
+	# angle_coeficient: float
+	#
+	# if atr_per != 0:
+	# 	angle_coeficient = angle / atr_per
+	# else:
+	# 	angle_coeficient = angle / 1
+	#
+	# angle_coeficient = float('{:.2f}'.format(angle_coeficient))
 	
 	# FLAG
 	
@@ -103,15 +103,15 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
 	if flag :
 		
-		if falling_dragon:
-			return ['🟢', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
+		if rising_dragon:
+			return ['🟢', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
 		
 		elif falling_dragon:
-			return ['🔴', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
+			return ['🔴', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
 		
 		else:
-			return ['↘️', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
+			return ['↘️', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
 		
 	else:
-		return ['Sleep', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
+		return ['Sleep', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
 	
