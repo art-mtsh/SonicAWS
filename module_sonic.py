@@ -37,7 +37,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# 		fresh_below = True
 			
 	# AVERAGE ATR
-	atr = (sum(sum([cHigh[-1:-cloud_filter * 2 - 1:-1] - cLow[-1:-cloud_filter * 2 - 1:-1]])) / len(cClose[-1:-cloud_filter * 2 - 1:-1]))
+	atr = (sum(sum([cHigh[-1:-25:-1] - cLow[-1:25:-1]])) / len(cClose[-1:-25:-1]))
 	atr_per = atr / (cClose[-1] / 100)
 	atr_per = float('{:.2f}'.format(atr_per))
 	
@@ -59,10 +59,10 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	closer_low = 0
 	farer_low = 0
 	
-	for i in range(5, cloud_filter*3):
-		if cLow[-i] <= min(cLow[-2:-i-4:-1]):
+	for i in range(4, 37):
+		if cLow[-i] <= min(cLow[-2:-i-3:-1]):
 			closer_low = cLow[-i]
-			for b in range(i+3+6, cloud_filter*3):
+			for b in range(i+4, 37):
 				if cLow[-b] <= min(cLow[-2:-b-3:-1]):
 					farer_low = cLow[-b]
 					break
@@ -71,10 +71,10 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	closer_high = 0
 	farer_high = 0
 	
-	for i in range(5, cloud_filter*3):
-		if cHigh[-i] >= max(cHigh[-2:-i-4:-1]):
+	for i in range(4, 37):
+		if cHigh[-i] >= max(cHigh[-2:-i-3:-1]):
 			closer_high = cHigh[-i]
-			for b in range(i+3+6, cloud_filter*3):
+			for b in range(i+4, 37):
 				if cHigh[-b] >= max(cHigh[-2:-b-3:-1]):
 					farer_high = cHigh[-b]
 					break
