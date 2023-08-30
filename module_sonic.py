@@ -104,10 +104,10 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
 	if flag :
 		
-		if rising_dragon:
+		if rising_dragon and farer_low >= ema34_high:
 			return ['🟢', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
 		
-		elif falling_dragon:
+		elif falling_dragon and farer_high <= ema34_low:
 			return ['🔴', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
 		
 		else:
