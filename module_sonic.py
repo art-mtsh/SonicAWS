@@ -37,7 +37,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# 		fresh_below = True
 			
 	# AVERAGE ATR
-	atr = (sum(sum([cHigh[-1:-25:-1] - cLow[-1:25:-1]])) / len(cClose[-1:-25:-1]))
+	atr = (sum(sum([cHigh[-1:-37:-1] - cLow[-1:-37:-1]])) / len(cClose[-1:-37:-1]))
 	atr_per = atr / (cClose[-1] / 100)
 	atr_per = float('{:.2f}'.format(atr_per))
 	
