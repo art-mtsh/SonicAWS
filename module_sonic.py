@@ -140,17 +140,17 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
 	
 	if rising_dragon and farer_high != 0 and cLow[-1] >= ema34_high[-1]:
-		return ['🟢', f"ATR: {atr_per}%", f"{(farer_high - cHigh[-1]) / (cClose[-1] / 100)}% t/far, {(closer_high - cHigh[-1]) / (cClose[-1] / 100)}% t/close,"]
+		return ['🟢', atr_per, f"{(farer_high - cHigh[-1]) / (cClose[-1] / 100)}% t/far, {(closer_high - cHigh[-1]) / (cClose[-1] / 100)}% t/close,"]
 	
 	elif falling_dragon and  dit_to_low != 0 and cHigh[-1] <= ema34_low[-1]:
-		return ['🔴', f"ATR: {atr_per}%", f"{(cLow[-1] - farer_low) / (cClose[-1] / 100)}% t/far, {(cLow[-1] - closer_low) / (cClose[-1] / 100)}% t/close,"]
+		return ['🔴', atr_per, f"{(cLow[-1] - farer_low) / (cClose[-1] / 100)}% t/far, {(cLow[-1] - closer_low) / (cClose[-1] / 100)}% t/close,"]
 		
 	elif cloud_above == 0 or cloud_below == 0:
-		return ['☁️', f"ATR: {atr_per}%", f'{int(abs(cClose[-1] - ema34_basis[-1]) / (cClose[-1] / 100))}% t/dragon']
+		return ['☁️', atr_per, f'{int(abs(cClose[-1] - ema34_basis[-1]) / (cClose[-1] / 100))}% t/dragon']
 		
 	# elif flag:
 	# 	return ['🚩', atr_per, f"fl:{farer_low}, cl:{closer_low}, fh:{farer_high}, ch:{closer_high}"]
 		
 	else:
-		return ['Sleep', f"ATR: {atr_per}%", f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
+		return ['Sleep', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
 	

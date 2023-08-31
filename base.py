@@ -57,12 +57,12 @@ def calculation(instr, atr_filter, cloud_filter):
 		
 		if sonic[1] >= atr_filter: #and avgvolume_60 >= volume_filter
 			if 'Sleep' not in sonic[0] and '🟢' not in sonic[0] and '🔴' not in sonic[0]:
-				print(f"{sonic[0]} {symbol}, {sonic[1]}, {sonic[2]};")
-				bot1.send_message(662482931, f'{sonic[0]} {symbol}, {sonic[1]}, {sonic[2]}')
+				print(f"{sonic[0]} {symbol}, ATR: {sonic[1]}%, {sonic[2]};")
+				bot1.send_message(662482931, f'{sonic[0]} {symbol}, ATR: {sonic[1]}%, {sonic[2]}')
 			
 			elif '🟢' in sonic[0] or '🔴' in sonic[0]:
 				print(f"---------------------> {symbol};")
-				bot3.send_message(662482931, f'{sonic[0]}{symbol}, {sonic[1]}, {sonic[2]}')
+				bot3.send_message(662482931, f'{sonic[0]}{symbol}, ATR: {sonic[1]}%, {sonic[2]}')
 					
 		# except telebot.apihelper.ApiTelegramException as ex:
 		# 	print(f'Telegram error for {symbol}: {ex}')
