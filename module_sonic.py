@@ -56,36 +56,78 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	
 	# FLAG
 	
-	closer_low = 0
-	farer_low = 0
+	first_point = 3 # МІНІМУМ 3
+	search_range = 48
+	distance_between = 5 # МІНІМУМ 5
 	
-	for i in range(4, 37):
-		if cLow[-i] <= min(cLow[-2:-i-3:-1]):
-			closer_low = cLow[-i]
-			for b in range(i+4, 37):
-				if cLow[-b] <= min(cLow[-2:-b-3:-1]):
-					farer_low = cLow[-b]
-					break
-			break
-	
-	closer_high = 0
 	farer_high = 0
+	closer_high = 0
 	
-	for i in range(4, 37):
-		if cHigh[-i] >= max(cHigh[-2:-i-3:-1]):
-			closer_high = cHigh[-i]
-			for b in range(i+4, 37):
-				if cHigh[-b] >= max(cHigh[-2:-b-3:-1]):
-					farer_high = cHigh[-b]
+	for i in range(first_point, search_range+1):
+		if cHigh[-i-2] <= cHigh[-i-1] <= cHigh[-i] >= cHigh[-i+1] >= cHigh[-i+2]:
+			for b in range(i+distance_between, search_range+1):
+				if cHigh[-b-2] <= cHigh[-b-1] <= cHigh[-b] >= cHigh[-b+1] >= cHigh[-b+2]:
+					if cHigh[-b] >= cHigh[-i]:
+					
+						falling_coefficient = (cHigh[-b] - cHigh[-i]) / (b - i)
+						
+						for g in range(1, b):
+							if cHigh[-g] > cHigh[-b] - (b - g) * falling_coefficient:
+								farer_high = 0
+								closer_high = 0
+								break
+							else:
+								farer_high = cHigh[-b]
+								closer_high = cHigh[-i]
+						break
 					break
 			break
 	
+	
+	farer_low = 0
+	closer_low = 0
+	
+	for i in range(first_point, search_range+1):
+		if cLow[-i-2] >= cLow[-i-1] >= cLow[-i] <= cLow[-i+1] <= cLow[-i+2]:
+			for b in range(i+distance_between, search_range+1):
+				if cLow[-b-2] >= cLow[-b-1] >= cLow[-b] <= cLow[-b+1] <= cLow[-b+2]:
+					if cLow[-b] <= cLow[-i]:
+					
+						rising_coefficient = (cLow[-i] - cLow[-b]) / (b - i)
+						
+						for g in range(1, b):
+							if cLow[-g] < cLow[-b] + (b - g) * rising_coefficient:
+								farer_low = 0
+								closer_low = 0
+								break
+							else:
+								farer_low = cLow[-b]
+								closer_low = cLow[-i]
+						break
+					break
+			break
+	
+
+
 	flag = closer_low != 0 and \
-		closer_high != 0 and \
-		farer_low != 0 and \
-		farer_high != 0 and \
-		farer_low <= closer_low <= cLow[-1] and farer_high >= closer_high >= cHigh[-1]
-			
+			closer_high != 0 and \
+			farer_low != 0 and \
+			farer_high != 0
+			# farer_low <= closer_low <= cLow[-1] and farer_high >= closer_high >= cHigh[-1]
+	
+	dit_to_low = 0
+	
+	if farer_low != 0 and cClose[-1] != 0 and atr_per != 0:
+		dist_in_perc = (cClose[-1] - farer_low) / (cClose[-1] / 100)
+		dit_to_low = dist_in_perc / atr_per
+	
+	dit_to_high = 0
+	
+	if farer_high != 0 and cClose[-1] != 0 and atr_per != 0:
+		dist_in_perc = (farer_high - cClose[-1]) / (cClose[-1] / 100)
+		dit_to_high = dist_in_perc / atr_per
+		
+	
 	# RESULT. Варіант з опорою на мінімальний cloud, на ПРОДОВЖЕННЯ руху
 	# if rising_dragon and cloud_above == 0 and fresh_below:
 	# 	if ema34_high[-1] >= cLow[-1] >= ema89[-1]:
@@ -102,16 +144,15 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	
 	
 	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
-	if flag :
+	
+	if rising_dragon and farer_high != 0:
+		return ['🟢', atr_per, int(dit_to_high)]
+	
+	elif falling_dragon and  farer_low != 0:
+		return ['🔴', atr_per, int(dit_to_low)]
 		
-		if rising_dragon and farer_low >= ema34_high[-24]:
-			return ['🟢', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
-		
-		elif falling_dragon and farer_high <= ema34_low[-24]:
-			return ['🔴', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
-		
-		else:
-			return ['↘️', atr_per, int((farer_high - farer_low) / (cClose[-1] / 100))]
+	elif flag:
+		return ['🚩', atr_per, f'flag']
 		
 	else:
 		return ['Sleep', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']

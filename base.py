@@ -77,8 +77,8 @@ def search_activale(price_filter, ticksize_filter, volume_filter, atr_filter, cl
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
 	instr = get_pairs(price_filter, ticksize_filter, num_chunks=8)
 	total_count = sum(len(sublist) for sublist in instr)
-	bot1.send_message(662482931, f'️️{total_count} coins: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter} cds')
-	print(f"{total_count} coins: Price <= ${price_filter}, Tick <= {ticksize_filter}%, avg.ATR >= {atr_filter}%, Cloud >= {cloud_filter} candles")
+	bot1.send_message(662482931, f'️️{total_count} coins {timeinterval}: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter} cds')
+	print(f"{total_count} coins {timeinterval}: Price <= ${price_filter}, Tick <= {ticksize_filter}%, avg.ATR >= {atr_filter}%, Cloud >= {cloud_filter} candles")
 	
 	p1 = Process(target=calculation, args=(instr[0], atr_filter, cloud_filter,))
 	p2 = Process(target=calculation, args=(instr[1], atr_filter, cloud_filter,))
