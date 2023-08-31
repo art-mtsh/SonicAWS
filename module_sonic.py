@@ -148,8 +148,8 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	elif cloud_above == 0 or cloud_below == 0:
 		return ['☁️', atr_per, "Cloud"]
 		
-	elif flag:
-		return ['🚩', atr_per, f"fl:{farer_low}, cl:{closer_low}, fh:{farer_high}, ch:{closer_high}"]
+	# elif flag:
+	# 	return ['🚩', atr_per, f"fl:{farer_low}, cl:{closer_low}, fh:{farer_high}, ch:{closer_high}"]
 		
 	else:
 		return ['Sleep', atr_per, f'far_low {farer_low} close_low {closer_low} far_high {farer_high} close_high {closer_high}']
