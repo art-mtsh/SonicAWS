@@ -138,7 +138,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# 	if ema34_low[-1] <= cHigh[-1] <= ema89[-1]:
 	# 		return ['🔴', atr_per, angle_coeficient]
 	# 	return ['↘️', atr_per, angle_coeficient]
-	#
+	#z
 	# else:
 	# 	return ['Sleep', atr_per, angle_coeficient]
 	
