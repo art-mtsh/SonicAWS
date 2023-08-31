@@ -9,6 +9,11 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	ema34_high = talipp.indicators.EMA(period=34, input_values=cHigh)
 	ema89 = talipp.indicators.EMA(period=89, input_values=cClose)
 	ema233 = talipp.indicators.EMA(period=233, input_values=cClose)
+
+	# AVERAGE ATR
+	atr = (sum(sum([cHigh[-1:-37:-1] - cLow[-1:-37:-1]])) / len(cClose[-1:-37:-1]))
+	atr_per = atr / (cClose[-1] / 100)
+	atr_per = float('{:.2f}'.format(atr_per))
 	
 	# TREND
 	rising_dragon = ema34_low[-1] >= ema89[-1] >= ema233[-1]
@@ -35,12 +40,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	#
 	# 	if ema34_low[-i] <= ema89[-i]:
 	# 		fresh_below = True
-			
-	# AVERAGE ATR
-	atr = (sum(sum([cHigh[-1:-37:-1] - cLow[-1:-37:-1]])) / len(cClose[-1:-37:-1]))
-	atr_per = atr / (cClose[-1] / 100)
-	atr_per = float('{:.2f}'.format(atr_per))
-	
+				
 	# ANGLE COEFFICIENT
 	# angle = abs(ema34_basis[-1] - ema34_basis[-cloud_filter*2-1]) / (cClose[-1] / 100)
 	# angle = float('{:.2f}'.format(angle))
