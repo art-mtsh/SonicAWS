@@ -64,9 +64,9 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	closer_high = 0
 	
 	for i in range(first_point, search_range+1):
-		if cHigh[-i-2] <= cHigh[-i-1] <= cHigh[-i] >= cHigh[-i+1] >= cHigh[-i+2]:
+		if cHigh[-i] >= max(cHigh[-1:-i-3:-1]): # cHigh[-i-2] <= cHigh[-i-1] <= cHigh[-i] >= cHigh[-i+1] >= cHigh[-i+2]:
 			for b in range(i+distance_between, search_range+1):
-				if cHigh[-b-2] <= cHigh[-b-1] <= cHigh[-b] >= cHigh[-b+1] >= cHigh[-b+2]:
+				if cHigh[-b] >= max(cHigh[-1:-b-3:-1]): # cHigh[-b-2] <= cHigh[-b-1] <= cHigh[-b] >= cHigh[-b+1] >= cHigh[-b+2]:
 					if cHigh[-b] >= cHigh[-i]:
 					
 						falling_coefficient = (cHigh[-b] - cHigh[-i]) / (b - i)
@@ -88,9 +88,9 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	closer_low = 0
 	
 	for i in range(first_point, search_range+1):
-		if cLow[-i-2] >= cLow[-i-1] >= cLow[-i] <= cLow[-i+1] <= cLow[-i+2]:
+		if cLow[-i] <= min(cLow[-1:-i-3:-1]): #cLow[-i-2] >= cLow[-i-1] >= cLow[-i] <= cLow[-i+1] <= cLow[-i+2]:
 			for b in range(i+distance_between, search_range+1):
-				if cLow[-b-2] >= cLow[-b-1] >= cLow[-b] <= cLow[-b+1] <= cLow[-b+2]:
+				if cLow[-b] <= min(cLow[-1:-b-3:-1]): # cLow[-b-2] >= cLow[-b-1] >= cLow[-b] <= cLow[-b+1] <= cLow[-b+2]:
 					if cLow[-b] <= cLow[-i]:
 					
 						rising_coefficient = (cLow[-i] - cLow[-b]) / (b - i)
