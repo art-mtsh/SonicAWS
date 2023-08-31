@@ -56,7 +56,7 @@ def calculation(instr, atr_filter, cloud_filter):
 		sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter)
 		
 		if sonic[1] >= atr_filter: #and avgvolume_60 >= volume_filter
-			if '🚩' in sonic[0]:
+			if 'Sleep' not in sonic[0] and '🟢' not in sonic[0] and '🔴' not in sonic[0]:
 				print(f"{sonic[0]} {symbol}, avg.ATR: {sonic[1]}%, index: {sonic[2]};")
 				bot1.send_message(662482931, f'{sonic[0]} {symbol}, avg.ATR: {sonic[1]}%, index: {sonic[2]}')
 			

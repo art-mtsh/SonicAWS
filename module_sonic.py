@@ -15,15 +15,15 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	falling_dragon = ema34_high[-1] <= ema89[-1] <= ema233[-1]
 	
 	# CLOUDS
-	# cloud_above = 0
-	# cloud_below = 0
-	#
-	# for i in range(2, cloud_filter+2):
-	# 	if cLow[-i] < ema34_high[-i] or ema34_low[-i] < ema89[-i] or ema89[-i] < ema233[-i]:
-	# 		cloud_above += 1
-	#
-	# 	if cHigh[-i] > ema34_low[-i] or ema34_high[-i] > ema89[-i] or ema89[-i] > ema233[-1]:
-	# 		cloud_below += 1
+	cloud_above = 0
+	cloud_below = 0
+
+	for i in range(1, cloud_filter+1):
+		if cLow[-i] < ema34_high[-i] or ema34_low[-i] < ema89[-i] or ema89[-i] < ema233[-i]:
+			cloud_above += 1
+
+		if cHigh[-i] > ema34_low[-i] or ema34_high[-i] > ema89[-i] or ema89[-i] > ema233[-1]:
+			cloud_below += 1
 	
 	# FRESH
 	# fresh_above = False
@@ -150,6 +150,9 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	
 	elif falling_dragon and  farer_low != 0 and cHigh[-1] <= ema34_low[-1]:
 		return ['🔴', atr_per, f"{int(dit_to_high)} atr's, f:{farer_low}, c:{closer_low}"]
+		
+	elif cloud_above != 0 or cloud_below != 0:
+		return ['☁️', atr_per, "Cloud"]
 		
 	elif flag:
 		return ['🚩', atr_per, f"fl:{farer_low}, cl:{closer_low}, fh:{farer_high}, ch:{closer_high}"]
