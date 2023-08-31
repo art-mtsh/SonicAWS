@@ -10,6 +10,11 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	ema89 = talipp.indicators.EMA(period=89, input_values=cClose)
 	ema233 = talipp.indicators.EMA(period=233, input_values=cClose)
 	
+	# AVERAGE ATR
+	atr = (sum(sum([cHigh[-1:-37:-1] - cLow[-1:-37:-1]])) / len(cClose[-1:-37:-1]))
+	atr_per = atr / (cClose[-1] / 100)
+	atr_per = float('{:.2f}'.format(atr_per))
+	
 	# TREND
 	rising_dragon = ema34_low[-1] >= ema89[-1] >= ema233[-1]
 	falling_dragon = ema34_high[-1] <= ema89[-1] <= ema233[-1]
@@ -35,11 +40,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	#
 	# 	if ema34_low[-i] <= ema89[-i]:
 	# 		fresh_below = True
-			
-	# AVERAGE ATR
-	atr = (sum(sum([cHigh[-1:-37:-1] - cLow[-1:-37:-1]])) / len(cClose[-1:-37:-1]))
-	atr_per = atr / (cClose[-1] / 100)
-	atr_per = float('{:.2f}'.format(atr_per))
+
 	
 	# ANGLE COEFFICIENT
 	# angle = abs(ema34_basis[-1] - ema34_basis[-cloud_filter*2-1]) / (cClose[-1] / 100)
@@ -70,19 +71,16 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 					if cHigh[-b] >= cHigh[-i]:
 					
 						falling_coefficient = (cHigh[-b] - cHigh[-i]) / (b - i)
+						clean_high = True
 						
 						for g in range(1, b):
 							if cHigh[-g] > cHigh[-b] - (b - g) * falling_coefficient:
-								farer_high = 0
-								closer_high = 0
+								clean_high = False
 								break
-							else:
-								farer_high = cHigh[-b]
-								closer_high = cHigh[-i]
-						break
-					break
-			break
-	
+						
+						if clean_high:
+							farer_high = cHigh[-b]
+							closer_high = cHigh[-i]
 	
 	farer_low = 0
 	closer_low = 0
@@ -94,20 +92,16 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 					if cLow[-b] <= cLow[-i]:
 					
 						rising_coefficient = (cLow[-i] - cLow[-b]) / (b - i)
+						clean_low = True
 						
 						for g in range(1, b):
 							if cLow[-g] < cLow[-b] + (b - g) * rising_coefficient:
-								farer_low = 0
-								closer_low = 0
+								clean_low = False
 								break
-							else:
-								farer_low = cLow[-b]
-								closer_low = cLow[-i]
-						break
-					break
-			break
-	
-
+						
+						if clean_low:
+							farer_low = cLow[-b]
+							closer_low = cLow[-i]
 
 	flag = closer_low != 0 and \
 			closer_high != 0 and \
