@@ -71,18 +71,17 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 					
 						falling_coefficient = (cHigh[-b] - cHigh[-i]) / (b - i)
 						
+						clean_high = True
+						
 						for g in range(1, b):
 							if cHigh[-g] > cHigh[-b] - (b - g) * falling_coefficient:
-								farer_high = 0
-								closer_high = 0
+								clean_high = False
 								break
-							else:
-								farer_high = cHigh[-b]
-								closer_high = cHigh[-i]
-						break
-					break
-			break
-	
+								
+						if clean_high == True:
+							farer_high = cHigh[-b]
+							closer_high = cHigh[-i]
+						
 	
 	farer_low = 0
 	closer_low = 0
@@ -95,18 +94,15 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 					
 						rising_coefficient = (cLow[-i] - cLow[-b]) / (b - i)
 						
+						clean_low = True
+						
 						for g in range(1, b):
 							if cLow[-g] < cLow[-b] + (b - g) * rising_coefficient:
-								farer_low = 0
-								closer_low = 0
-								break
-							else:
-								farer_low = cLow[-b]
-								closer_low = cLow[-i]
-						break
-					break
-			break
-	
+								clean_low = False
+						
+						if clean_low == True:
+							farer_low = cLow[-b]
+							closer_low = cLow[-i]
 
 
 	flag = closer_low != 0 and \
