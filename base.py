@@ -162,7 +162,7 @@ def waiting():
 		last_hour_digit = int(now.strftime('%H'))
 		last_minute_digit = int(now.strftime('%M')[-1])
 		last_second_digit = int(now.strftime('%S'))
-		if last_hour_digit in list(range(8, 21)):
+		if last_hour_digit in list(range(8, 23)):
 			if last_minute_digit == 4 or last_minute_digit == 9:
 				if last_second_digit == 25:
 					break
