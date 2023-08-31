@@ -146,7 +146,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 		return ['🔴', atr_per, f"{int(dit_to_low)} atr's to farer low on {farer_low}, cl:{closer_low}"]
 		
 	elif cloud_above == 0 or cloud_below == 0:
-		return ['☁️', atr_per, f'{int(abs(cClose[-1] - ema34_basis[-1]) / atr_per)} ATRs from Close to Dragon']
+		return ['☁️', atr_per, f'{int((abs(cClose[-1] - ema34_basis[-1]) / (cClose[-1] / 100)) / atr_per)} ATRs from Close to Dragon']
 		
 	# elif flag:
 	# 	return ['🚩', atr_per, f"fl:{farer_low}, cl:{closer_low}, fh:{farer_high}, ch:{closer_high}"]
