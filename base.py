@@ -164,7 +164,7 @@ def waiting():
 		last_second_digit = int(now.strftime('%S'))
 		if last_hour_digit in list(range(8, 21)):
 			if last_minute_digit == 4 or last_minute_digit == 9:
-				if last_second_digit == 00:
+				if last_second_digit == 25:
 					break
 		time.sleep(0.1)
 
