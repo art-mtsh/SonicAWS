@@ -106,8 +106,6 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 						break
 					break
 			break
-	
-
 
 	flag = closer_low != 0 and \
 			closer_high != 0 and \
@@ -126,23 +124,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	if farer_high != 0 and cClose[-1] != 0 and atr_per != 0:
 		dist_in_perc = (farer_high - cClose[-1]) / (cClose[-1] / 100)
 		dit_to_high = dist_in_perc / atr_per
-		
-	
-	# RESULT. Варіант з опорою на мінімальний cloud, на ПРОДОВЖЕННЯ руху
-	# if rising_dragon and cloud_above == 0 and fresh_below:
-	# 	if ema34_high[-1] >= cLow[-1] >= ema89[-1]:
-	# 		return ['🟢', atr_per, angle_coeficient]
-	# 	return ['↗️', atr_per, angle_coeficient]
-	#
-	# elif falling_dragon and cloud_below == 0 and fresh_above:
-	# 	if ema34_low[-1] <= cHigh[-1] <= ema89[-1]:
-	# 		return ['🔴', atr_per, angle_coeficient]
-	# 	return ['↘️', atr_per, angle_coeficient]
-	#z
-	# else:
-	# 	return ['Sleep', atr_per, angle_coeficient]
-	
-	
+
 	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
 	
 	if rising_dragon and farer_high != 0 and cLow[-1] >= ema34_high[-1]:
