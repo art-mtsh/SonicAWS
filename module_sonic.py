@@ -109,44 +109,32 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	# 		farer_high != 0
 	# 		# farer_low <= closer_low <= cLow[-1] and farer_high >= closer_high >= cHigh[-1]
 	
-	dit_to_low = 0
-	
-	if farer_low != 0 and cClose[-1] != 0 and atr_per != 0:
-		dist_in_perc = (cClose[-1] - farer_low) / (cClose[-1] / 100)
-		dit_to_low = dist_in_perc / atr_per
-	
-	dit_to_high = 0
-	
-	if farer_high != 0 and cClose[-1] != 0 and atr_per != 0:
-		dist_in_perc = (farer_high - cClose[-1]) / (cClose[-1] / 100)
-		dit_to_high = dist_in_perc / atr_per
-		
-	
-	# RESULT. Варіант з опорою на мінімальний cloud, на ПРОДОВЖЕННЯ руху
-	# if rising_dragon and cloud_above == 0 and fresh_below:
-	# 	if ema34_high[-1] >= cLow[-1] >= ema89[-1]:
-	# 		return ['🟢', atr_per, angle_coeficient]
-	# 	return ['↗️', atr_per, angle_coeficient]
-	#
-	# elif falling_dragon and cloud_below == 0 and fresh_above:
-	# 	if ema34_low[-1] <= cHigh[-1] <= ema89[-1]:
-	# 		return ['🔴', atr_per, angle_coeficient]
-	# 	return ['↘️', atr_per, angle_coeficient]
-	#z
-	# else:
-	# 	return ['Sleep', atr_per, angle_coeficient]
+	# RESULT
 	
 	
-	# RESULT. Варіант з первинним відходом від dragon, одразу ж після перетину
+	high_to_fh = (farer_high - cHigh[-1]) / (cClose[-1] / 100)
+	high_to_ch = (closer_high - cHigh[-1]) / (cClose[-1] / 100)
+	
+	low_to_fl = (cLow[-1] - farer_low) / (cClose[-1] / 100)
+	low_to_cl = (cLow[-1] - closer_low) / (cClose[-1] / 100)
+	
+	high_to_fh = float('{:.2f}'.format(high_to_fh))
+	high_to_ch = float('{:.2f}'.format(high_to_ch))
+	
+	low_to_fl = float('{:.2f}'.format(low_to_fl))
+	low_to_cl = float('{:.2f}'.format(low_to_cl))
+	
+	close_to_dragon = abs(cClose[-1] - ema34_basis[-1]) / (cClose[-1] / 100)
+	close_to_dragon = float('{:.2f}'.format(close_to_dragon))
 	
 	if rising_dragon and farer_high != 0 and cLow[-1] >= ema34_high[-1]:
-		return ['🟢', atr_per, f"{(farer_high - cHigh[-1]) / (cClose[-1] / 100)}% t/far, {(closer_high - cHigh[-1]) / (cClose[-1] / 100)}% t/close,"]
+		return ['🟢', atr_per, f"{high_to_fh}% t/far, {high_to_ch}% t/close,"]
 	
-	elif falling_dragon and  dit_to_low != 0 and cHigh[-1] <= ema34_low[-1]:
-		return ['🔴', atr_per, f"{(cLow[-1] - farer_low) / (cClose[-1] / 100)}% t/far, {(cLow[-1] - closer_low) / (cClose[-1] / 100)}% t/close,"]
+	elif falling_dragon and  farer_low != 0 and cHigh[-1] <= ema34_low[-1]:
+		return ['🔴', atr_per, f"{low_to_fl}% t/far, {low_to_cl}% t/close,"]
 		
 	elif cloud_above == 0 or cloud_below == 0:
-		return ['☁️', atr_per, f'{int(abs(cClose[-1] - ema34_basis[-1]) / (cClose[-1] / 100))}% t/dragon']
+		return ['☁️', atr_per, f'{close_to_dragon}% t/dragon']
 		
 	# elif flag:
 	# 	return ['🚩', atr_per, f"fl:{farer_low}, cl:{closer_low}, fh:{farer_high}, ch:{closer_high}"]
