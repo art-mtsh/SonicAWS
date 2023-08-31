@@ -151,7 +151,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	elif falling_dragon and  farer_low != 0 and cHigh[-1] <= ema34_low[-1]:
 		return ['🔴', atr_per, f"{int(dit_to_high)} atr's, f:{farer_low}, c:{closer_low}"]
 		
-	elif cloud_above != 0 or cloud_below != 0:
+	elif cloud_above == 0 or cloud_below == 0:
 		return ['☁️', atr_per, "Cloud"]
 		
 	elif flag:
