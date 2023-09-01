@@ -125,10 +125,10 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 	close_to_dragon = abs(cClose[-1] - ema34_basis[-1]) / (cClose[-1] / 100)
 	close_to_dragon = float('{:.2f}'.format(close_to_dragon))
 	
-	if rising_dragon and closer_high >= ema34_high[-1]:
+	if rising_dragon and closer_high >= ema34_high[-1] and closer_low != 0:
 		return ['🟢', atr_per, f'{close_to_dragon}% t/dragon']
 	
-	elif falling_dragon and  closer_low <= ema34_low[-1]:
+	elif falling_dragon and  closer_low <= ema34_low[-1] and closer_high != 0:
 		return ['🔴', atr_per, f'{close_to_dragon}% t/dragon']
 		
 	elif cloud_above == 0 or cloud_below == 0:
