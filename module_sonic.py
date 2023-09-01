@@ -1,7 +1,7 @@
 import talipp.indicators.EMA
 
 
-def sonic_signal(cHigh, cLow, cClose, cloud_filter):
+def sonic_signal(cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 
 	# INDICATORS
 	ema34_basis = talipp.indicators.EMA(period=34, input_values=cClose)
@@ -57,16 +57,14 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	
 	# FLAG
 	
-	first_point = 3 # МІНІМУМ 3
 	search_range = 48
-	distance_between = 5 # МІНІМУМ 5
 	
 	farer_high = 0
 	closer_high = 0
 	
 	for i in range(first_point, search_range+1):
 		if cHigh[-i] >= max(cHigh[-1:-i-3:-1]): # cHigh[-i-2] <= cHigh[-i-1] <= cHigh[-i] >= cHigh[-i+1] >= cHigh[-i+2]:
-			for b in range(i+distance_between, search_range+1):
+			for b in range(i + second_point, search_range + 1):
 				if cHigh[-b] >= max(cHigh[-1:-b-3:-1]): # cHigh[-b-2] <= cHigh[-b-1] <= cHigh[-b] >= cHigh[-b+1] >= cHigh[-b+2]:
 					if cHigh[-b] >= cHigh[-i]:
 					
@@ -87,7 +85,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter):
 	
 	for i in range(first_point, search_range+1):
 		if cLow[-i] <= min(cLow[-1:-i-3:-1]): #cLow[-i-2] >= cLow[-i-1] >= cLow[-i] <= cLow[-i+1] <= cLow[-i+2]:
-			for b in range(i+distance_between, search_range+1):
+			for b in range(i + second_point, search_range + 1):
 				if cLow[-b] <= min(cLow[-1:-b-3:-1]): # cLow[-b-2] >= cLow[-b-1] >= cLow[-b] <= cLow[-b+1] <= cLow[-b+2]:
 					if cLow[-b] <= cLow[-i]:
 					

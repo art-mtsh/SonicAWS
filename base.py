@@ -19,7 +19,7 @@ bot3 = telebot.TeleBot(TOKEN3)
 timeinterval = '5m'
 
 
-def calculation(instr, atr_filter, cloud_filter):
+def calculation(instr, atr_filter, cloud_filter, first_point, second_point):
 
 	for symbol in instr:
 		# try:
@@ -53,7 +53,7 @@ def calculation(instr, atr_filter, cloud_filter):
 		cLow = df1['cLow'].to_numpy()
 		cClose = df1['cClose'].to_numpy()
 		
-		sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter)
+		sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter, first_point=first_point, second_point=second_point)
 		
 		if sonic[1] >= atr_filter: #and avgvolume_60 >= volume_filter
 			if 'Sleep' not in sonic[0] and '🟢' not in sonic[0] and '🔴' not in sonic[0]:
@@ -72,7 +72,7 @@ def calculation(instr, atr_filter, cloud_filter):
 		# 	print(f'Error main module for {symbol}: {exy}')
 		# 	bot2.send_message(662482931, f'Error main module for {symbol}: {exy}')
 
-def search_activale(price_filter, ticksize_filter, volume_filter, atr_filter, cloud_filter):
+def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, first_point, second_point):
 	time1 = time.perf_counter()
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
 	instr = get_pairs(price_filter, ticksize_filter, num_chunks=8)
@@ -81,14 +81,14 @@ def search_activale(price_filter, ticksize_filter, volume_filter, atr_filter, cl
 	# bot3.send_message(662482931, '.')
 	print(f"{total_count} coins {timeinterval}: Price <= ${price_filter}, Tick <= {ticksize_filter}%, avg.ATR >= {atr_filter}%, Cloud >= {cloud_filter} candles")
 	
-	p1 = Process(target=calculation, args=(instr[0], atr_filter, cloud_filter,))
-	p2 = Process(target=calculation, args=(instr[1], atr_filter, cloud_filter,))
-	p3 = Process(target=calculation, args=(instr[2], atr_filter, cloud_filter,))
-	p4 = Process(target=calculation, args=(instr[3], atr_filter, cloud_filter,))
-	p5 = Process(target=calculation, args=(instr[4], atr_filter, cloud_filter,))
-	p6 = Process(target=calculation, args=(instr[5], atr_filter, cloud_filter,))
-	p7 = Process(target=calculation, args=(instr[6], atr_filter, cloud_filter,))
-	p8 = Process(target=calculation, args=(instr[7], atr_filter, cloud_filter,))
+	p1 = Process(target=calculation, args=(instr[0], atr_filter, cloud_filter, first_point, second_point,))
+	p2 = Process(target=calculation, args=(instr[1], atr_filter, cloud_filter, first_point, second_point,))
+	p3 = Process(target=calculation, args=(instr[2], atr_filter, cloud_filter, first_point, second_point,))
+	p4 = Process(target=calculation, args=(instr[3], atr_filter, cloud_filter, first_point, second_point,))
+	p5 = Process(target=calculation, args=(instr[4], atr_filter, cloud_filter, first_point, second_point,))
+	p6 = Process(target=calculation, args=(instr[5], atr_filter, cloud_filter, first_point, second_point,))
+	p7 = Process(target=calculation, args=(instr[6], atr_filter, cloud_filter, first_point, second_point,))
+	p8 = Process(target=calculation, args=(instr[7], atr_filter, cloud_filter, first_point, second_point,))
 	# p9 = Process(target=calculation, args=(instr[8], volume_filter, atr_filter, cloud_filter,))
 	# p10 = Process(target=calculation, args=(instr[9], volume_filter, atr_filter, cloud_filter,))
 	# p11 = Process(target=calculation, args=(instr[10], volume_filter, atr_filter, cloud_filter,))
@@ -175,15 +175,19 @@ if __name__ == '__main__':
 	ticksize_filter = 0.025 #float(input('Ticksize less than: '))
 	volume_filter = 1 #int(input('Volume more than: '))
 	atr_filter = 0.2 #float(input('ATR more than: '))
-	cloud_filter = 10 #int(input('Cloud length: '))
+	cloud_filter = int(input('Cloud length: '))
+	first_point = int(input('First point: '))
+	second_point = int(input('Second point: '))
 	
 	while True:
 		search_activale(
-		    price_filter=price_filter,
-		    ticksize_filter=ticksize_filter,
-		    volume_filter=volume_filter,
-		    atr_filter=atr_filter,
-			cloud_filter=cloud_filter
+			price_filter=price_filter,
+			ticksize_filter=ticksize_filter,
+			volume_filter=volume_filter,
+			atr_filter=atr_filter,
+			cloud_filter=cloud_filter,
+			first_point=first_point,
+			second_point=second_point,
 		)
 		time.sleep(60)
 		waiting()
