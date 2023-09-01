@@ -183,7 +183,6 @@ if __name__ == '__main__':
 		search_activale(
 			price_filter=price_filter,
 			ticksize_filter=ticksize_filter,
-			volume_filter=volume_filter,
 			atr_filter=atr_filter,
 			cloud_filter=cloud_filter,
 			first_point=first_point,
