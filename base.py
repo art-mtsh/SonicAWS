@@ -114,8 +114,11 @@ def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, fir
 	print(f'For signal:\n{signal_message}')
 	print(f'For status:\n{status_message}')
 	
-	bot3.send_message(662482931, signal_message)
-	bot1.send_message(662482931, f'️{total_count} coins {timeinterval}: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter} cds\n'
+	if len(signal_message) != 0:
+		bot3.send_message(662482931, signal_message)
+	
+	if len(status_message) != 0:
+		bot1.send_message(662482931, f'️{total_count} coins {timeinterval}: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter} cds\n'
 								f'\n'
 								f'{status_message}\n'
 								f'\n'
