@@ -104,15 +104,6 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 							farer_low = cLow[-b]
 							closer_low = cLow[-i]
 							farer_low_index = b
-
-	# flag = closer_low != 0 and \
-	# 		closer_high != 0 and \
-	# 		farer_low != 0 and \
-	# 		farer_high != 0
-	# 		# farer_low <= closer_low <= cLow[-1] and farer_high >= closer_high >= cHigh[-1]
-	
-	# RESULT
-	
 	
 	high_to_fh = (farer_high - cHigh[-1]) / (cClose[-1] / 100)
 	high_to_ch = (closer_high - cHigh[-1]) / (cClose[-1] / 100)
@@ -129,6 +120,7 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 	close_to_dragon = abs(cClose[-1] - ema34_basis[-1]) / (cClose[-1] / 100)
 	close_to_dragon = float('{:.2f}'.format(close_to_dragon))
 	
+	# RESULT
 	if rising_dragon and farer_low != 0 and farer_high != 0 and farer_low >= ema34_high[-farer_low_index]:
 		return ['🟢', atr_per, f'{close_to_dragon}% t/dragon']
 	

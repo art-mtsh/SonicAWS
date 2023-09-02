@@ -110,14 +110,12 @@ def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, fir
 	time2 = time.perf_counter()
 	time3 = time2 - time1
 	
-	# Send the message to your Telegram bot
-	print(f'For signal:\n{signal_message}')
-	print(f'For status:\n{status_message}')
-	
 	if len(signal_message) != 0:
+		print(f'For signal:\n{signal_message}')
 		bot3.send_message(662482931, signal_message)
 	
 	if len(status_message) != 0:
+		print(f'For status:\n{status_message}')
 		bot1.send_message(662482931, f'️{total_count} coins {timeinterval}: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter} cds\n'
 								f'\n'
 								f'{status_message}\n'
