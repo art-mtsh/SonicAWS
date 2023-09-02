@@ -42,12 +42,10 @@ def calculation(instr, atr_filter, cloud_filter, first_point, second_point, for_
 				'is_best_match'
 			]
 			df1 = d1
-			df1['cOpen'] = df1['cOpen'].astype(float)
 			df1['cHigh'] = df1['cHigh'].astype(float)
 			df1['cLow'] = df1['cLow'].astype(float)
 			df1['cClose'] = df1['cClose'].astype(float)
 			
-			cOpen = df1['cOpen'].to_numpy()
 			cHigh = df1['cHigh'].to_numpy()
 			cLow = df1['cLow'].to_numpy()
 			cClose = df1['cClose'].to_numpy()
