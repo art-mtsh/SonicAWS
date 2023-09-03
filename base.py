@@ -42,15 +42,17 @@ def calculation(instr, atr_filter, cloud_filter, first_point, second_point, for_
 				'is_best_match'
 			]
 			df1 = d1
+			df1['cOpen'] = df1['cOpen'].astype(float)
 			df1['cHigh'] = df1['cHigh'].astype(float)
 			df1['cLow'] = df1['cLow'].astype(float)
 			df1['cClose'] = df1['cClose'].astype(float)
 			
+			cOpen = df1['cOpen'].to_numpy()
 			cHigh = df1['cHigh'].to_numpy()
 			cLow = df1['cLow'].to_numpy()
 			cClose = df1['cClose'].to_numpy()
 			
-			sonic = sonic_signal(cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter, first_point=first_point, second_point=second_point)
+			sonic = sonic_signal(cOpen=cOpen, cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter, first_point=first_point, second_point=second_point)
 			
 			if sonic[1] >= atr_filter:  # and avgvolume_60 >= volume_filter
 				if 'Sleep' not in sonic[0] and '🟢' not in sonic[0] and '🔴' not in sonic[0]:
@@ -125,6 +127,8 @@ def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, fir
 								f'{status_message}\n'
 								f'\n'
 								f'🍌 {int(time3)} seconds 🍌')
+	else:
+		bot1.send_message(662482931, f'️😪')
 	
 	print(f"Finished processes in {int(time3)} seconds, at {datetime.datetime.now().strftime('%H:%M:%S')}\n")
 

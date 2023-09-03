@@ -1,7 +1,7 @@
 import talipp.indicators.EMA
 
 
-def sonic_signal(cHigh, cLow, cClose, cloud_filter, first_point, second_point):
+def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 
 	# INDICATORS
 	ema34_basis = talipp.indicators.EMA(period=34, input_values=cClose)
@@ -124,18 +124,33 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 	close_to_dragon = abs(cClose[-1] - ema34_basis[-1]) / (cClose[-1] / 100)
 	close_to_dragon = float('{:.2f}'.format(close_to_dragon))
 	
+	# BODY/RANGE RATIO
+	br_ratio = 0
+	
+	if farer_high != 0:
+		br_ratios = []
+		for i in range(1, farer_high_index+1):
+			br_ratios.append(abs(cOpen[-i] - cClose[-i]) / ((cHigh[-i] - cLow[-i]) / 100))
+		br_ratio = sum(br_ratios) / len(br_ratios)
+		
+	if farer_low != 0:
+		br_ratios = []
+		for i in range(1, farer_low_index+1):
+			br_ratios.append(abs(cOpen[-i] - cClose[-i]) / ((cHigh[-i] - cLow[-i]) / 100))
+		br_ratio = sum(br_ratios) / len(br_ratios)
+	
 	# RESULT
 	if rising_dragon and closer_low != 0 and closer_high != 0 and closer_high >= ema34_high[-closer_high_index]:
-		return ['🟢', atr_per, f'{close_to_dragon}% t/dragon']
+		return ['🟢', atr_per, f'BR:{br_ratio}%, {close_to_dragon}% t/dragon']
 	
 	elif falling_dragon and closer_low != 0 and closer_high != 0 and closer_low <= ema34_low[-closer_low_index]:
-		return ['🔴', atr_per, f'{close_to_dragon}% t/dragon']
+		return ['🔴', atr_per, f'BR:{br_ratio}%, {close_to_dragon}% t/dragon']
 		
 	elif rising_dragon and closer_high != 0 and closer_high >= ema34_high[-closer_high_index]:
-		return ['↗️', atr_per, f'{close_to_dragon}% t/dragon']
+		return ['↗️', atr_per, f'BR:{br_ratio}%, {close_to_dragon}% t/dragon']
 	
 	elif falling_dragon and closer_low != 0 and closer_low <= ema34_low[-closer_low_index]:
-		return ['↘️', atr_per, f'{close_to_dragon}% t/dragon']
+		return ['↘️', atr_per, f'BR:{br_ratio}%, {close_to_dragon}% t/dragon']
 	
 	# elif cloud_above == 0 or cloud_below == 0:
 	# 	return ['☁️', atr_per, f'{close_to_dragon}% t/dragon']
