@@ -143,16 +143,16 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 		
 	# RESULT
 	if rising_dragon and closer_low != 0 and closer_high != 0 and closer_high >= ema34_high[-closer_high_index]:
-		return ['🟢', atr_per, f'BR:{br_ratio}%']
+		return ['🟢', atr_per, f'BR: {br_ratio}%']
 	
 	elif falling_dragon and closer_low != 0 and closer_high != 0 and closer_low <= ema34_low[-closer_low_index]:
-		return ['🔴', atr_per, f'BR:{br_ratio}%']
+		return ['🔴', atr_per, f'BR: {br_ratio}%']
 		
 	elif rising_dragon and closer_high != 0 and closer_high >= ema34_high[-closer_high_index]:
-		return ['↗️', atr_per, f'BR:{br_ratio}%']
+		return ['↗️', atr_per, f'BR: {br_ratio}%']
 	
 	elif falling_dragon and closer_low != 0 and closer_low <= ema34_low[-closer_low_index]:
-		return ['↘️', atr_per, f'BR:{br_ratio}%']
+		return ['↘️', atr_per, f'BR: {br_ratio}%']
 	
 	# elif cloud_above == 0 or cloud_below == 0:
 	# 	return ['☁️', atr_per, f'{close_to_dragon}% t/dragon']
