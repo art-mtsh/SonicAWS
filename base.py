@@ -112,7 +112,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, fir
 	
 	if len(signal_message) != 0:
 		print(f'For signal:\n{signal_message}')
-		bot3.send_message(662482931, f'️{total_count}c|{timeinterval}: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter} cds\n'
+		bot3.send_message(662482931, f'️{total_count}c({timeinterval}): <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter}cds\n'
 								f'\n'
 								f'{signal_message}\n'
 								f'\n'
@@ -120,7 +120,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, fir
 	
 	if len(status_message) != 0:
 		print(f'For status:\n{status_message}')
-		bot1.send_message(662482931, f'️{total_count}c|{timeinterval}: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter} cds\n'
+		bot1.send_message(662482931, f'️{total_count}c({timeinterval}): <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter}cds\n'
 								f'\n'
 								f'{status_message}\n'
 								f'\n'
