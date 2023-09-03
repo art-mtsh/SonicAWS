@@ -42,6 +42,7 @@ def calculation(instr, atr_filter, cloud_filter, first_point, second_point, for_
 				'is_best_match'
 			]
 			df1 = d1
+			
 			df1['cOpen'] = df1['cOpen'].astype(float)
 			df1['cHigh'] = df1['cHigh'].astype(float)
 			df1['cLow'] = df1['cLow'].astype(float)
