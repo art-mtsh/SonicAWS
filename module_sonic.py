@@ -126,16 +126,16 @@ def sonic_signal(cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 	
 	# RESULT
 	if rising_dragon and closer_low != 0 and closer_high != 0 and closer_high >= ema34_high[-closer_high_index]:
-		return ['🟢', atr_per, f'{close_to_dragon}% t/dragon']
+		return ['🟢', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
 	
 	elif falling_dragon and closer_low != 0 and closer_high != 0 and closer_low <= ema34_low[-closer_low_index]:
-		return ['🔴', atr_per, f'{close_to_dragon}% t/dragon']
+		return ['🔴', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
 		
 	elif rising_dragon and closer_high != 0 and closer_high >= ema34_high[-closer_high_index]:
-		return ['↗️', atr_per, f'{close_to_dragon}% t/dragon']
+		return ['↗️', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
 	
 	elif falling_dragon and closer_low != 0 and closer_low <= ema34_low[-closer_low_index]:
-		return ['↘️', atr_per, f'{close_to_dragon}% t/dragon']
+		return ['↘️', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
 	
 	# elif cloud_above == 0 or cloud_below == 0:
 	# 	return ['☁️', atr_per, f'{close_to_dragon}% t/dragon']
