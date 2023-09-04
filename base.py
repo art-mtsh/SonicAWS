@@ -132,7 +132,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, fir
 								f'\n'
 								f'🍌 {int(time3)} seconds 🍌')
 	else:
-		bot1.send_message(662482931, f'️😪')
+		bot1.send_message(662482931, f'️😪😪😪')
 	
 	print(f"Finished processes in {int(time3)} seconds, at {datetime.datetime.now().strftime('%H:%M:%S')}\n")
 
