@@ -1,17 +1,23 @@
 import talipp.indicators.EMA
 
+dragon_length = 100
+trend_length = 300
+supertrend_length = 900
+atr_length = 36
+flag_search_range = 120
+brratio_lengh = 60
 
 def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 
 	# INDICATORS
-	ema34_basis = talipp.indicators.EMA(period=100, input_values=cClose)
-	ema34_low = talipp.indicators.EMA(period=100, input_values=cLow)
-	ema34_high = talipp.indicators.EMA(period=100, input_values=cHigh)
-	ema89 = talipp.indicators.EMA(period=300, input_values=cClose)
-	ema233 = talipp.indicators.EMA(period=900, input_values=cClose)
+	ema34_basis = talipp.indicators.EMA(period=dragon_length, input_values=cClose)
+	ema34_low = talipp.indicators.EMA(period=dragon_length, input_values=cLow)
+	ema34_high = talipp.indicators.EMA(period=dragon_length, input_values=cHigh)
+	ema89 = talipp.indicators.EMA(period=trend_length, input_values=cClose)
+	ema233 = talipp.indicators.EMA(period=supertrend_length, input_values=cClose)
 	
 	# AVERAGE ATR
-	atr = (sum(sum([cHigh[-1:-37:-1] - cLow[-1:-37:-1]])) / len(cClose[-1:-37:-1]))
+	atr = (sum(sum([cHigh[-1:-atr_length-1:-1] - cLow[-1:-atr_length-1:-1]])) / len(cClose[-1:-atr_length-1:-1]))
 	atr_per = atr / (cClose[-1] / 100)
 	atr_per = float('{:.2f}'.format(atr_per))
 	
@@ -57,16 +63,14 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 	
 	# FLAG
 	
-	search_range = 36
-	
 	farer_high = 0
 	closer_high = 0
 	farer_high_index = 0
 	closer_high_index = 0
 	
-	for i in range(first_point, search_range+1):
+	for i in range(first_point, flag_search_range+1):
 		if cHigh[-i] >= max(cHigh[-1:-i-4:-1]): # cHigh[-i-2] <= cHigh[-i-1] <= cHigh[-i] >= cHigh[-i+1] >= cHigh[-i+2]:
-			for b in range(i + second_point, search_range + 1):
+			for b in range(i + second_point, flag_search_range + 1):
 				if cHigh[-b] >= max(cHigh[-1:-b-4:-1]): # cHigh[-b-2] <= cHigh[-b-1] <= cHigh[-b] >= cHigh[-b+1] >= cHigh[-b+2]:
 					if cHigh[-b] >= cHigh[-i]:
 					
@@ -89,9 +93,9 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 	farer_low_index = 0
 	closer_low_index = 0
 	
-	for i in range(first_point, search_range+1):
+	for i in range(first_point, flag_search_range+1):
 		if cLow[-i] <= min(cLow[-1:-i-4:-1]): #cLow[-i-2] >= cLow[-i-1] >= cLow[-i] <= cLow[-i+1] <= cLow[-i+2]:
-			for b in range(i + second_point, search_range + 1):
+			for b in range(i + second_point, flag_search_range + 1):
 				if cLow[-b] <= min(cLow[-1:-b-4:-1]): # cLow[-b-2] >= cLow[-b-1] >= cLow[-b] <= cLow[-b+1] <= cLow[-b+2]:
 					if cLow[-b] <= cLow[-i]:
 					
@@ -129,7 +133,7 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 	
 	if farer_high != 0 or farer_low != 0:
 		br_ratios = []
-		for i in range(1, 24):
+		for i in range(1, brratio_lengh):
 			body = abs(cOpen[-i] - cClose[-i])
 			candle_range = (cHigh[-i] - cLow[-i])
 			one_percent = candle_range / 100
