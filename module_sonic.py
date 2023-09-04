@@ -1,4 +1,7 @@
 import talipp.indicators.EMA
+import pandas as pd
+from requests import get
+
 
 dragon_length = 34
 trend_length = 89
@@ -22,7 +25,7 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 	ema233 = talipp.indicators.EMA(period=supertrend_length, input_values=cClose)
 	
 	# AVERAGE ATR
-	atr_per = 0
+
 	atr = (sum(sum([cHigh[-1:-atr_length-1:-1] - cLow[-1:-atr_length-1:-1]])) / len(cClose[-1:-atr_length-1:-1]))
 	atr_per = atr / (cClose[-1] / 100)
 	atr_per = float('{:.2f}'.format(atr_per))
@@ -160,6 +163,8 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 					return ['✅✅✅', atr_per, f'BR: {br_ratio}%']
 				return ['✅✅⬜️', atr_per, f'BR: {br_ratio}%']
 			return ['✅⬜️⬜️', atr_per, f'BR: {br_ratio}%']
+		else:
+			return ['Sleep', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
 			
 	elif falling_dragon:
 		if closer_low != 0:
@@ -168,6 +173,8 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 					return ['✅✅✅', atr_per, f'BR: {br_ratio}%']
 				return ['✅✅⬜️', atr_per, f'BR: {br_ratio}%']
 			return ['✅⬜️⬜️', atr_per, f'BR: {br_ratio}%']
+		else:
+			return ['Sleep', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
 		
 	elif closer_low != 0 and closer_high != 0:
 		return ['🚩', atr_per, f'BR: {br_ratio}%']
@@ -176,4 +183,35 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 	
 	else:
 		return ['Sleep', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
-	
+		
+# url_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + 'TOMOUSDT' + '&interval=' + '5m' + '&limit=300'
+# data1 = get(url_klines).json()
+#
+# d1 = pd.DataFrame(data1)
+# d1.columns = [
+# 'open_time',
+# 'cOpen',
+# 'cHigh',
+# 'cLow',
+# 'cClose',
+# 'cVolume',
+# 'close_time',
+# 'qav',
+# 'num_trades',
+# 'taker_base_vol',
+# 'taker_quote_vol',
+# 'is_best_match'
+# ]
+# df1 = d1
+#
+# df1['cOpen'] = df1['cOpen'].astype(float)
+# df1['cHigh'] = df1['cHigh'].astype(float)
+# df1['cLow'] = df1['cLow'].astype(float)
+# df1['cClose'] = df1['cClose'].astype(float)
+#
+# cOpen = df1['cOpen'].to_numpy()
+# cHigh = df1['cHigh'].to_numpy()
+# cLow = df1['cLow'].to_numpy()
+# cClose = df1['cClose'].to_numpy()
+#
+# print(sonic_signal(cOpen, cHigh, cLow, cClose, 12, 3, 6))
