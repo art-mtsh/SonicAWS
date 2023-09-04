@@ -161,8 +161,8 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 			if closer_low != 0:
 				if closer_low >= ema34_high[-closer_low_index]:
 					return ['✅✅✅', atr_per, f'BR: {br_ratio}%']
-				return ['✅✅◽️', atr_per, f'BR: {br_ratio}%']
-			return ['✅◽️◽️', atr_per, f'BR: {br_ratio}%']
+				return ['✅✅◻️', atr_per, f'BR: {br_ratio}%']
+			return ['✅◻️◻️', atr_per, f'BR: {br_ratio}%']
 		else:
 			return ['Sleep', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
 			
@@ -171,8 +171,8 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 			if closer_high != 0:
 				if closer_high <= ema34_low[-closer_high_index]:
 					return ['✅✅✅', atr_per, f'BR: {br_ratio}%']
-				return ['✅✅◽️', atr_per, f'BR: {br_ratio}%']
-			return ['✅◽️', atr_per, f'BR: {br_ratio}%']
+				return ['✅✅◻️', atr_per, f'BR: {br_ratio}%']
+			return ['✅◻️◻️', atr_per, f'BR: {br_ratio}%']
 		else:
 			return ['Sleep', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
 		
