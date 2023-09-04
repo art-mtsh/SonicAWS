@@ -23,7 +23,7 @@ def calculation(instr, atr_filter, cloud_filter, first_point, second_point, for_
 	for symbol in instr:
 		try:
 			# --- DATA ---
-			url_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + timeinterval + '&limit=300'
+			url_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + timeinterval + '&limit=950'
 			data1 = get(url_klines).json()
 			
 			d1 = pd.DataFrame(data1)
