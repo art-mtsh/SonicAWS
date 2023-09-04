@@ -122,7 +122,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, fir
 								f'\n'
 								f'{signal_message}\n'
 								f'\n'
-								f'🍌 {int(time3)} seconds 🍌')
+								f'🍌 {int(time3)} seconds 🍌', timeout=30)
 	
 	if len(status_message) != 0:
 		print(f'For status:\n{status_message}')
@@ -130,7 +130,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, fir
 								f'\n'
 								f'{status_message}\n'
 								f'\n'
-								f'🍌 {int(time3)} seconds 🍌')
+								f'🍌 {int(time3)} seconds 🍌', timeout=30)
 	
 	print(f"Finished processes in {int(time3)} seconds, at {datetime.datetime.now().strftime('%H:%M:%S')}\n")
 
