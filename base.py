@@ -59,7 +59,7 @@ def calculation(instr, atr_filter, cloud_filter, first_point, second_point, for_
 			if '🚩' in sonic[0]:
 				for_status.put(f'{sonic[0]} {symbol.removesuffix("USDT")}, ATR: {sonic[1]}%, {sonic[2]}')
 			
-			elif '✅' in sonic[0]:
+			elif '✅✅✅' in sonic[0] or '✅✅⬜️' in sonic[0] or '✅⬜️⬜️' in sonic[0]:
 				for_signal.put(f'{sonic[0]} {symbol.removesuffix("USDT")}, ATR: {sonic[1]}%, {sonic[2]}')
 			
 			else:
