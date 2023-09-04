@@ -16,7 +16,7 @@ bot2 = telebot.TeleBot(TOKEN2)
 TOKEN3 = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot3 = telebot.TeleBot(TOKEN3)
 
-timeinterval = '1m'
+timeinterval = '5m'
 
 
 def calculation(instr, atr_filter, cloud_filter, first_point, second_point, for_signal, for_status):

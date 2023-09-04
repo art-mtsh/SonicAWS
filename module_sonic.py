@@ -1,14 +1,14 @@
 import talipp.indicators.EMA
 
-dragon_length = 100
-trend_length = 300
-supertrend_length = 900
+dragon_length = 34
+trend_length = 89
+supertrend_length = 233
 
-atr_length = 36
+atr_length = 24
 
-flag_search_range = 120
+flag_search_range = 24
 
-brratio_lengh = 60
+brratio_lengh = 36
 brratio_filter = 40
 
 
@@ -151,19 +151,19 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 			br_ratio = int(sum(br_ratios) / len(br_ratios))
 		
 	# RESULT
-	if rising_dragon and closer_low != 0 and closer_high != 0:
+	if rising_dragon and closer_low != 0 and closer_high != 0 and farer_low >= ema34_high[-farer_low_index] and closer_low >= ema34_high[-closer_low_index]:
 		return ['🟢', atr_per, f'BR: {br_ratio}%']
 	
-	elif falling_dragon and closer_low != 0 and closer_high != 0:
+	elif falling_dragon and closer_low != 0 and closer_high != 0 and farer_high <= ema34_low[-farer_high_index] and closer_high <= ema34_low[-closer_high_index]:
 		return ['🔴', atr_per, f'BR: {br_ratio}%']
 	
 	elif closer_low != 0 and closer_high != 0:
 		return ['🚩', atr_per, f'BR: {br_ratio}%']
 		
-	elif rising_dragon and closer_high != 0:
+	elif rising_dragon and closer_high != 0 and farer_high >= ema34_high[-farer_high_index] and closer_high >= ema34_high[-closer_high_index]:
 		return ['↗️', atr_per, f'BR: {br_ratio}%']
 	
-	elif falling_dragon and closer_low != 0:
+	elif falling_dragon and closer_low != 0 and farer_low <= ema34_low[-farer_low_index] and closer_low <= ema34_low[-closer_low_index]:
 		return ['↘️', atr_per, f'BR: {br_ratio}%']
 		
 	# elif cloud_above == 0 or cloud_below == 0:
