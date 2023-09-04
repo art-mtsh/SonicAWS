@@ -22,6 +22,7 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 	ema233 = talipp.indicators.EMA(period=supertrend_length, input_values=cClose)
 	
 	# AVERAGE ATR
+	atr_per = 0
 	atr = (sum(sum([cHigh[-1:-atr_length-1:-1] - cLow[-1:-atr_length-1:-1]])) / len(cClose[-1:-atr_length-1:-1]))
 	atr_per = atr / (cClose[-1] / 100)
 	atr_per = float('{:.2f}'.format(atr_per))
@@ -152,27 +153,26 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 		
 	# RESULT
 	
-	# if rising_dragon:
-	# 	if closer_high != 0:
-	# 		if closer_low != 0:
-	# 			if closer_low >= ema34_high[-closer_low_index]:
-	# 				return ['✅✅✅', atr_per, f'BR: {br_ratio}%']
-	# 			return ['✅✅⬜️', atr_per, f'BR: {br_ratio}%']
-	# 		return ['✅⬜️⬜️', atr_per, f'BR: {br_ratio}%']
-	#
-	# elif falling_dragon:
-	# 	if closer_low != 0:
-	# 		if closer_high != 0:
-	# 			if closer_high <= ema34_low[-closer_high_index]:
-	# 				return ['✅✅✅', atr_per, f'BR: {br_ratio}%']
-	# 			return ['✅✅⬜️', atr_per, f'BR: {br_ratio}%']
-	# 		return ['✅⬜️⬜️', atr_per, f'BR: {br_ratio}%']
+	if rising_dragon:
+		if closer_high != 0:
+			if closer_low != 0:
+				if closer_low >= ema34_high[-closer_low_index]:
+					return ['✅✅✅', atr_per, f'BR: {br_ratio}%']
+				return ['✅✅⬜️', atr_per, f'BR: {br_ratio}%']
+			return ['✅⬜️⬜️', atr_per, f'BR: {br_ratio}%']
+			
+	elif falling_dragon:
+		if closer_low != 0:
+			if closer_high != 0:
+				if closer_high <= ema34_low[-closer_high_index]:
+					return ['✅✅✅', atr_per, f'BR: {br_ratio}%']
+				return ['✅✅⬜️', atr_per, f'BR: {br_ratio}%']
+			return ['✅⬜️⬜️', atr_per, f'BR: {br_ratio}%']
 		
-	if closer_low != 0 and closer_high != 0:
+	elif closer_low != 0 and closer_high != 0:
 		return ['🚩', atr_per, f'BR: {br_ratio}%']
 	
 	# elif cloud_above == 0 or cloud_below == 0:
-	# 	return ['☁️', atr_per, f'{close_to_dragon}% t/dragon']
 	
 	else:
 		return ['Sleep', atr_per, f'\n fl:{farer_low}, \n cl:{closer_low}, \n fh:{farer_high}, \n ch:{closer_high}']
