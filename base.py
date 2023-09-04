@@ -21,54 +21,54 @@ timeinterval = '1m'
 
 def calculation(instr, atr_filter, cloud_filter, first_point, second_point, for_signal, for_status):
 	for symbol in instr:
-		try:
-			# --- DATA ---
-			url_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + timeinterval + '&limit=950'
-			data1 = get(url_klines).json()
-			
-			d1 = pd.DataFrame(data1)
-			d1.columns = [
-				'open_time',
-				'cOpen',
-				'cHigh',
-				'cLow',
-				'cClose',
-				'cVolume',
-				'close_time',
-				'qav',
-				'num_trades',
-				'taker_base_vol',
-				'taker_quote_vol',
-				'is_best_match'
-			]
-			df1 = d1
-			
-			df1['cOpen'] = df1['cOpen'].astype(float)
-			df1['cHigh'] = df1['cHigh'].astype(float)
-			df1['cLow'] = df1['cLow'].astype(float)
-			df1['cClose'] = df1['cClose'].astype(float)
-			
-			cOpen = df1['cOpen'].to_numpy()
-			cHigh = df1['cHigh'].to_numpy()
-			cLow = df1['cLow'].to_numpy()
-			cClose = df1['cClose'].to_numpy()
-			
-			sonic = sonic_signal(cOpen=cOpen, cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter, first_point=first_point, second_point=second_point)
-			
-			if sonic[1] >= atr_filter:  # and avgvolume_60 >= volume_filter
-				if 'Sleep' not in sonic[0] and '🟢' not in sonic[0] and '🔴' not in sonic[0]:
-					for_status.put(f'{sonic[0]} {symbol.removesuffix("USDT")}, ATR: {sonic[1]}%, {sonic[2]}')
-				
-				elif '🟢' in sonic[0] or '🔴' in sonic[0]:
-					for_signal.put(f'{sonic[0]} {symbol.removesuffix("USDT")}, ATR: {sonic[1]}%, {sonic[2]}')
+		# try:
+		# --- DATA ---
+		url_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + timeinterval + '&limit=990'
+		data1 = get(url_klines).json()
 		
-		except telebot.apihelper.ApiTelegramException as ex:
-			print(f'Telegram error for {symbol}: {ex}')
-			bot2.send_message(662482931, f'Telegram error for {symbol}: {ex}')
+		d1 = pd.DataFrame(data1)
+		d1.columns = [
+			'open_time',
+			'cOpen',
+			'cHigh',
+			'cLow',
+			'cClose',
+			'cVolume',
+			'close_time',
+			'qav',
+			'num_trades',
+			'taker_base_vol',
+			'taker_quote_vol',
+			'is_best_match'
+		]
+		df1 = d1
 		
-		except Exception as exy:
-			print(f'Error main module for {symbol}: {exy}')
-			bot2.send_message(662482931, f'Error main module for {symbol}: {exy}')
+		df1['cOpen'] = df1['cOpen'].astype(float)
+		df1['cHigh'] = df1['cHigh'].astype(float)
+		df1['cLow'] = df1['cLow'].astype(float)
+		df1['cClose'] = df1['cClose'].astype(float)
+		
+		cOpen = df1['cOpen'].to_numpy()
+		cHigh = df1['cHigh'].to_numpy()
+		cLow = df1['cLow'].to_numpy()
+		cClose = df1['cClose'].to_numpy()
+		
+		sonic = sonic_signal(cOpen=cOpen, cHigh=cHigh, cLow=cLow, cClose=cClose, cloud_filter=cloud_filter, first_point=first_point, second_point=second_point)
+		
+		if sonic[1] >= atr_filter:  # and avgvolume_60 >= volume_filter
+			if 'Sleep' not in sonic[0] and '🟢' not in sonic[0] and '🔴' not in sonic[0]:
+				for_status.put(f'{sonic[0]} {symbol.removesuffix("USDT")}, ATR: {sonic[1]}%, {sonic[2]}')
+			
+			elif '🟢' in sonic[0] or '🔴' in sonic[0]:
+				for_signal.put(f'{sonic[0]} {symbol.removesuffix("USDT")}, ATR: {sonic[1]}%, {sonic[2]}')
+		
+		# except telebot.apihelper.ApiTelegramException as ex:
+		# 	print(f'Telegram error for {symbol}: {ex}')
+		# 	bot2.send_message(662482931, f'Telegram error for {symbol}: {ex}')
+		#
+		# except Exception as exy:
+		# 	print(f'Error main module for {symbol}: {exy}')
+		# 	bot2.send_message(662482931, f'Error main module for {symbol}: {exy}')
 
 
 def search_activale(price_filter, ticksize_filter, atr_filter, cloud_filter, first_point, second_point):

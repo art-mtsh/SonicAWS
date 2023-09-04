@@ -3,11 +3,14 @@ import talipp.indicators.EMA
 dragon_length = 100
 trend_length = 300
 supertrend_length = 900
+
 atr_length = 36
+
 flag_search_range = 120
+
 brratio_lengh = 60
 brratio_filter = 40
-atr_filter = 0.3
+
 
 def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 
@@ -28,15 +31,15 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 	falling_dragon = ema34_high[-1] <= ema89[-1] <= ema233[-1]
 	
 	# CLOUDS
-	cloud_above = 0
-	cloud_below = 0
-
-	for i in range(1, cloud_filter+1):
-		if cLow[-i] < ema34_high[-i] or ema34_low[-i] < ema89[-i] or ema89[-i] < ema233[-i]:
-			cloud_above += 1
-
-		if cHigh[-i] > ema34_low[-i] or ema34_high[-i] > ema89[-i] or ema89[-i] > ema233[-1]:
-			cloud_below += 1
+	# cloud_above = 0
+	# cloud_below = 0
+	#
+	# for i in range(1, cloud_filter+1):
+	# 	if cLow[-i] < ema34_high[-i] or ema34_low[-i] < ema89[-i] or ema89[-i] < ema233[-i]:
+	# 		cloud_above += 1
+	#
+	# 	if cHigh[-i] > ema34_low[-i] or ema34_high[-i] > ema89[-i] or ema89[-i] > ema233[-1]:
+	# 		cloud_below += 1
 	
 	# FRESH
 	# fresh_above = False
@@ -148,19 +151,19 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 			br_ratio = int(sum(br_ratios) / len(br_ratios))
 		
 	# RESULT
-	if rising_dragon and closer_low != 0 and closer_high != 0 and closer_high >= ema34_high[-closer_high_index]:
+	if rising_dragon and closer_low != 0 and closer_high != 0:
 		return ['🟢', atr_per, f'BR: {br_ratio}%']
 	
-	elif falling_dragon and closer_low != 0 and closer_high != 0 and closer_low <= ema34_low[-closer_low_index]:
+	elif falling_dragon and closer_low != 0 and closer_high != 0:
 		return ['🔴', atr_per, f'BR: {br_ratio}%']
 	
-	elif closer_low != 0 and closer_high != 0 and br_ratio >= brratio_filter and atr_per >= atr_filter:
+	elif closer_low != 0 and closer_high != 0 and br_ratio >= brratio_filter:
 		return ['🚩', atr_per, f'BR: {br_ratio}%']
 		
-	elif rising_dragon and closer_high != 0 and closer_high >= ema34_high[-closer_high_index]:
+	elif rising_dragon and closer_high != 0:
 		return ['↗️', atr_per, f'BR: {br_ratio}%']
 	
-	elif falling_dragon and closer_low != 0 and closer_low <= ema34_low[-closer_low_index]:
+	elif falling_dragon and closer_low != 0:
 		return ['↘️', atr_per, f'BR: {br_ratio}%']
 		
 	# elif cloud_above == 0 or cloud_below == 0:
