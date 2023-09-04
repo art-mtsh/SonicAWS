@@ -6,6 +6,8 @@ supertrend_length = 900
 atr_length = 36
 flag_search_range = 120
 brratio_lengh = 60
+brratio_filter = 40
+atr_filter = 0.3
 
 def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 
@@ -152,7 +154,7 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 	elif falling_dragon and closer_low != 0 and closer_high != 0 and closer_low <= ema34_low[-closer_low_index]:
 		return ['🔴', atr_per, f'BR: {br_ratio}%']
 	
-	elif closer_low != 0 and closer_high != 0 and br_ratio >= 40 and atr_per >= 0.4:
+	elif closer_low != 0 and closer_high != 0 and br_ratio >= brratio_filter and atr_per >= atr_filter:
 		return ['🚩', atr_per, f'BR: {br_ratio}%']
 		
 	elif rising_dragon and closer_high != 0 and closer_high >= ema34_high[-closer_high_index]:
