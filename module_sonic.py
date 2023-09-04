@@ -4,11 +4,11 @@ import talipp.indicators.EMA
 def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_point):
 
 	# INDICATORS
-	ema34_basis = talipp.indicators.EMA(period=34, input_values=cClose)
-	ema34_low = talipp.indicators.EMA(period=34, input_values=cLow)
-	ema34_high = talipp.indicators.EMA(period=34, input_values=cHigh)
-	ema89 = talipp.indicators.EMA(period=89, input_values=cClose)
-	ema233 = talipp.indicators.EMA(period=233, input_values=cClose)
+	ema34_basis = talipp.indicators.EMA(period=100, input_values=cClose)
+	ema34_low = talipp.indicators.EMA(period=100, input_values=cLow)
+	ema34_high = talipp.indicators.EMA(period=100, input_values=cHigh)
+	ema89 = talipp.indicators.EMA(period=300, input_values=cClose)
+	ema233 = talipp.indicators.EMA(period=900, input_values=cClose)
 	
 	# AVERAGE ATR
 	atr = (sum(sum([cHigh[-1:-37:-1] - cLow[-1:-37:-1]])) / len(cClose[-1:-37:-1]))

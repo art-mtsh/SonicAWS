@@ -16,7 +16,7 @@ bot2 = telebot.TeleBot(TOKEN2)
 TOKEN3 = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot3 = telebot.TeleBot(TOKEN3)
 
-timeinterval = '5m'
+timeinterval = '1m'
 
 
 def calculation(instr, atr_filter, cloud_filter, first_point, second_point, for_signal, for_status):
@@ -153,7 +153,7 @@ if __name__ == '__main__':
 	ticksize_filter = 0.025  # float(input('Ticksize less than: '))
 	volume_filter = 1  # int(input('Volume more than: '))
 	atr_filter = 0.2  # float(input('ATR more than: '))
-	cloud_filter = 12 # int(input('Cloud length: '))
+	cloud_filter = 60 # int(input('Cloud length: '))
 	first_point = int(input('First point: '))
 	second_point = int(input('Second point: '))
 	
