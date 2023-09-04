@@ -157,7 +157,7 @@ def sonic_signal(cOpen, cHigh, cLow, cClose, cloud_filter, first_point, second_p
 	elif falling_dragon and closer_low != 0 and closer_high != 0:
 		return ['🔴', atr_per, f'BR: {br_ratio}%']
 	
-	elif closer_low != 0 and closer_high != 0 and br_ratio >= brratio_filter:
+	elif closer_low != 0 and closer_high != 0:
 		return ['🚩', atr_per, f'BR: {br_ratio}%']
 		
 	elif rising_dragon and closer_high != 0:
