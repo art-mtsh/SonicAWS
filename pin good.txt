@@ -1,0 +1,103 @@
+			# ================== PARAMETERS ==================
+			ts_filter = 0.02
+			atr_filter = 0.2
+			avg_brr_filter = 20
+			room_filter = 1
+			
+			revert = True
+			
+			risk = 30
+			rr_ratio = 3
+			show_trades = False
+			# ================================================
+
+243 coins. Timeframe: 1h
+
+9 month TOTAL: 38 trades, winrate 89%, with result of 625$. Average PNL: 16.44736842105263
+Month cycle done in 29 seconds, at 19:33:22
+
+
+8 month TOTAL: 27 trades, winrate 81%, with result of 189$. Average PNL: 7.0
+Month cycle done in 30 seconds, at 19:33:52
+
+
+7 month TOTAL: 15 trades, winrate 73%, with result of -41$. Average PNL: -2.7333333333333334
+Month cycle done in 30 seconds, at 19:34:22
+
+
+6 month TOTAL: 14 trades, winrate 85%, with result of 166$. Average PNL: 11.857142857142858
+Month cycle done in 29 seconds, at 19:34:52
+
+
+5 month TOTAL: 27 trades, winrate 77%, with result of 70$. Average PNL: 2.5925925925925926
+Month cycle done in 28 seconds, at 19:35:20
+
+
+4 month TOTAL: 16 trades, winrate 81%, with result of 110$. Average PNL: 6.875
+Month cycle done in 28 seconds, at 19:35:48
+
+
+3 month TOTAL: 13 trades, winrate 76%, with result of 19$. Average PNL: 1.4615384615384615
+Month cycle done in 26 seconds, at 19:36:15
+
+
+2 month TOTAL: 10 trades, winrate 80%, with result of 52$. Average PNL: 5.2
+Month cycle done in 25 seconds, at 19:36:40
+
+
+1 month TOTAL: 18 trades, winrate 88%, with result of 286$. Average PNL: 15.88888888888889
+Month cycle done in 24 seconds, at 19:37:05
+
+
+12 month TOTAL: 19 trades, winrate 100%, with result of 557$. Average PNL: 29.31578947368421
+Month cycle done in 25 seconds, at 19:37:30
+
+
+11 month TOTAL: 10 trades, winrate 90%, with result of 173$. Average PNL: 17.3
+Month cycle done in 25 seconds, at 19:37:55
+
+
+10 month TOTAL: 9 trades, winrate 88%, with result of 145$. Average PNL: 16.11111111111111
+Month cycle done in 25 seconds, at 19:38:20
+
+
+9 month TOTAL: 10 trades, winrate 60%, with result of -186$. Average PNL: -18.6
+Month cycle done in 25 seconds, at 19:38:45
+
+
+8 month TOTAL: 6 trades, winrate 66%, with result of -62$. Average PNL: -10.333333333333334
+Month cycle done in 25 seconds, at 19:39:11
+
+
+================================================================='
+
+Start with LEVERUSDT
+Nothing found for LEVERUSDT
+Start with USDCUSDT
+Nothing found for USDCUSDT
+Start with AVAXUSDT
+Done with AVAXUSDT: [28.83844611225623, 29.548837380156485, 28.694795707154125, -90.81640984607094, 27.94880658151703]
+Start with ATAUSDT
+Nothing found for ATAUSDT
+Start with ACHUSDT
+Nothing found for ACHUSDT
+Start with ARPAUSDT
+Done with ARPAUSDT: [29.312109188229233, 29.57869426722333]
+Start with CHZUSDT
+Done with CHZUSDT: [29.518831638676254, -92.31321759897115, 27.986356301822727, 29.472759378095517, -91.35623676866145, 29.51295845784322, 29.528748852748375]
+Start with RNDRUSDT
+Done with RNDRUSDT: [29.201262450465876, 28.81054023089801, 29.25995694696948, 29.33174131520404, 29.498941281863342]
+Start with MASKUSDT
+Nothing found for MASKUSDT
+Start with ETHBTC
+Nothing found for ETHBTC
+Start with MTLUSDT
+Done with MTLUSDT: [28.979876360483736, 29.15895627213876, 29.221555278191946, -90.83475175258921, 28.781331313197843]
+Start with XTZUSDT
+Nothing found for XTZUSDT
+Start with XRPBUSD
+Done with XRPBUSD: [29.463768474735723, 28.880795878486403, 28.34555479888401, 29.69204488588578, 29.259502012609993, 29.42840676900509, 28.696305868611688]
+Start with XRPUSDT
+Done with XRPUSDT: [29.485489451947753, 28.998422295401337, 28.591856637359886, 29.699655845017915, 29.308496488614598, 28.752496995646666, 29.570731102989626]
+Start with CFXUSDT
+Nothing found for CFXUSDT

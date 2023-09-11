@@ -14,10 +14,6 @@ def get_pairs(price_filter, ticksize_filter, num_chunks):
 		if pair_info["contractType"] == "PERPETUAL"
 	]
 	
-	excluded_pairs = []
-	
-	perpetual_pairs = [pair for pair in perpetual_pairs if pair not in excluded_pairs]
-	
 	# Get ticker prices for all pairs
 	ticker_prices_response = requests.get(base_url + "ticker/price")
 	ticker_prices_data = ticker_prices_response.json()
@@ -68,9 +64,8 @@ def get_pairs(price_filter, ticksize_filter, num_chunks):
 
 	return chunks
 
-# res = get_pairs(10000, 0.02, 1)
+res = get_pairs(3000, 100.0, 16)
 # print(res)
-# for i in res:
-# 	print(i)
-#
-# print(len(res))
+for i in res:
+	print(i)
+

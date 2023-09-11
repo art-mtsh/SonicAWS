@@ -1,6 +1,7 @@
 import trade_operations as to
 
-def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, room_filter, revert, risk, rr_ratio, show_trades, cOpen, cHigh, cLow, cClose, cTime):
+
+def ib_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, revert, risk, rr_ratio, show_trades, cOpen, cHigh, cLow, cClose, cTime):
 
 	i = bar_index
 
@@ -14,15 +15,11 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 	avg_brratio = to.avg_brr(i, 24, cOpen, cHigh, cLow, cClose)
 	
 	# PIN DEFINITION
-	pin_status = to.pin(i, 10, 5, 0.2, 3, cOpen, cHigh, cLow, cClose)
-	
-	# ROOM TO THE LEFT
-	bullish_room = to.room_ttl(i, cHigh, cLow).get('low_room')
-	bearish_room = to.room_ttl(i, cHigh, cLow).get('high_room')
+	ib_status = to.inbar(i, brr_filter=50, mb_size=3, min_bar_range=0.2, max_bar_range=3, cOpen=cOpen, cHigh=cHigh, cLow=cLow, cClose=cClose)
 	
 	if tick_size <= ts_filter and atr_per >= atr_filter and avg_brratio >= avg_brr_filter:
 		# BULLISH PATTERN
-		if pin_status == "bull" and bullish_room >= room_filter:
+		if ib_status == "bull": # and to.ema_directed(i, cClose) == "bull":
 			
 			order_details = to.order(i, "bull", revert, risk, rr_ratio, cHigh, cLow, cClose)
 			
@@ -35,10 +32,10 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 
 			# ВАРІАНТ ЗІ ВХОДОМ НА НАСТУПНОМУ Ж БАРІ
 			if cHigh[-i+1] >= entry >= cLow[-i+1]:
-				for s in range(i, 0, -1):
+				for s in range(i, 1, -1):
 					if cHigh[-s] >= stoploss >= cLow[-s]:
 						if show_trades:
-							print(f'Pin at {i}, '
+							print(f'Inbar at {i}, '
 							      f'{cTime[-i].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
 							      f'size: ${int(p_size)}, '
 								  f'pnl: {float("{:.2f}".format(loss))}$ '
@@ -46,11 +43,12 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 							      f'entry: {float("{:.5f}".format(entry))}, '
 							      f'exit: {float("{:.5f}".format(stoploss))}, '
 							      f'close at {s}')
-						return [s, loss]
+						# print(f"sl ib on {symbol}")
+						return [s, loss, float("{:.2f}".format(0.0008 * p_size))]
 						
 					elif cHigh[-s] >= takeprofit >= cLow[-s]:
 						if show_trades:
-							print(f'Pin at {i}, '
+							print(f'Inbar at {i}, '
 							      f'{cTime[-i].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
 							      f'size: ${int(p_size)}, '
 							      f'pnl: {float("{:.2f}".format(take))}$ '
@@ -58,17 +56,15 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 							      f'entry: {float("{:.5f}".format(entry))}, '
 							      f'exit: {float("{:.5f}".format(takeprofit))}, '
 							      f'close at {s}')
-						return [s, take]
-					
-					else:
-						continue
+						# print(f"tp ib on {symbol}")
+						return [s, take, float("{:.2f}".format(0.0006 * p_size))]
+				return [i, 0, 0]
 			else:
-				return [i, 0]
-		else:
-			return [i, 0]
+				# print(f"no entry on bull ib {symbol}")
+				return [i, 0, 0]
 		
 		# BEARISH PATTERN
-		if pin_status == "bear" and bearish_room >= room_filter:
+		elif ib_status == "bear": # and to.ema_directed(i, cClose) == "bear":
 			
 			order_details = to.order(i, "bear", revert, risk, rr_ratio, cHigh, cLow, cClose)
 			
@@ -81,10 +77,10 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 			
 			# ВАРІАНТ ЗІ ВХОДОМ НА НАСТУПНОМУ Ж БАРІ
 			if cHigh[-i+1] >= entry >= cLow[-i+1]:
-				for s in range(i, 0, -1):
+				for s in range(i, 1, -1):
 					if cHigh[-s] >= stoploss >= cLow[-s]:
 						if show_trades:
-							print(f'Pin at {i}, '
+							print(f'Inbar at {i}, '
 							      f'{cTime[-i].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
 							      f'size: ${int(p_size)}, '
 							      f'pnl: {float("{:.2f}".format(loss))}$ '
@@ -92,11 +88,12 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 							      f'entry: {float("{:.5f}".format(entry))}, '
 							      f'exit: {float("{:.5f}".format(stoploss))}, '
 							      f'close at {s}')
-						return [s, loss]
+						# print(f"sl ib on {symbol}")
+						return [s, loss, float("{:.2f}".format(0.0008 * p_size))]
 					
 					elif cHigh[-s] >= takeprofit >= cLow[-s]:
 						if show_trades:
-							print(f'Pin at {i}, '
+							print(f'Inbar at {i}, '
 							      f'{cTime[-i].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
 							      f'size: ${int(p_size)}, '
 							      f'pnl: {float("{:.2f}".format(take))}$ '
@@ -104,13 +101,16 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 							      f'entry: {float("{:.5f}".format(entry))}, '
 							      f'exit: {float("{:.5f}".format(takeprofit))}, '
 							      f'close at {s}')
-						return [s, take]
-					
-					else:
-						continue
+						# print(f"tp ib on {symbol}")
+						return [s, take, float("{:.2f}".format(0.0006 * p_size))]
+				return [i, 0, 0]
 			else:
-				return [i, 0]
+				# print(f"no entry on bear ib {symbol}")
+				return [i, 0, 0]
 		else:
-			return [i, 0]
+			# print(f"bull/bear ib pattern {symbol}")
+			return [i, 0, 0]
 	else:
-		return [i, 0]
+		# print(f"no ib filter on {symbol}")
+		return [i, 0, 0]
+	
