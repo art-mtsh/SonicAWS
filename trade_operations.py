@@ -14,6 +14,14 @@ def tick_size(candle_index, cOpen, cHigh, cLow, cClose):
 	
 	return tick_size
 
+def williams_pr(i, length, cHigh, cLow, cClose):
+	l_l = min(cLow[-i:-length - i:-1])
+	h_h = max(cHigh[-i:-length - i:-1])
+	if (h_h - l_l) != 0:
+		return (h_h - cClose[-i]) / (h_h - l_l) * -100
+	else:
+		return 1
+	
 def average_atr(candle_index, length, cHigh, cLow, cClose):
 	atr = (sum(sum([cHigh[-candle_index:-candle_index - length:-1] - cLow[-candle_index:-candle_index - length:-1]])) / len(cClose[-candle_index:-candle_index - length:-1]))
 	atr_per = atr / (cClose[-candle_index] / 100)
@@ -33,13 +41,6 @@ def ema_directed(i, cHigh, cLow, cClose):
 		return "bear"
 	else:
 		return "sleep"
-	
-def donchian_middle(candle_index, length, cHigh, cLow):
-	d_min = min(cLow[-candle_index:-length - candle_index:-1])
-	d_max = max(cHigh[-candle_index:-length - candle_index:-1])
-	d_mid = (d_min + d_max) / 2
-	
-	return d_mid
 
 def avg_brr(candle_index, length, cOpen, cHigh, cLow, cClose):
 	br_ranges = []
@@ -164,3 +165,4 @@ def order(i, direction, revert, risk, rr_ratio, cHigh, cLow, cClose):
 		take = None
 	
 	return {"entry": entry, "stoploss": stoploss, "takeprofit": takeprofit, "position size": p_size, "loss": loss, "take": take}
+

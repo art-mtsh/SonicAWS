@@ -10,80 +10,85 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 	tick_size = to.tick_size(i, cOpen, cHigh, cLow, cClose)
 	
 	# INDICATIORS
-	ema20 = talipp.indicators.EMA(period=20, input_values=list(cClose[0: len(cClose) - i + 1]))
-	ema40 = talipp.indicators.EMA(period=40, input_values=list(cClose[0: len(cClose) - i + 1]))
-	ema60 = talipp.indicators.EMA(period=60, input_values=list(cClose[0: len(cClose) - i + 1]))
-	ema80 = talipp.indicators.EMA(period=80, input_values=list(cClose[0: len(cClose) - i + 1]))
+	ema50 = talipp.indicators.EMA(period=50, input_values=list(cClose[0: len(cClose) - i + 1]))
+	ema100 = talipp.indicators.EMA(period=100, input_values=list(cClose[0: len(cClose) - i + 1]))
+	ema150 = talipp.indicators.EMA(period=150, input_values=list(cClose[0: len(cClose) - i + 1]))
+	ema200 = talipp.indicators.EMA(period=200, input_values=list(cClose[0: len(cClose) - i + 1]))
 	
-	ohlcv_list = []
+	# ohlcv_list = []
+	#
+	# for h in range(-50 - i, 1 - i):
+	# 	talipp_ohlcv = OHLCV(cOpen[h], cHigh[h], cLow[h], cClose[h], cVolume[h])
+	# 	ohlcv_list.append(talipp_ohlcv)
+	#
+	# talipp_stoch = talipp.indicators.Stoch(period=5, smoothing_period=3, input_values=ohlcv_list)
+	# stochastic1 = talipp_stoch[-1]
+	# stochastic2 = talipp_stoch[-2]
 	
-	for h in range(-50 - i, 1 - i):
-		talipp_ohlcv = OHLCV(cOpen[h], cHigh[h], cLow[h], cClose[h], cVolume[h])
-		ohlcv_list.append(talipp_ohlcv)
+	williams = to.williams_pr(i, 14, cHigh, cLow, cClose)
 	
-	talipp_stoch = talipp.indicators.Stoch(period=5, smoothing_period=5, input_values=ohlcv_list)
-	stochastic1 = talipp_stoch[-1]
-	stochastic2 = talipp_stoch[-2]
-	
-	range1 = to.bar_ratio_range(i, cOpen, cHigh, cLow, cClose).get("range percent")
-	range2 = to.bar_ratio_range(i+1, cOpen, cHigh, cLow, cClose).get("range percent")
-	range3 = to.bar_ratio_range(i+2, cOpen, cHigh, cLow, cClose).get("range percent")
-	
-	brr1 = to.bar_ratio_range(i, cOpen, cHigh, cLow, cClose).get("body/range ratio")
-	brr2 = to.bar_ratio_range(i+1, cOpen, cHigh, cLow, cClose).get("body/range ratio")
-	brr3 = to.bar_ratio_range(i+2, cOpen, cHigh, cLow, cClose).get("body/range ratio")
-	
-	range_min = 0.3
-	range_max = 0.7
-	brr_min = 33
+	# range1 = to.bar_ratio_range(i, cOpen, cHigh, cLow, cClose).get("range percent")
+	# range2 = to.bar_ratio_range(i+1, cOpen, cHigh, cLow, cClose).get("range percent")
+	# range3 = to.bar_ratio_range(i+2, cOpen, cHigh, cLow, cClose).get("range percent")
+	#
+	# brr1 = to.bar_ratio_range(i, cOpen, cHigh, cLow, cClose).get("body/range ratio")
+	# brr2 = to.bar_ratio_range(i+1, cOpen, cHigh, cLow, cClose).get("body/range ratio")
+	# brr3 = to.bar_ratio_range(i+2, cOpen, cHigh, cLow, cClose).get("body/range ratio")
+	#
+	# range_min = 0.3
+	# range_max = 0.7
+	# brr_min = 33
 	
 	if tick_size <= ts_filter:
-		# BULLISH PATTERN
 		
 		high_under_ema = 0
 		low_above_ema = 0
 		
 		for s in range(1, 50):
-			if cHigh[-i-s+1] < ema80[-s]:
+			if cHigh[-i-s+1] < ema200[-s]:
 				high_under_ema += 1
 			else:
 				break
 				
 		for s in range(1, 50):
-			if cLow[-i-s+1] > ema80[-s]:
+			if cLow[-i-s+1] > ema200[-s]:
 				low_above_ema += 1
 			else:
 				break
 		
-		if stochastic2.d > stochastic1.d < 20 and \
-			cClose[-i] < cOpen[-i] and \
-			cLow[-i] > ema20[-1] >= ema40[-1] >= ema60[-1] >= ema80[-1] and \
+		# ================== BULL ==================
+		if williams <= -95 and \
+			cLow[-i] > ema50[-1] >= ema100[-1] >= ema150[-1] >= ema200[-1] and \
 			low_above_ema >= 30 and \
-			0.5 >= abs(cLow[-i] - ema20[-1]) / (cClose[-i] / 100) >= 0.2:
+			0.8 >= abs(cHigh[-i] * 1.0002 - ema50[-1]) / (cClose[-i] / 100) >= 0.4:
 			
-			order_details = to.order(i, "bull", revert, risk, rr_ratio, cHigh, cLow, cClose)
-			
-			entry = order_details.get("entry")
-			stoploss = ema20[-1]
+			entry = cHigh[-i] * 1.0002
+			stoploss = ema50[-1]
 			takeprofit = entry + abs(entry - stoploss) * rr_ratio
-			p_size = order_details.get("position size")
-			loss = order_details.get("loss")
-			take = order_details.get("take")
+			risk_perc = abs(entry - stoploss) / (cClose[-i] / 100)
+			p_size = risk / risk_perc * 100
+			
+			if revert:
+				loss = float(-(risk_perc / 100) * p_size * rr_ratio - 0.0008 * p_size)
+				take = float((risk_perc / 100) * p_size - 0.0006 * p_size)
+			else:
+				loss = float(-(risk_perc / 100) * p_size - 0.0008 * p_size)
+				take = float((risk_perc / 100) * p_size * rr_ratio - 0.0006 * p_size)
 
 			# ВАРІАНТ ЗІ ВХОДОМ НА НАСТУПНОМУ Ж БАРІ
 			if cHigh[-i+1] >= entry >= cLow[-i+1]:
 				for s in range(i, 1, -1):
 					if cHigh[-s] >= stoploss >= cLow[-s]:
 						if show_trades:
-							print(f'Pin at {-i+3}, '
+							print(f'Pin at {-i}, '
 							      f'{cTime[-i].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
 							      # f'O: {cOpen[-i]}, '
 							      # f'H: {cHigh[-i]}, '
 							      # f'L: {cLow[-i]}, '
 							      # f'C: {cClose[-i]}, '
 							      # f'V: {cVolume[-i]}, '
-                                  # f'EMA80: {ema80[-1]}, '
-							      # f'STOCH: {stochastic1.d}, '
+                                  f'EMA50: {float("{:.4f}".format(ema50[-1]))}, '
+							      f'WILL: {float("{:.4f}".format(williams))}, '
 							      f'size: ${int(p_size)}, '
 								  f'pnl: {float("{:.2f}".format(loss))}$ '
 							      f'(fee: {float("{:.2f}".format(0.0008 * p_size))}$), '
@@ -94,15 +99,15 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 						
 					elif cHigh[-s] >= takeprofit >= cLow[-s]:
 						if show_trades:
-							print(f'Pin at {-i+3}, '
-							      f'{cTime[-i+3].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
+							print(f'Pin at {-i}, '
+							      f'{cTime[-i].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
                                   # f'O: {cOpen[-i]}, '
 							      # f'H: {cHigh[-i]}, '
 							      # f'L: {cLow[-i]}, '
 							      # f'C: {cClose[-i]}, '
 							      # f'V: {cVolume[-i]}, '
-                                  # f'EMA80: {ema80[-1]}, '
-							      # f'STOCH: {stochastic1.d}, '
+                                  f'EMA50: {float("{:.4f}".format(ema50[-1]))}, '
+							      f'WILL: {float("{:.4f}".format(williams))}, '
 							      f'size: ${int(p_size)}, '
 							      f'pnl: {float("{:.2f}".format(take))}$ '
 							      f'(fee: {float("{:.2f}".format(0.0006 * p_size))}$), '
@@ -116,36 +121,39 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 			else:
 				return [i, 0, 0]
 		
-		# BEARISH PATTERN
-		elif stochastic2.d < stochastic1.d > 80 and \
-			cClose[-i] > cOpen[-i] and \
-			cHigh[-i] < ema20[-1] <= ema40[-1] <= ema60[-1] <= ema80[-1] and \
+		# ================== BEAR ==================
+		elif williams >= -5 and \
+			cHigh[-i] < ema50[-1] <= ema100[-1] <= ema150[-1] <= ema200[-1] and \
 			high_under_ema >= 30 and \
-			0.5 >= abs(cHigh[-i] - ema20[-1]) / (cClose[-i] / 100) >= 0.2:
+			0.8 >= abs(cLow[-i] * 0.9998 - ema50[-1]) / (cClose[-i] / 100) >= 0.4:
 			
-			order_details = to.order(i, "bear", revert, risk, rr_ratio, cHigh, cLow, cClose)
-			
-			entry = order_details.get("entry")
-			stoploss = ema20[-1]
+			entry = cLow[-i] * 0.9998
+			stoploss = ema50[-1]
 			takeprofit = entry - abs(entry - stoploss) * rr_ratio
-			p_size = order_details.get("position size")
-			loss = order_details.get("loss")
-			take = order_details.get("take")
+			risk_perc = abs(entry - stoploss) / (cClose[-i] / 100)
+			p_size = risk / risk_perc * 100
+			
+			if revert:
+				loss = float(-(risk_perc / 100) * p_size * rr_ratio - 0.0008 * p_size)
+				take = float((risk_perc / 100) * p_size - 0.0006 * p_size)
+			else:
+				loss = float(-(risk_perc / 100) * p_size - 0.0008 * p_size)
+				take = float((risk_perc / 100) * p_size * rr_ratio - 0.0006 * p_size)
 			
 			# ВАРІАНТ ЗІ ВХОДОМ НА НАСТУПНОМУ Ж БАРІ
 			if cHigh[-i+1] >= entry >= cLow[-i+1]:
 				for s in range(i, 1, -1):
 					if cHigh[-s] >= stoploss >= cLow[-s]:
 						if show_trades:
-							print(f'Pin at {-i+3}, '
-							      f'{cTime[-i+3].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
+							print(f'Pin at {-i}, '
+							      f'{cTime[-i].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
                                   # f'O: {cOpen[-i]}, '
 							      # f'H: {cHigh[-i]}, '
 							      # f'L: {cLow[-i]}, '
 							      # f'C: {cClose[-i]}, '
 							      # f'V: {cVolume[-i]}, '
-                                  # f'EMA80: {ema80[-1]}, '
-							      # f'STOCH: {stochastic1.d}, '
+                                  f'EMA50: {float("{:.4f}".format(ema50[-1]))}, '
+							      f'WILL: {float("{:.4f}".format(williams))}, '
 							      f'size: ${int(p_size)}, '
 							      f'pnl: {float("{:.2f}".format(loss))}$ '
 							      f'(fee: {float("{:.2f}".format(0.0008 * p_size))}$), '
@@ -157,14 +165,14 @@ def pinbar_analysis(symbol, bar_index, ts_filter, atr_filter, avg_brr_filter, ro
 					elif cHigh[-s] >= takeprofit >= cLow[-s]:
 						if show_trades:
 							print(f'Pin at {-i}, '
-							      f'{cTime[-i+3].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
+							      f'{cTime[-i].strftime("%Y-%m-%d %H:%M:%S")} {symbol}, '
                                   # f'O: {cOpen[-i]}, '
 							      # f'H: {cHigh[-i]}, '
 							      # f'L: {cLow[-i]}, '
 							      # f'C: {cClose[-i]}, '
 							      # f'V: {cVolume[-i]}, '
-							      # f'EMA80: {ema80[-1]}, '
-							      # f'STOCH: {stochastic1.d}, '
+                                  f'EMA50: {float("{:.4f}".format(ema50[-1]))}, '
+							      f'WILL: {float("{:.4f}".format(williams))}, '
 							      f'size: ${int(p_size)}, '
 							      f'pnl: {float("{:.2f}".format(take))}$ '
 							      f'(fee: {float("{:.2f}".format(0.0006 * p_size))}$), '
