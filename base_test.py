@@ -113,11 +113,10 @@ def calculation(instr, year, month, day, hour, pin_result_list, pin_fee_list, dc
 			continue
 			
 				
-def search_activale():
+def search_activale(year, month, threads):
 	time1 = time.perf_counter()
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
-	number_of_processes = 4
-	instr = get_pairs(price_filter=3000, ticksize_filter=100, num_chunks=number_of_processes)
+	instr = get_pairs(price_filter=3000, ticksize_filter=100, num_chunks=threads)
 	# total_count = sum(len(sublist) for sublist in instr)
 	#
 	# print(f"{total_count} coins. Timeframe: {timeinterval}")
@@ -158,15 +157,9 @@ def search_activale():
 		[2023, 7, 7]
 	]
 	
-	year = 2023
-	
-	month = 9
-	
-	for day in range(13, 31):
+	for day in range(1, 31):
 		
 		for day_part in range(9, 22, 12):
-		
-			time5 = time.perf_counter()
 			
 			the_processes = []
 			
@@ -175,7 +168,7 @@ def search_activale():
 			dc_result_list = Manager().list()
 			dc_fee_list = Manager().list()
 			
-			for i in range(number_of_processes):
+			for i in range(threads):
 				
 				process = Process(target=calculation, args=(instr[i], year, month, day, day_part, pin_result_list, pin_fee_list, dc_result_list, dc_fee_list,))
 				the_processes.append(process)
@@ -221,7 +214,7 @@ def search_activale():
 				      f'{day_result[15]}, '
 				      f'{day_result[16]}')
 			
-			print(f"{year}-{month}-{day} (<{day_part}:00). Unique cumulative result: {int(unique_result)}$")
+			# print(f"{year}-{month}-{day} (<{day_part}:00). Unique cumulative result: {int(unique_result)}$")
 		
 			general_total += float("{:.2f}".format(unique_result))
 		
@@ -231,5 +224,8 @@ def search_activale():
 
 
 if __name__ == '__main__':
-	search_activale()
+	year = int(input("Year: "))
+	month = int(input("Month: "))
+	threads = int(input("Threads: "))
+	search_activale(year, month, threads)
 	
