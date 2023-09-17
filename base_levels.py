@@ -55,7 +55,7 @@ def calculation(instr, atr_filter, search_distance, for_signal, for_status):
 			lev_s = levels_search(cHigh=cHigh, cLow=cLow, cClose=cClose, search_distance=search_distance)
 			
 			if lev_s[0] >= atr_filter and lev_s[1] != 0:
-				for_status.put(f'{symbol}({frame}), atr: {lev_s[0]}%, level {lev_s[1]} in {float("{:.2f}".format(lev_s[2]))}%')
+				for_status.put(f'{symbol}({frame}), atr: {lev_s[0]}%, {lev_s[1]} in {float("{:.1f}".format(lev_s[2]))}%')
 				
 			# except telebot.apihelper.ApiTelegramException as ex:
 			# 	print(f'Telegram error for {symbol}: {ex}')
