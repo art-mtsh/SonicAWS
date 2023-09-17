@@ -5,7 +5,7 @@
 atr_length = 60
 
 
-def levels_search(cHigh, cLow, cClose):
+def levels_search(cHigh, cLow, cClose, search_distance):
 	
 	# AVERAGE ATR
 
@@ -13,7 +13,6 @@ def levels_search(cHigh, cLow, cClose):
 	atr_per = atr / (cClose[-1] / 100)
 	atr_per = float('{:.2f}'.format(atr_per))
 	
-	searh_distance = 0.5
 	
 	if len(cClose) >= 901:
 		highs = []
@@ -21,7 +20,7 @@ def levels_search(cHigh, cLow, cClose):
 		for i in range(61, 900):
 			if cHigh[-i] == max(cHigh[-i+60:-i-61:-1]) and \
 				cHigh[-i] >= cClose[-1] and \
-				abs(cHigh[-i] - cClose[-1]) / (cClose[-1] / 100) <= searh_distance:
+				abs(cHigh[-i] - cClose[-1]) / (cClose[-1] / 100) <= search_distance:
 				clear_high = True
 				for b in range(1, i):
 					if cHigh[-b] > cHigh[-i]:
@@ -32,7 +31,7 @@ def levels_search(cHigh, cLow, cClose):
 				
 			if cLow[-i] == min(cLow[-i+60:-i-61:-1]) and \
 				cLow[-i] <= cClose[-1] and \
-				abs(cLow[-i] - cClose[-1]) / (cClose[-1] / 100) <= searh_distance:
+				abs(cLow[-i] - cClose[-1]) / (cClose[-1] / 100) <= search_distance:
 				clear_low = True
 				for b in range(1, i):
 					if cLow[-b] < cLow[-i]:

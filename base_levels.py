@@ -16,10 +16,8 @@ bot2 = telebot.TeleBot(TOKEN2)
 TOKEN3 = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot3 = telebot.TeleBot(TOKEN3)
 
-timeinterval = '5m'
 
-
-def calculation(instr, atr_filter, for_signal, for_status):
+def calculation(instr, atr_filter, search_distance, for_signal, for_status):
 	for frame in ['1m', '5m', '15m']:
 		for symbol in instr:
 			# try:
@@ -54,7 +52,7 @@ def calculation(instr, atr_filter, for_signal, for_status):
 			cLow = df1['cLow'].to_numpy()
 			cClose = df1['cClose'].to_numpy()
 			
-			lev_s = levels_search(cHigh=cHigh, cLow=cLow, cClose=cClose)
+			lev_s = levels_search(cHigh=cHigh, cLow=cLow, cClose=cClose, search_distance=search_distance)
 			
 			if lev_s[0] >= atr_filter and lev_s[1] != 0:
 				for_status.put(f'{symbol}({frame}), atr: {lev_s[0]}, level {lev_s[1]} in {float("{:.2f}".format(lev_s[2]))}%')
@@ -68,7 +66,7 @@ def calculation(instr, atr_filter, for_signal, for_status):
 			# 	bot2.send_message(662482931, f'Error main module for {symbol}: {exy}')
 
 
-def search_activale(price_filter, ticksize_filter, atr_filter):
+def search_activale(price_filter, ticksize_filter, atr_filter, search_distance):
 	time1 = time.perf_counter()
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
 	
@@ -84,7 +82,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter):
 	the_processes = []
 	
 	for i in range(threads):
-		process = Process(target=calculation, args=(instr[i], atr_filter, for_signal, for_status,))
+		process = Process(target=calculation, args=(instr[i], atr_filter, search_distance, for_signal, for_status,))
 		the_processes.append(process)
 	
 	for pro in the_processes:
@@ -149,12 +147,13 @@ if __name__ == '__main__':
 	price_filter = 3000  # int(input('Pice less than: '))
 	ticksize_filter = 0.02  # float(input('Ticksize less than: '))
 	atr_filter = 0.2  # float(input('ATR more than: '))
-	
+	search_distance = float(input("Search distance: "))
 	while True:
 		search_activale(
 			price_filter=price_filter,
 			ticksize_filter=ticksize_filter,
 			atr_filter=atr_filter,
+			search_distance=search_distance
 		)
 		waiting()
 
