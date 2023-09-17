@@ -13,7 +13,6 @@ def levels_search(cHigh, cLow, cClose, search_distance):
 	atr_per = atr / (cClose[-1] / 100)
 	atr_per = float('{:.2f}'.format(atr_per))
 	
-	
 	if len(cClose) >= 901:
 		highs = []
 		lows = []
@@ -23,7 +22,7 @@ def levels_search(cHigh, cLow, cClose, search_distance):
 				abs(cHigh[-i] - cClose[-1]) / (cClose[-1] / 100) <= search_distance:
 				clear_high = True
 				for b in range(1, i):
-					if cHigh[-b] > cHigh[-i]:
+					if cHigh[-b] > cHigh[-i] * 1.0003:
 						clear_high = False
 						break
 				if clear_high:
@@ -34,7 +33,7 @@ def levels_search(cHigh, cLow, cClose, search_distance):
 				abs(cLow[-i] - cClose[-1]) / (cClose[-1] / 100) <= search_distance:
 				clear_low = True
 				for b in range(1, i):
-					if cLow[-b] < cLow[-i]:
+					if cLow[-b] < cLow[-i] * 0.9997:
 						clear_low = False
 						break
 				if clear_low:
