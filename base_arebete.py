@@ -193,7 +193,7 @@ def waiting():
 if __name__ == '__main__':
 	
 	price_filter = 4000
-	ticksize_filter = 0.015
+	ticksize_filter = 0.02
 	atr_filter = 0.3
 	while True:
 		search_activale(
