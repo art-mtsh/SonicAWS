@@ -98,29 +98,29 @@ def calculation(instr, atr_filter, for_signal, for_status):
 					one = float("{:.2f}".format((binHigh[-1] - prev_binance_max) / (binClose[-1] / 100)))
 					two = float("{:.2f}".format((bybHigh[-1] - prev_bybit_max) / (bybClose[-1] / 100)))
 					if abs(one) >= divergence or abs(two) >= divergence:
-						print(f'{symbol}({binance_frame[frame]}), sell. Binance {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
-						bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), sell. Binance {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
+						print(f'{symbol}({binance_frame[frame]}), sell. Binance overhigh {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
+						bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), sell. Binance overhigh {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
 					
 				if (bybit_overhigh and not binance_overhigh):
 					one = float("{:.2f}".format((binHigh[-1] - prev_binance_max) / (binClose[-1] / 100)))
 					two = float("{:.2f}".format((bybHigh[-1] - prev_bybit_max) / (bybClose[-1] / 100)))
 					if abs(one) >= divergence or abs(two) >= divergence:
-						print(f'{symbol}({binance_frame[frame]}), sell. Binance {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
-						bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), sell. Binance {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
+						print(f'{symbol}({binance_frame[frame]}), sell. Binance {one}%({prev_binance_max}), bybit overhigh {two}%({prev_bybit_max})')
+						bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), sell. Binance {one}%({prev_binance_max}), bybit overhigh {two}%({prev_bybit_max})')
 					
 				if (binance_underlow and not bybit_underlow):
 					one = float("{:.2f}".format((binLow[-1] - prev_binance_min) / (binClose[-1] / 100)))
 					two = float("{:.2f}".format((bybLow[-1] - prev_bybit_min) / (bybClose[-1] / 100)))
 					if abs(one) >= divergence or abs(two) >= divergence:
-						print(f'{symbol}({binance_frame[frame]}), buy. Binance {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
-						bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), buy. Binance {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
+						print(f'{symbol}({binance_frame[frame]}), buy. Binance underlow {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
+						bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), buy. Binance underlow {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
 					
 				if (bybit_underlow and not binance_underlow):
 					one = float("{:.2f}".format((binLow[-1] - prev_binance_min) / (binClose[-1] / 100)))
 					two = float("{:.2f}".format((bybLow[-1] - prev_bybit_min) / (bybClose[-1] / 100)))
 					if abs(one) >= divergence or abs(two) >= divergence:
-						print(f'{symbol}({binance_frame[frame]}), buy. Binance {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
-						bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), buy. Binance {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
+						print(f'{symbol}({binance_frame[frame]}), buy. Binance {one}%({prev_binance_min}), bybit underlow {two}%({prev_bybit_min})')
+						bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), buy. Binance {one}%({prev_binance_min}), bybit underlow {two}%({prev_bybit_min})')
 
 def search_activale(price_filter, ticksize_filter, atr_filter):
 	time1 = time.perf_counter()
