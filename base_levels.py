@@ -20,7 +20,6 @@ bot3 = telebot.TeleBot(TOKEN3)
 def calculation(instr, atr_filter, search_distance, for_signal, for_status):
 	for frame in ['1m', '5m', '15m', '30m', '1h', '4h', '1d']:
 		for symbol in instr:
-			# try:
 			# --- DATA ---
 			url_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + frame + '&limit=999'
 			data1 = get(url_klines).json()
@@ -56,14 +55,6 @@ def calculation(instr, atr_filter, search_distance, for_signal, for_status):
 			
 			if lev_s[0] >= atr_filter and lev_s[1] != 0:
 				for_status.put(f'{symbol}({frame}), atr: {lev_s[0]}%, {lev_s[1]} in {float("{:.1f}".format(lev_s[2]))}%')
-				
-			# except telebot.apihelper.ApiTelegramException as ex:
-			# 	print(f'Telegram error for {symbol}: {ex}')
-			# 	bot2.send_message(662482931, f'Telegram error for {symbol}: {ex}')
-			#
-			# except Exception as exy:
-			# 	print(f'Error main module for {symbol}: {exy}')
-			# 	bot2.send_message(662482931, f'Error main module for {symbol}: {exy}')
 
 
 def search_activale(price_filter, ticksize_filter, atr_filter, search_distance):
@@ -97,11 +88,9 @@ def search_activale(price_filter, ticksize_filter, atr_filter, search_distance):
 	
 	while not for_signal.empty():
 		to_signal.append(for_signal.get())
-		# to_signal.append('\n')
 	
 	while not for_status.empty():
 		to_status.append(for_status.get())
-		# to_status.append('\n')
 	
 	# Format results as a single message
 	signal_message = "\n".join(to_signal)
@@ -120,11 +109,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter, search_distance):
 	
 	if len(status_message) != 0:
 		print(f'For status:\n{status_message}')
-		bot1.send_message(662482931, f'️{total_count}coins: <${price_filter}, <{ticksize_filter}%, >{atr_filter}%\n'
-								f'\n'
-								f'{status_message}\n'
-								f'\n'
-								f'🍌 {int(time3)} seconds 🍌', timeout=30)
+		bot1.send_message(662482931, f'{status_message}\n', timeout=30)
 	
 	print(f"Finished processes in {int(time3)} seconds, at {datetime.datetime.now().strftime('%H:%M:%S')}\n")
 
