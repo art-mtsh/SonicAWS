@@ -94,20 +94,28 @@ def calculation(instr, atr_filter, for_signal, for_status):
 				bybit_underlow = prev_bybit_min == third_bybit_min and bybLow[-1] <= prev_bybit_min
 				
 				if (binance_overhigh and not bybit_overhigh):
-					print(f'{symbol} ({binance_frame[frame]}) binance {binHigh[-1]} >= {prev_binance_max} and bybit {bybHigh[-1]} < {prev_bybit_max}')
-					bot3.send_message(662482931, f'{symbol} ({binance_frame[frame]}) binance {binHigh[-1]} >= {prev_binance_max} and bybit {bybHigh[-1]} < {prev_bybit_max}')
+					one = float("{:.2f}".format((binHigh[-1]-prev_binance_max) / (binClose / 100)))
+					two = float("{:.2f}".format((bybHigh[-1] - prev_bybit_max) / (bybClose[-1] / 100)))
+					print(f'{symbol} ({binance_frame[frame]}) binance {one} and bybit {two}')
+					bot3.send_message(662482931, f'{symbol} ({binance_frame[frame]}) binance {one} and bybit {two}')
 					
 				if (bybit_overhigh and not binance_overhigh):
-					print(f'{symbol} ({binance_frame[frame]}) binance {binHigh[-1]} < {prev_binance_max} and bybit {bybHigh[-1]} >= {prev_bybit_max}')
-					bot3.send_message(662482931, f'{symbol} ({binance_frame[frame]}) binance {binHigh[-1]} < {prev_binance_max} and bybit {bybHigh[-1]} >= {prev_bybit_max}')
+					one = float("{:.2f}".format((binHigh[-1] - prev_binance_max) / (binClose / 100)))
+					two = float("{:.2f}".format((bybHigh[-1] - prev_bybit_max) / (bybClose[-1] / 100)))
+					print(f'{symbol} ({binance_frame[frame]}) binance {one} and bybit {two}')
+					bot3.send_message(662482931, f'{symbol} ({binance_frame[frame]}) binance {one} and bybit {two}')
 					
 				if (binance_underlow and not bybit_underlow):
-					print(f'{symbol} ({binance_frame[frame]}) binance {binLow[-1]} <= {prev_binance_max} and bybit {bybLow[-1]} > {prev_bybit_min}')
-					bot3.send_message(662482931, f'{symbol} ({binance_frame[frame]}) binance {binLow[-1]} <= {prev_binance_max} and bybit {bybLow[-1]} > {prev_bybit_min}')
+					one = float("{:.2f}".format((binLow[-1] - prev_binance_max) / (binClose / 100)))
+					two = float("{:.2f}".format((bybLow[-1] - prev_bybit_min) / (bybClose[-1] / 100)))
+					print(f'{symbol} ({binance_frame[frame]}) binance {one} and bybit {two}')
+					bot3.send_message(662482931, f'{symbol} ({binance_frame[frame]}) binance {one} and bybit {two}')
 					
 				if (bybit_underlow and not binance_underlow):
-					print(f'{symbol} ({binance_frame[frame]}) binance {binLow[-1]} > {prev_binance_max} and bybit {bybLow[-1]} <= {prev_bybit_min}')
-					bot3.send_message(662482931, f'{symbol} ({binance_frame[frame]}) binance {binLow[-1]} > {prev_binance_max} and bybit {bybLow[-1]} <= {prev_bybit_min}')
+					one = float("{:.2f}".format((binLow[-1] - prev_binance_max) / (binClose / 100)))
+					two = float("{:.2f}".format((bybLow[-1] - prev_bybit_min) / (bybClose[-1] / 100)))
+					print(f'{symbol} ({binance_frame[frame]}) binance {one} and bybit {two}')
+					bot3.send_message(662482931, f'{symbol} ({binance_frame[frame]}) binance {one} and bybit {two}')
 
 def search_activale(price_filter, ticksize_filter, atr_filter):
 	time1 = time.perf_counter()
