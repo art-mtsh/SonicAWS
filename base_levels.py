@@ -18,7 +18,7 @@ bot3 = telebot.TeleBot(TOKEN3)
 
 
 def calculation(instr, atr_filter, search_distance, for_signal, for_status):
-	for frame in ['1m', '5m', '15m']:
+	for frame in ['1m', '5m', '15m', '30m', '1h', '4h', '1d']:
 		for symbol in instr:
 			# try:
 			# --- DATA ---
@@ -52,7 +52,7 @@ def calculation(instr, atr_filter, search_distance, for_signal, for_status):
 			cLow = df1['cLow'].to_numpy()
 			cClose = df1['cClose'].to_numpy()
 			
-			lev_s = levels_search(cHigh=cHigh, cLow=cLow, cClose=cClose, search_distance=search_distance)
+			lev_s = levels_search(symbol=symbol, frame=frame, cHigh=cHigh, cLow=cLow, cClose=cClose, search_distance=search_distance)
 			
 			if lev_s[0] >= atr_filter and lev_s[1] != 0:
 				for_status.put(f'{symbol}({frame}), atr: {lev_s[0]}%, {lev_s[1]} in {float("{:.1f}".format(lev_s[2]))}%')
@@ -136,16 +136,14 @@ def waiting():
 		last_minute_digit = int(now.strftime('%M')[-1])
 		last_second_digit = int(now.strftime('%S'))
 		if last_hour_digit in list(range(8, 23)):
-			if last_minute_digit == 4 or last_minute_digit == 9:
-				if last_second_digit == 00:
-					break
+			if last_minute_digit % 3 == 0:
+				break
 		time.sleep(0.1)
-
 
 if __name__ == '__main__':
 	
 	price_filter = 3000  # int(input('Pice less than: '))
-	ticksize_filter = 0.02  # float(input('Ticksize less than: '))
+	ticksize_filter = 0.03  # float(input('Ticksize less than: '))
 	atr_filter = 0.2  # float(input('ATR more than: '))
 	search_distance = float(input("Search distance: "))
 	while True:

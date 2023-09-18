@@ -5,7 +5,7 @@
 atr_length = 60
 
 
-def levels_search(cHigh, cLow, cClose, search_distance):
+def levels_search(symbol, frame, cHigh, cLow, cClose, search_distance):
 	
 	# AVERAGE ATR
 
@@ -16,28 +16,19 @@ def levels_search(cHigh, cLow, cClose, search_distance):
 	if len(cClose) >= 901:
 		highs = []
 		lows = []
-		for i in range(61, 900):
-			if cHigh[-i] == max(cHigh[-i+60:-i-61:-1]) and \
-				cHigh[-i] >= cClose[-1] and \
-				abs(cHigh[-i] - cClose[-1]) / (cClose[-1] / 100) <= search_distance:
-				clear_high = True
-				for b in range(1, i):
-					if cHigh[-b] > cHigh[-i] * 1.0003:
-						clear_high = False
-						break
-				if clear_high:
-					highs.append(cHigh[-i])
-				
-			if cLow[-i] == min(cLow[-i+60:-i-61:-1]) and \
-				cLow[-i] <= cClose[-1] and \
-				abs(cLow[-i] - cClose[-1]) / (cClose[-1] / 100) <= search_distance:
-				clear_low = True
-				for b in range(1, i):
-					if cLow[-b] < cLow[-i] * 0.9997:
-						clear_low = False
-						break
-				if clear_low:
-					lows.append(cLow[-i])
+		for i in range(31, 900):
+			
+			if cHigh[-i] == max(cHigh[-1:-i-30:-1]) and abs(cHigh[-i] - cClose[-1]) / (cClose[-1] / 100) <= search_distance:
+				for b in range(i+30, 900):
+					if cHigh[-b] == max(cHigh[-1:-b-30:-1]) and cHigh[-b] == cHigh[-i]:
+						highs.append(cHigh[-b])
+						print(f"{symbol} ({frame}): point 1 {-i}, point 2 {-b}, {cHigh[-b]}")
+						
+			if cLow[-i] == min(cLow[-1:-i-30:-1]) and abs(cLow[-i] - cClose[-1]) / (cClose[-1] / 100) <= search_distance:
+				for b in range(i+30, 900):
+					if cLow[-b] == min(cLow[-1:-b-30:-1]) and cLow[-b] == cLow[-i]:
+						lows.append(cLow[-b])
+						print(f"{symbol} ({frame}): point 1 {-i}, point 2 {-b}, {cLow[-b]}")
 
 		if len(lows) != 0:
 			return [atr_per, lows[-1], abs(lows[-1] - cClose[-1]) / (cClose[-1] / 100)]
@@ -47,6 +38,7 @@ def levels_search(cHigh, cLow, cClose, search_distance):
 			return [0, 0, 0]
 	else:
 		return [0, 0, 0]
+	
 # url_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + 'TOMOUSDT' + '&interval=' + '5m' + '&limit=300'
 # data1 = get(url_klines).json()
 #
