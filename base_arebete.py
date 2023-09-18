@@ -20,7 +20,7 @@ bybit_frame = ['1', '5', '15', '30', '60']
 atr_length = 30
 
 def calculation(instr, atr_filter, for_signal, for_status):
-	for frame in range(0, 1):
+	for frame in range(0, 5):
 		for symbol in instr:
 			# --- BINANCE DATA ---
 			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=240'
