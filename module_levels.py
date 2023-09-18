@@ -2,7 +2,7 @@
 # import pandas as pd
 # from requests import get
 
-atr_length = 60
+atr_length = 30
 
 
 def levels_search(symbol, frame, cHigh, cLow, cClose, search_distance):
