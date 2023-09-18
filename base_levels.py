@@ -135,10 +135,10 @@ def waiting():
 		last_hour_digit = int(now.strftime('%H'))
 		last_minute_digit = int(now.strftime('%M')[-1])
 		last_second_digit = int(now.strftime('%S'))
+		time.sleep(90)
 		if last_hour_digit in list(range(8, 23)):
-			if last_minute_digit % 3 == 0:
-				break
-		time.sleep(0.1)
+			break
+
 
 if __name__ == '__main__':
 	
