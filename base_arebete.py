@@ -113,8 +113,8 @@ def calculation(instr, atr_filter, ticksize_filter):
 				clean_profit = float('{:.4f}'.format(clean_profit))
 				
 				if bybit_tick_size <= ticksize_filter and clean_profit >= divergence_filter:
-					print(f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last min: {min(divers)}\nDivers: {divers}\n')
-					bot3.send_message(662482931, f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last min: {min(divers)}\nDivers: {divers}\n')
+					print(f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last max: {max(divers)}\nDivers: {divers}\n')
+					bot3.send_message(662482931, f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last max: {max(divers)}\nDivers: {divers}\n')
 				
 
 def search_activale(price_filter, ticksize_filter, atr_filter):
