@@ -131,11 +131,10 @@ def calculation(instr, atr_filter, ticksize_filter):
 					
 						historical_divergence = divers[0] - min(divers)
 						historical_divergence_clean = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
-						float('{:.2f}'.format(historical_divergence_clean))
+						historical_divergence_clean = float('{:.2f}'.format(historical_divergence_clean))
 						
 						current_clean = divers[0] - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
-						
-						
+						current_clean = float('{:.2f}'.format(current_clean))
 						
 						if bybit_tick_size <= ticksize_filter and historical_divergence_clean >= divergence_filter and current_clean >= divergence_filter:
 							print(f"{symbol}:\n"
