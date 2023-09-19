@@ -24,14 +24,14 @@ ticksize_filter = 0.02
 atr_filter = 0.0
 atr_length = 30
 
-current_divergence = 0.2
+divergence_filter = 0.2
 
 
 def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 	for frame in range(0, 1):
 		for symbol in instr:
 			# --- BINANCE DATA ---
-			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=302'
+			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=365'
 			binance_data = get(binance_klines).json()
 			binance_pd = pd.DataFrame(binance_data)
 			binance_pd.columns = [
@@ -65,7 +65,7 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 			atr_per_binance = float('{:.2f}'.format(atr_per_binance))
 		
 			# --- BYBIT DATA ---
-			bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=302'
+			bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=365'
 			bybit_data = get(bybit_klines).json()
 			bybit_pd = pd.DataFrame(bybit_data)
 			if not bybit_pd.empty and atr_per_binance >= atr_filter:
@@ -99,40 +99,23 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 				bybit_tick_size = float('{:.4f}'.format(diffs / (bybClose[-1] / 100)))
 				# ==== bybit ticksize ====
 				
-				distance = abs(binClose[-2] - bybClose[-2])
-				distance_per = distance / (max([binClose[-2], bybClose[-2]]) / 100)
-				distance_per = float('{:.2f}'.format(distance_per))
+				divers = []
 				
-				distance_past1 = abs(binClose[-60] - bybClose[-60])
-				distance_past1_per = distance_past1 / (max([binClose[-60], bybClose[-60]]) / 100)
-				distance_past1_per = float('{:.2f}'.format(distance_past1_per))
+				for l in range(2, 365, 60):
+					distance = abs(binClose[-l] - bybClose[-l])
+					distance_per = distance / (max([binClose[-l], bybClose[-l]]) / 100)
+					distance_per = float('{:.2f}'.format(distance_per))
+					divers.append(distance_per)
 				
-				distance_past2 = abs(binClose[-120] - bybClose[-120])
-				distance_past2_per = distance_past2 / (max([binClose[-120], bybClose[-120]]) / 100)
-				distance_past2_per = float('{:.2f}'.format(distance_past2_per))
+				historical_divergence = max(divers) - min(divers)
+				historical_divergence = float('{:.4f}'.format(historical_divergence))
 				
-				distance_past3 = abs(binClose[-180] - bybClose[-180])
-				distance_past3_per = distance_past3 / (max([binClose[-180], bybClose[-180]]) / 100)
-				distance_past3_per = float('{:.2f}'.format(distance_past3_per))
+				clean_profit = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
+				clean_profit = float('{:.4f}'.format(clean_profit))
 				
-				distance_past4 = abs(binClose[-240] - bybClose[-240])
-				distance_past4_per = distance_past4 / (max([binClose[-240], bybClose[-240]]) / 100)
-				distance_past4_per = float('{:.2f}'.format(distance_past4_per))
-				
-				distance_past5 = abs(binClose[-300] - bybClose[-300])
-				distance_past5_per = distance_past4 / (max([binClose[-300], bybClose[-300]]) / 100)
-				distance_past5_per = float('{:.2f}'.format(distance_past5_per))
-				
-				max_distance = max([distance_per, distance_past1_per, distance_past2_per, distance_past3_per, distance_past4_per, distance_past5_per])
-				min_distance = min([distance_per, distance_past1_per, distance_past2_per, distance_past3_per, distance_past4_per, distance_past5_per])
-				
-				historical_divergence = max_distance - min_distance
-				
-				if bybit_tick_size <= ticksize_filter:
-					if historical_divergence >= current_divergence / 2:
-						print(f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}% <- {distance_past4_per}% <- {distance_past5_per}%')
-						if historical_divergence >= current_divergence:
-							bot3.send_message(662482931, f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}% <- {distance_past4_per}% <- {distance_past5_per}%')
+				if bybit_tick_size <= ticksize_filter and clean_profit >= divergence_filter:
+						print(f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nDivers: {divers}\n')
+						bot3.send_message(662482931, f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nDivers: {divers}\n')
 				
 			
 				# prev_binance_max = max(binHigh[-2:-12:-1])
@@ -156,28 +139,28 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 				# if (binance_overhigh and not bybit_overhigh):
 				# 	one = float("{:.2f}".format((binHigh[-1] - prev_binance_max) / (binClose[-1] / 100)))
 				# 	two = float("{:.2f}".format((bybHigh[-1] - prev_bybit_max) / (bybClose[-1] / 100)))
-				# 	if abs(one) >= current_divergence or abs(two) >= current_divergence:
+				# 	if abs(one) >= divergence_filter or abs(two) >= divergence_filter:
 				# 		print(f'{symbol}({binance_frame[frame]}), sell:\nBinance overhigh {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
 				# 		bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), sell.\nBinance overhigh {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
 				#
 				# if (bybit_overhigh and not binance_overhigh):
 				# 	one = float("{:.2f}".format((binHigh[-1] - prev_binance_max) / (binClose[-1] / 100)))
 				# 	two = float("{:.2f}".format((bybHigh[-1] - prev_bybit_max) / (bybClose[-1] / 100)))
-				# 	if abs(one) >= current_divergence or abs(two) >= current_divergence:
+				# 	if abs(one) >= divergence_filter or abs(two) >= divergence_filter:
 				# 		print(f'{symbol}({binance_frame[frame]}), sell:\nBinance {one}%({prev_binance_max}), bybit overhigh {two}%({prev_bybit_max})')
 				# 		bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), sell.\nBinance {one}%({prev_binance_max}), bybit overhigh {two}%({prev_bybit_max})')
 				#
 				# if (binance_underlow and not bybit_underlow):
 				# 	one = float("{:.2f}".format((binLow[-1] - prev_binance_min) / (binClose[-1] / 100)))
 				# 	two = float("{:.2f}".format((bybLow[-1] - prev_bybit_min) / (bybClose[-1] / 100)))
-				# 	if abs(one) >= current_divergence or abs(two) >= current_divergence:
+				# 	if abs(one) >= divergence_filter or abs(two) >= divergence_filter:
 				# 		print(f'{symbol}({binance_frame[frame]}), buy:\nBinance underlow {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
 				# 		bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), buy.\nBinance underlow {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
 				#
 				# if (bybit_underlow and not binance_underlow):
 				# 	one = float("{:.2f}".format((binLow[-1] - prev_binance_min) / (binClose[-1] / 100)))
 				# 	two = float("{:.2f}".format((bybLow[-1] - prev_bybit_min) / (bybClose[-1] / 100)))
-				# 	if abs(one) >= current_divergence or abs(two) >= current_divergence:
+				# 	if abs(one) >= divergence_filter or abs(two) >= divergence_filter:
 				# 		print(f'{symbol}({binance_frame[frame]}), buy:\nBinance {one}%({prev_binance_min}), bybit underlow {two}%({prev_bybit_min})')
 				# 		bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), buy.\nBinance {one}%({prev_binance_min}), bybit underlow {two}%({prev_bybit_min})')
 
