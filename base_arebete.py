@@ -28,10 +28,10 @@ divergence_filter = 0.4
 
 
 def calculation(instr, atr_filter, ticksize_filter):
-	for frame in range(3, 4):
+	for frame in range(0, 1):
 		for symbol in instr:
 			# --- BINANCE DATA ---
-			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=60'
+			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=730'
 			binance_data = get(binance_klines).json()
 			binance_pd = pd.DataFrame(binance_data)
 			if not binance_pd.empty:
@@ -66,7 +66,7 @@ def calculation(instr, atr_filter, ticksize_filter):
 				atr_per_binance = float('{:.2f}'.format(atr_per_binance))
 			
 				# --- BYBIT DATA ---
-				bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=60'
+				bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=730'
 				bybit_data = get(bybit_klines).json()
 				bybit_pd = pd.DataFrame(bybit_data)
 				if not bybit_pd.empty and atr_per_binance >= atr_filter:
@@ -121,9 +121,9 @@ def calculation(instr, atr_filter, ticksize_filter):
 					# 		print(f"{symbol}: {int(sum(cleans))}%")
 							# print(f"{symbol}. Binance O:{binOpen[-2]} H:{binHigh[-2]} L:{binLow[-2]} C:{binClose[-2]}, Bybit O:{bybOpen[-2]} H:{bybHigh[-2]} L:{bybLow[-2]} C:{bybClose[-2]}")
 							
-					if len(binClose) > 50 and len(bybClose) > 50:
+					if len(binClose) > 725 and len(bybClose) > 725:
 						divers = []
-						for l in range(1, 49):
+						for l in range(1, 721):
 							distance_per = abs(binClose[-l] - bybClose[-l]) / (binClose[-l] / 100)
 							distance_per = float('{:.2f}'.format(distance_per))
 							divers.append(distance_per)
@@ -187,7 +187,7 @@ def waiting():
 		last_minute_digit = int(now.strftime('%M'))
 		last_second_digit = int(now.strftime('%S'))
 		time.sleep(0.1)
-		if last_minute_digit % 5 == 0 and last_second_digit == 0:
+		if last_minute_digit % 2 == 0 and last_second_digit == 0:
 			break
 		# if last_hour_digit in list(range(8, 23)):
 
