@@ -21,13 +21,10 @@ bybit_frame = ['1', '5', '15', '30', '60']
 price_filter = 100000
 ticksize_filter = 0.05
 
-atr_filter = 0.0
-atr_length = 30
-
 divergence_filter = 0.4
 
 
-def calculation(instr, atr_filter, ticksize_filter):
+def calculation(instr, ticksize_filter):
 	for frame in range(0, 1):
 		for symbol in instr:
 			# --- BINANCE DATA ---
@@ -60,16 +57,13 @@ def calculation(instr, atr_filter, ticksize_filter):
 				binHigh = binance_df['binHigh'].to_numpy()
 				binLow = binance_df['binLow'].to_numpy()
 				binClose = binance_df['binClose'].to_numpy()
-				
-				atr = (sum(sum([binHigh[-1:-atr_length - 1:-1] - binLow[-1:-atr_length - 1:-1]])) / len(binClose[-1:-atr_length - 1:-1]))
-				atr_per_binance = atr / (binClose[-1] / 100)
-				atr_per_binance = float('{:.2f}'.format(atr_per_binance))
 			
 				# --- BYBIT DATA ---
 				bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=730'
 				bybit_data = get(bybit_klines).json()
 				bybit_pd = pd.DataFrame(bybit_data)
-				if not bybit_pd.empty and atr_per_binance >= atr_filter:
+				
+				if not bybit_pd.empty:
 					data_list = bybit_pd["result"]["list"]
 					column_names = ["time_start", "bybOpen", "bybHigh", "bybLow", "bybClose", "volume", "some_column"]
 					bybit_df = pd.DataFrame(data_list, columns=column_names)
@@ -99,34 +93,19 @@ def calculation(instr, atr_filter, ticksize_filter):
 					
 					bybit_tick_size = float('{:.4f}'.format(diffs / (bybClose[-1] / 100)))
 					
-					# ==== bybit ticksize ====
+					current_clean = float('{:.2f}'.format(abs(binClose[-1] - bybClose[-1]) / (binClose[-1] / 100)))
 					
-					# divers = []
-					# if len(binClose) > 961 and len(bybClose) > 961:
-					#
-					# 	for l in range(2, 960):
-					# 		distance = abs(binClose[-l] - bybClose[-l])
-					# 		distance_per = distance / (max([binClose[-l], bybClose[-l]]) / 100)
-					# 		distance_per = float('{:.2f}'.format(distance_per))
-					# 		divers.append(distance_per)
-					#
-					# 	cleans = []
-					#
-					# 	for s in range(1, len(divers)):
-					# 		historical_divergence = abs(divers[-s] - divers[-s-1]) - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
-					# 		if historical_divergence >= divergence_filter:
-					# 			cleans.append(float('{:.2f}'.format(historical_divergence)))
-					#
-					# 	if len(cleans) != 0:
-					# 		print(f"{symbol}: {int(sum(cleans))}%")
-							# print(f"{symbol}. Binance O:{binOpen[-2]} H:{binHigh[-2]} L:{binLow[-2]} C:{binClose[-2]}, Bybit O:{bybOpen[-2]} H:{bybHigh[-2]} L:{bybLow[-2]} C:{bybClose[-2]}")
-							
-					if len(binClose) > 725 and len(bybClose) > 725:
+					if len(binClose) > 725 and \
+						len(bybClose) > 725 and \
+						current_clean >= divergence_filter and \
+						bybit_tick_size <= ticksize_filter:
+						
 						divers = []
 						for l in range(1, 721):
 							distance_per = abs(binClose[-l] - bybClose[-l]) / (binClose[-l] / 100)
 							distance_per = float('{:.2f}'.format(distance_per))
 							divers.append(distance_per)
+						
 						'''
 						Розраховувати "чисту" дивергенцію в моменті (за мінусом комісій, тіксайзу і т.д.) - не має сенсу, бо
 						нам важлива результуюча різниця між поточною дивергенцією (входу) і майбутньою дивергенцією (виходу)
@@ -136,22 +115,19 @@ def calculation(instr, atr_filter, ticksize_filter):
 						Усе, що далі - наш прибуток.
 						'''
 						
-						current_clean = float('{:.2f}'.format(divers[0]))
+						current_price_diff = float('{:.4f}'.format(abs(binClose[-1]-bybClose[-1])))
+						print(f"{symbol}:\n"
+						      f"Current divergence: {current_clean}% > {divergence_filter}\n"
+						      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
+						      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
 						
-						if bybit_tick_size <= ticksize_filter and current_clean >= divergence_filter:
-							current_price_diff = float('{:.4f}'.format(abs(binClose[-1]-bybClose[-1])))
-							print(f"{symbol}:\n"
-							      f"Current divergence: {current_clean}% > {divergence_filter}\n"
-							      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
-							      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
-							
-							bot3.send_message(662482931, f"{symbol}:\n"
-							      f"Current divergence: {current_clean}% > {divergence_filter}\n"
-							      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
-							      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
+						bot3.send_message(662482931, f"{symbol}:\n"
+						      f"Current divergence: {current_clean}% > {divergence_filter}\n"
+						      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
+						      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
 					
 
-def search_activale(price_filter, ticksize_filter, atr_filter):
+def search_activale(price_filter, ticksize_filter):
 	time1 = time.perf_counter()
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
 	
@@ -160,12 +136,12 @@ def search_activale(price_filter, ticksize_filter, atr_filter):
 	instr = get_pairs(price_filter, ticksize_filter, num_chunks=threads)
 	total_count = sum(len(sublist) for sublist in instr)
 	
-	print(f"{total_count} coins: Price <= ${price_filter}, Tick <= {ticksize_filter}%, avg.ATR >= {atr_filter}%")
+	print(f"{total_count} coins: Price <= ${price_filter}, Tick <= {ticksize_filter}%")
 
 	the_processes = []
 	
 	for i in range(threads):
-		process = Process(target=calculation, args=(instr[i], atr_filter, ticksize_filter))
+		process = Process(target=calculation, args=(instr[i], ticksize_filter))
 		the_processes.append(process)
 	
 	for pro in the_processes:
@@ -197,6 +173,5 @@ if __name__ == '__main__':
 		search_activale(
 			price_filter=price_filter,
 			ticksize_filter=ticksize_filter,
-			atr_filter=atr_filter,
 		)
 		waiting()
