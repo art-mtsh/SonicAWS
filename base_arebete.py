@@ -124,19 +124,21 @@ def calculation(instr, atr_filter, ticksize_filter):
 					if len(binClose) > 50 and len(bybClose) > 50:
 						divers = []
 						for l in range(1, 49):
-							distance = abs(binClose[-l] - bybClose[-l])
-							distance_per = distance / (max([binClose[-l], bybClose[-l]]) / 100)
+							distance_per = abs(binClose[-l] - bybClose[-l]) / (binClose[-l] / 100)
 							distance_per = float('{:.2f}'.format(distance_per))
 							divers.append(distance_per)
-					
-						historical_divergence = divers[0] - min(divers)
-						historical_divergence_clean = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
-						historical_divergence_clean = float('{:.2f}'.format(historical_divergence_clean))
+						'''
+						Розраховувати "чисту" дивергенцію в моменті (за мінусом комісій, тіксайзу і т.д.) - не має сенсу, бо
+						нам важлива результуюча різниця між поточною дивергенцією (входу) і майбутньою дивергенцією (виходу)
+						від ЯКОЇ ВЖЕ ми і будемо віднімати комісії і т.д.
 						
-						current_clean = divers[0] - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
-						current_clean = float('{:.2f}'.format(current_clean))
+						Різниця між дивергенцією входу і дивергенцією виходу має бути 0.11% + 0.08% = 0.19% - аби вийти в нуль.
+						Усе, що далі - наш прибуток.
+						'''
 						
-						if bybit_tick_size <= ticksize_filter and historical_divergence_clean >= divergence_filter and current_clean >= divergence_filter:
+						current_clean = float('{:.2f}'.format(divers[0]))
+						
+						if bybit_tick_size <= ticksize_filter and current_clean >= divergence_filter:
 							current_price_diff = float('{:.4f}'.format(abs(binClose[-1]-bybClose[-1])))
 							print(f"{symbol}:\n"
 							      f"Current clean [0]: {current_clean}%\n"
