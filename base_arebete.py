@@ -18,8 +18,8 @@ bot3 = telebot.TeleBot(TOKEN3)
 binance_frame = ['1m', '5m', '15m', '30m', '1h']
 bybit_frame = ['1', '5', '15', '30', '60']
 
-price_filter = 4000
-ticksize_filter = 0.02
+price_filter = 100000
+ticksize_filter = 0.05
 
 atr_filter = 0.0
 atr_length = 30
