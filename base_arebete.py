@@ -24,7 +24,7 @@ ticksize_filter = 0.05
 atr_filter = 0.0
 atr_length = 30
 
-divergence_filter = 0.2
+divergence_filter = 0.4
 
 
 def calculation(instr, atr_filter, ticksize_filter):
@@ -141,12 +141,12 @@ def calculation(instr, atr_filter, ticksize_filter):
 						if bybit_tick_size <= ticksize_filter and current_clean >= divergence_filter:
 							current_price_diff = float('{:.4f}'.format(abs(binClose[-1]-bybClose[-1])))
 							print(f"{symbol}:\n"
-							      f"Current divergence: {current_clean}%\n"
+							      f"Current divergence: {current_clean}% > {divergence_filter}\n"
 							      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
 							      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
 							
 							bot3.send_message(662482931, f"{symbol}:\n"
-							      f"Current divergence: {current_clean}%\n"
+							      f"Current divergence: {current_clean}% > {divergence_filter}\n"
 							      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
 							      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
 					
