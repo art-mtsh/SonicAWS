@@ -28,10 +28,10 @@ divergence_filter = 0.2
 
 
 def calculation(instr, atr_filter, ticksize_filter):
-	for frame in range(0, 1):
+	for frame in range(3, 4):
 		for symbol in instr:
 			# --- BINANCE DATA ---
-			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=365'
+			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=60'
 			binance_data = get(binance_klines).json()
 			binance_pd = pd.DataFrame(binance_data)
 			if not binance_pd.empty:
@@ -56,7 +56,7 @@ def calculation(instr, atr_filter, ticksize_filter):
 				binance_df['binLow'] = binance_df['binLow'].astype(float)
 				binance_df['binClose'] = binance_df['binClose'].astype(float)
 				
-				# binOpen = binance_df['binOpen'].to_numpy()
+				binOpen = binance_df['binOpen'].to_numpy()
 				binHigh = binance_df['binHigh'].to_numpy()
 				binLow = binance_df['binLow'].to_numpy()
 				binClose = binance_df['binClose'].to_numpy()
@@ -66,7 +66,7 @@ def calculation(instr, atr_filter, ticksize_filter):
 				atr_per_binance = float('{:.2f}'.format(atr_per_binance))
 			
 				# --- BYBIT DATA ---
-				bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=365'
+				bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=60'
 				bybit_data = get(bybit_klines).json()
 				bybit_pd = pd.DataFrame(bybit_data)
 				if not bybit_pd.empty and atr_per_binance >= atr_filter:
@@ -98,25 +98,56 @@ def calculation(instr, atr_filter, ticksize_filter):
 							diffs = all_ticks[-u] - all_ticks[-u - 1]
 					
 					bybit_tick_size = float('{:.4f}'.format(diffs / (bybClose[-1] / 100)))
+					
 					# ==== bybit ticksize ====
 					
-					divers = []
+					# divers = []
+					# if len(binClose) > 961 and len(bybClose) > 961:
+					#
+					# 	for l in range(2, 960):
+					# 		distance = abs(binClose[-l] - bybClose[-l])
+					# 		distance_per = distance / (max([binClose[-l], bybClose[-l]]) / 100)
+					# 		distance_per = float('{:.2f}'.format(distance_per))
+					# 		divers.append(distance_per)
+					#
+					# 	cleans = []
+					#
+					# 	for s in range(1, len(divers)):
+					# 		historical_divergence = abs(divers[-s] - divers[-s-1]) - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
+					# 		if historical_divergence >= divergence_filter:
+					# 			cleans.append(float('{:.2f}'.format(historical_divergence)))
+					#
+					# 	if len(cleans) != 0:
+					# 		print(f"{symbol}: {int(sum(cleans))}%")
+							# print(f"{symbol}. Binance O:{binOpen[-2]} H:{binHigh[-2]} L:{binLow[-2]} C:{binClose[-2]}, Bybit O:{bybOpen[-2]} H:{bybHigh[-2]} L:{bybLow[-2]} C:{bybClose[-2]}")
+							
+					if len(binClose) > 50 and len(bybClose) > 50:
+						divers = []
+						for l in range(1, 49):
+							distance = abs(binClose[-l] - bybClose[-l])
+							distance_per = distance / (max([binClose[-l], bybClose[-l]]) / 100)
+							distance_per = float('{:.2f}'.format(distance_per))
+							divers.append(distance_per)
 					
-					for l in range(2, 365, 60):
-						distance = abs(binClose[-l] - bybClose[-l])
-						distance_per = distance / (max([binClose[-l], bybClose[-l]]) / 100)
-						distance_per = float('{:.2f}'.format(distance_per))
-						divers.append(distance_per)
+						historical_divergence = divers[0] - min(divers)
+						historical_divergence_clean = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
+						float('{:.2f}'.format(historical_divergence_clean))
+						
+						current_clean = divers[0] - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
+						
+						
+						
+						if bybit_tick_size <= ticksize_filter and historical_divergence_clean >= divergence_filter and current_clean >= divergence_filter:
+							print(f"{symbol}:\n"
+							      f"Current clean: {current_clean}% (if we back to 0%)\n"
+							      f"Historicly you'll get: {historical_divergence_clean}%\n"
+							      f"Divs ranges is: {min(divers)} -> {max(divers)}")
+							
+							bot3.send_message(662482931, f"{symbol}:\n"
+							      f"Current clean: {current_clean}% (if we back to 0%)\n"
+							      f"Historicly you'll get: {historical_divergence_clean}%\n"
+							      f"Divs ranges is: {min(divers)} -> {max(divers)}")
 					
-					historical_divergence = abs(divers[0] - max(divers))
-					
-					clean_profit = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
-					clean_profit = float('{:.4f}'.format(clean_profit))
-					
-					if bybit_tick_size <= ticksize_filter and clean_profit >= divergence_filter:
-						print(f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last max: {max(divers)}\nDivers: {divers}\n')
-						bot3.send_message(662482931, f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last max: {max(divers)}\nDivers: {divers}\n')
-				
 
 def search_activale(price_filter, ticksize_filter, atr_filter):
 	time1 = time.perf_counter()
@@ -151,11 +182,11 @@ def waiting():
 	while True:
 		now = datetime.datetime.now()
 		# last_hour_digit = int(now.strftime('%H'))
-		# last_minute_digit = int(now.strftime('%M')[-1])
+		last_minute_digit = int(now.strftime('%M'))
 		last_second_digit = int(now.strftime('%S'))
-		if last_second_digit == 0:
+		time.sleep(60)
+		if last_minute_digit % 10 == 0:
 			break
-		time.sleep(0.1)
 		# if last_hour_digit in list(range(8, 23)):
 
 
