@@ -107,7 +107,7 @@ def calculation(instr, atr_filter, ticksize_filter):
 					distance_per = float('{:.2f}'.format(distance_per))
 					divers.append(distance_per)
 				
-				historical_divergence = divers[0] - min(divers)
+				historical_divergence = abs(divers[0] - max(divers))
 				
 				clean_profit = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
 				clean_profit = float('{:.4f}'.format(clean_profit))
@@ -121,7 +121,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter):
 	time1 = time.perf_counter()
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
 	
-	threads = 8
+	threads = 16
 	
 	instr = get_pairs(price_filter, ticksize_filter, num_chunks=threads)
 	total_count = sum(len(sublist) for sublist in instr)
