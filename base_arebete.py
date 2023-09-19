@@ -34,87 +34,88 @@ def calculation(instr, atr_filter, ticksize_filter):
 			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=365'
 			binance_data = get(binance_klines).json()
 			binance_pd = pd.DataFrame(binance_data)
-			binance_pd.columns = [
-				'open_time',
-				'binOpen',
-				'binHigh',
-				'binLow',
-				'binClose',
-				'binVolume',
-				'binClose_time',
-				'qav',
-				'num_trades',
-				'taker_base_vol',
-				'taker_quote_vol',
-				'is_best_match'
-			]
-			binance_df = binance_pd
+			if not binance_pd.empty:
+				binance_pd.columns = [
+					'open_time',
+					'binOpen',
+					'binHigh',
+					'binLow',
+					'binClose',
+					'binVolume',
+					'binClose_time',
+					'qav',
+					'num_trades',
+					'taker_base_vol',
+					'taker_quote_vol',
+					'is_best_match'
+				]
+				binance_df = binance_pd
+				
+				binance_df['binOpen'] = binance_df['binOpen'].astype(float)
+				binance_df['binHigh'] = binance_df['binHigh'].astype(float)
+				binance_df['binLow'] = binance_df['binLow'].astype(float)
+				binance_df['binClose'] = binance_df['binClose'].astype(float)
+				
+				# binOpen = binance_df['binOpen'].to_numpy()
+				binHigh = binance_df['binHigh'].to_numpy()
+				binLow = binance_df['binLow'].to_numpy()
+				binClose = binance_df['binClose'].to_numpy()
+				
+				atr = (sum(sum([binHigh[-1:-atr_length - 1:-1] - binLow[-1:-atr_length - 1:-1]])) / len(binClose[-1:-atr_length - 1:-1]))
+				atr_per_binance = atr / (binClose[-1] / 100)
+				atr_per_binance = float('{:.2f}'.format(atr_per_binance))
 			
-			binance_df['binOpen'] = binance_df['binOpen'].astype(float)
-			binance_df['binHigh'] = binance_df['binHigh'].astype(float)
-			binance_df['binLow'] = binance_df['binLow'].astype(float)
-			binance_df['binClose'] = binance_df['binClose'].astype(float)
-			
-			# binOpen = binance_df['binOpen'].to_numpy()
-			binHigh = binance_df['binHigh'].to_numpy()
-			binLow = binance_df['binLow'].to_numpy()
-			binClose = binance_df['binClose'].to_numpy()
-			
-			atr = (sum(sum([binHigh[-1:-atr_length - 1:-1] - binLow[-1:-atr_length - 1:-1]])) / len(binClose[-1:-atr_length - 1:-1]))
-			atr_per_binance = atr / (binClose[-1] / 100)
-			atr_per_binance = float('{:.2f}'.format(atr_per_binance))
-		
-			# --- BYBIT DATA ---
-			bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=365'
-			bybit_data = get(bybit_klines).json()
-			bybit_pd = pd.DataFrame(bybit_data)
-			if not bybit_pd.empty and atr_per_binance >= atr_filter:
-				data_list = bybit_pd["result"]["list"]
-				column_names = ["time_start", "bybOpen", "bybHigh", "bybLow", "bybClose", "volume", "some_column"]
-				bybit_df = pd.DataFrame(data_list, columns=column_names)
-				
-				bybit_df['bybOpen'] = bybit_df['bybOpen'].astype(float)
-				bybit_df['bybHigh'] = bybit_df['bybHigh'].astype(float)
-				bybit_df['bybLow'] = bybit_df['bybLow'].astype(float)
-				bybit_df['bybClose'] = bybit_df['bybClose'].astype(float)
-				
-				bybOpen = bybit_df['bybOpen'].to_numpy()[::-1]
-				bybHigh = bybit_df['bybHigh'].to_numpy()[::-1]
-				bybLow = bybit_df['bybLow'].to_numpy()[::-1]
-				bybClose = bybit_df['bybClose'].to_numpy()[::-1]
-				
-				# ==== bybit ticksize ====
-				all_ticks = list(bybOpen[-1:-1 - 300:-1]) + \
-			            list(bybHigh[-1:-1 - 300:-1]) + \
-			            list(bybLow[-1:-1 - 300:-1]) + \
-			            list(bybClose[-1:-1 - 300:-1])
-				all_ticks = sorted(all_ticks)
-				
-				diffs = 10
-				
-				for u in range(0, len(all_ticks) - 1):
-					if 0 < all_ticks[-u] - all_ticks[-u - 1] < diffs:
-						diffs = all_ticks[-u] - all_ticks[-u - 1]
-				
-				bybit_tick_size = float('{:.4f}'.format(diffs / (bybClose[-1] / 100)))
-				# ==== bybit ticksize ====
-				
-				divers = []
-				
-				for l in range(2, 365, 60):
-					distance = abs(binClose[-l] - bybClose[-l])
-					distance_per = distance / (max([binClose[-l], bybClose[-l]]) / 100)
-					distance_per = float('{:.2f}'.format(distance_per))
-					divers.append(distance_per)
-				
-				historical_divergence = abs(divers[0] - max(divers))
-				
-				clean_profit = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
-				clean_profit = float('{:.4f}'.format(clean_profit))
-				
-				if bybit_tick_size <= ticksize_filter and clean_profit >= divergence_filter:
-					print(f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last max: {max(divers)}\nDivers: {divers}\n')
-					bot3.send_message(662482931, f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last max: {max(divers)}\nDivers: {divers}\n')
+				# --- BYBIT DATA ---
+				bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=365'
+				bybit_data = get(bybit_klines).json()
+				bybit_pd = pd.DataFrame(bybit_data)
+				if not bybit_pd.empty and atr_per_binance >= atr_filter:
+					data_list = bybit_pd["result"]["list"]
+					column_names = ["time_start", "bybOpen", "bybHigh", "bybLow", "bybClose", "volume", "some_column"]
+					bybit_df = pd.DataFrame(data_list, columns=column_names)
+					
+					bybit_df['bybOpen'] = bybit_df['bybOpen'].astype(float)
+					bybit_df['bybHigh'] = bybit_df['bybHigh'].astype(float)
+					bybit_df['bybLow'] = bybit_df['bybLow'].astype(float)
+					bybit_df['bybClose'] = bybit_df['bybClose'].astype(float)
+					
+					bybOpen = bybit_df['bybOpen'].to_numpy()[::-1]
+					bybHigh = bybit_df['bybHigh'].to_numpy()[::-1]
+					bybLow = bybit_df['bybLow'].to_numpy()[::-1]
+					bybClose = bybit_df['bybClose'].to_numpy()[::-1]
+					
+					# ==== bybit ticksize ====
+					all_ticks = list(bybOpen[-1:-1 - 300:-1]) + \
+				            list(bybHigh[-1:-1 - 300:-1]) + \
+				            list(bybLow[-1:-1 - 300:-1]) + \
+				            list(bybClose[-1:-1 - 300:-1])
+					all_ticks = sorted(all_ticks)
+					
+					diffs = 10
+					
+					for u in range(0, len(all_ticks) - 1):
+						if 0 < all_ticks[-u] - all_ticks[-u - 1] < diffs:
+							diffs = all_ticks[-u] - all_ticks[-u - 1]
+					
+					bybit_tick_size = float('{:.4f}'.format(diffs / (bybClose[-1] / 100)))
+					# ==== bybit ticksize ====
+					
+					divers = []
+					
+					for l in range(2, 365, 60):
+						distance = abs(binClose[-l] - bybClose[-l])
+						distance_per = distance / (max([binClose[-l], bybClose[-l]]) / 100)
+						distance_per = float('{:.2f}'.format(distance_per))
+						divers.append(distance_per)
+					
+					historical_divergence = abs(divers[0] - max(divers))
+					
+					clean_profit = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
+					clean_profit = float('{:.4f}'.format(clean_profit))
+					
+					if bybit_tick_size <= ticksize_filter and clean_profit >= divergence_filter:
+						print(f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last max: {max(divers)}\nDivers: {divers}\n')
+						bot3.send_message(662482931, f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last max: {max(divers)}\nDivers: {divers}\n')
 				
 
 def search_activale(price_filter, ticksize_filter, atr_filter):
