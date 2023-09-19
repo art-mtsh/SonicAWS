@@ -107,8 +107,9 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 					distance_per = float('{:.2f}'.format(distance_per))
 					divers.append(distance_per)
 				
-				historical_divergence = max(divers) - min(divers)
-				historical_divergence = float('{:.4f}'.format(historical_divergence))
+				hd_min = abs(divers[0] - min(divers))
+				hd_max = abs(divers[0] - max(divers))
+				historical_divergence = max([hd_min, hd_max])
 				
 				clean_profit = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
 				clean_profit = float('{:.4f}'.format(clean_profit))
@@ -117,53 +118,6 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 						print(f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nDivers: {divers}\n')
 						bot3.send_message(662482931, f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nDivers: {divers}\n')
 				
-			
-				# prev_binance_max = max(binHigh[-2:-12:-1])
-				# prev_bybit_max = max(bybHigh[-2:-12:-1])
-				#
-				# third_binance_max = max(binHigh[-5:-15:-1])
-				# third_bybit_max = max(bybHigh[-5:-15:-1])
-				#
-				# prev_binance_min = min(binLow[-2:-12:-1])
-				# prev_bybit_min = min(bybLow[-2:-12:-1])
-				#
-				# third_binance_min = min(binLow[-5:-15:-1])
-				# third_bybit_min = min(bybLow[-5:-15:-1])
-				#
-				# binance_overhigh = prev_binance_max == third_binance_max and binHigh[-1] >= prev_binance_max
-				# bybit_overhigh = prev_bybit_max == third_bybit_max and bybHigh[-1] >= prev_bybit_max
-				#
-				# binance_underlow = prev_binance_min == third_binance_min and binLow[-1] <= prev_binance_min
-				# bybit_underlow = prev_bybit_min == third_bybit_min and bybLow[-1] <= prev_bybit_min
-				#
-				# if (binance_overhigh and not bybit_overhigh):
-				# 	one = float("{:.2f}".format((binHigh[-1] - prev_binance_max) / (binClose[-1] / 100)))
-				# 	two = float("{:.2f}".format((bybHigh[-1] - prev_bybit_max) / (bybClose[-1] / 100)))
-				# 	if abs(one) >= divergence_filter or abs(two) >= divergence_filter:
-				# 		print(f'{symbol}({binance_frame[frame]}), sell:\nBinance overhigh {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
-				# 		bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), sell.\nBinance overhigh {one}%({prev_binance_max}), bybit {two}%({prev_bybit_max})')
-				#
-				# if (bybit_overhigh and not binance_overhigh):
-				# 	one = float("{:.2f}".format((binHigh[-1] - prev_binance_max) / (binClose[-1] / 100)))
-				# 	two = float("{:.2f}".format((bybHigh[-1] - prev_bybit_max) / (bybClose[-1] / 100)))
-				# 	if abs(one) >= divergence_filter or abs(two) >= divergence_filter:
-				# 		print(f'{symbol}({binance_frame[frame]}), sell:\nBinance {one}%({prev_binance_max}), bybit overhigh {two}%({prev_bybit_max})')
-				# 		bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), sell.\nBinance {one}%({prev_binance_max}), bybit overhigh {two}%({prev_bybit_max})')
-				#
-				# if (binance_underlow and not bybit_underlow):
-				# 	one = float("{:.2f}".format((binLow[-1] - prev_binance_min) / (binClose[-1] / 100)))
-				# 	two = float("{:.2f}".format((bybLow[-1] - prev_bybit_min) / (bybClose[-1] / 100)))
-				# 	if abs(one) >= divergence_filter or abs(two) >= divergence_filter:
-				# 		print(f'{symbol}({binance_frame[frame]}), buy:\nBinance underlow {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
-				# 		bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), buy.\nBinance underlow {one}%({prev_binance_min}), bybit {two}%({prev_bybit_min})')
-				#
-				# if (bybit_underlow and not binance_underlow):
-				# 	one = float("{:.2f}".format((binLow[-1] - prev_binance_min) / (binClose[-1] / 100)))
-				# 	two = float("{:.2f}".format((bybLow[-1] - prev_bybit_min) / (bybClose[-1] / 100)))
-				# 	if abs(one) >= divergence_filter or abs(two) >= divergence_filter:
-				# 		print(f'{symbol}({binance_frame[frame]}), buy:\nBinance {one}%({prev_binance_min}), bybit underlow {two}%({prev_bybit_min})')
-				# 		bot3.send_message(662482931, f'{symbol}({binance_frame[frame]}), buy.\nBinance {one}%({prev_binance_min}), bybit underlow {two}%({prev_bybit_min})')
-
 def search_activale(price_filter, ticksize_filter, atr_filter):
 	time1 = time.perf_counter()
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
