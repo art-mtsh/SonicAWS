@@ -138,11 +138,11 @@ def calculation(instr, atr_filter, ticksize_filter):
 						
 						if bybit_tick_size <= ticksize_filter and historical_divergence_clean >= divergence_filter and current_clean >= divergence_filter:
 							print(f"{symbol}:\n"
-							      f"Current clean [0]: {current_clean}% ({binClose[-1]}/{bybClose[-1]})\n"
+							      f"Current clean [0]: {current_clean}% ({binClose[-1]}/{bybClose[-1]}, -{abs(binClose[-1]-bybClose[-1])})\n"
 							      f"Divs ranges is: {min(divers)} -> {max(divers)}")
 							
 							bot3.send_message(662482931, f"{symbol}:\n"
-							      f"Current clean [0]: {current_clean}% ({binClose[-1]}/{bybClose[-1]})\n"
+							      f"Current clean [0]: {current_clean}% ({binClose[-1]}/{bybClose[-1]}, -{abs(binClose[-1]-bybClose[-1])})\n"
 							      f"Divs ranges is: {min(divers)} -> {max(divers)}")
 					
 
