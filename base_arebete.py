@@ -115,9 +115,12 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 				distance_past3_per = distance_past3 / (max([binClose[-180], bybClose[-180]]) / 100)
 				distance_past3_per = float('{:.2f}'.format(distance_past3_per))
 				
-				if distance_per >= current_divergence and bybit_tick_size <= ticksize_filter:
-					bot3.send_message(662482931, f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}%')
-					print(f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}%')
+				if bybit_tick_size <= ticksize_filter:
+					if distance_per >= current_divergence / 2:
+						print(f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}%')
+						if distance_per >= current_divergence:
+							bot3.send_message(662482931, f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}%')
+				
 			
 				# prev_binance_max = max(binHigh[-2:-12:-1])
 				# prev_bybit_max = max(bybHigh[-2:-12:-1])
