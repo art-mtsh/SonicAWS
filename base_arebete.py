@@ -163,7 +163,7 @@ def waiting():
 		last_minute_digit = int(now.strftime('%M'))
 		last_second_digit = int(now.strftime('%S'))
 		time.sleep(0.1)
-		if last_minute_digit % 2 == 0 and last_second_digit == 0:
+		if last_second_digit == 0:
 			break
 		# if last_hour_digit in list(range(8, 23)):
 
