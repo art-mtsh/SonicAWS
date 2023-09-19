@@ -153,7 +153,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter):
 	time1 = time.perf_counter()
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
 	
-	threads = 16
+	threads = 8
 	
 	instr = get_pairs(price_filter, ticksize_filter, num_chunks=threads)
 	total_count = sum(len(sublist) for sublist in instr)
