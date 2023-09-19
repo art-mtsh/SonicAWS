@@ -31,7 +31,7 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 	for frame in range(0, 1):
 		for symbol in instr:
 			# --- BINANCE DATA ---
-			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=185'
+			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=302'
 			binance_data = get(binance_klines).json()
 			binance_pd = pd.DataFrame(binance_data)
 			binance_pd.columns = [
@@ -65,7 +65,7 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 			atr_per_binance = float('{:.2f}'.format(atr_per_binance))
 		
 			# --- BYBIT DATA ---
-			bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=185'
+			bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=302'
 			bybit_data = get(bybit_klines).json()
 			bybit_pd = pd.DataFrame(bybit_data)
 			if not bybit_pd.empty and atr_per_binance >= atr_filter:
@@ -84,10 +84,10 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 				bybClose = bybit_df['bybClose'].to_numpy()[::-1]
 				
 				# ==== bybit ticksize ====
-				all_ticks = list(bybOpen[-1:-1 - 180:-1]) + \
-				            list(bybHigh[-1:-1 - 180:-1]) + \
-				            list(bybLow[-1:-1 - 180:-1]) + \
-				            list(bybClose[-1:-1 - 180:-1])
+				all_ticks = list(bybOpen[-1:-1 - 300:-1]) + \
+				            list(bybHigh[-1:-1 - 300:-1]) + \
+				            list(bybLow[-1:-1 - 300:-1]) + \
+				            list(bybClose[-1:-1 - 300:-1])
 				all_ticks = sorted(all_ticks)
 				
 				diffs = 10
@@ -115,11 +115,24 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 				distance_past3_per = distance_past3 / (max([binClose[-180], bybClose[-180]]) / 100)
 				distance_past3_per = float('{:.2f}'.format(distance_past3_per))
 				
+				distance_past4 = abs(binClose[-240] - bybClose[-240])
+				distance_past4_per = distance_past4 / (max([binClose[-240], bybClose[-240]]) / 100)
+				distance_past4_per = float('{:.2f}'.format(distance_past4_per))
+				
+				distance_past5 = abs(binClose[-300] - bybClose[-300])
+				distance_past5_per = distance_past4 / (max([binClose[-300], bybClose[-300]]) / 100)
+				distance_past5_per = float('{:.2f}'.format(distance_past5_per))
+				
+				max_distance = max([distance_per, distance_past1_per, distance_past2_per, distance_past3_per, distance_past4_per, distance_past5_per])
+				min_distance = min([distance_per, distance_past1_per, distance_past2_per, distance_past3_per, distance_past4_per, distance_past5_per])
+				
+				historical_divergence = max_distance - min_distance
+				
 				if bybit_tick_size <= ticksize_filter:
-					if distance_per >= current_divergence / 2:
-						print(f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}%')
-						if distance_per >= current_divergence:
-							bot3.send_message(662482931, f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}%')
+					if historical_divergence >= current_divergence / 2:
+						print(f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}% <- {distance_past4_per}% <- {distance_past5_per}%')
+						if historical_divergence >= current_divergence:
+							bot3.send_message(662482931, f'{symbol}. {distance_per}% ({binClose[-2]}, {bybClose[-2]}) <- {distance_past1_per}% <- {distance_past2_per}% <- {distance_past3_per}% <- {distance_past4_per}% <- {distance_past5_per}%')
 				
 			
 				# prev_binance_max = max(binHigh[-2:-12:-1])
