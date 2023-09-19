@@ -1,6 +1,6 @@
 import pandas as pd
 from requests import get
-from multiprocessing import Process, Queue
+from multiprocessing import Process
 import telebot
 import time
 import datetime
@@ -27,7 +27,7 @@ atr_length = 30
 divergence_filter = 0.2
 
 
-def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
+def calculation(instr, atr_filter, ticksize_filter):
 	for frame in range(0, 1):
 		for symbol in instr:
 			# --- BINANCE DATA ---
@@ -55,7 +55,7 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 			binance_df['binLow'] = binance_df['binLow'].astype(float)
 			binance_df['binClose'] = binance_df['binClose'].astype(float)
 			
-			binOpen = binance_df['binOpen'].to_numpy()
+			# binOpen = binance_df['binOpen'].to_numpy()
 			binHigh = binance_df['binHigh'].to_numpy()
 			binLow = binance_df['binLow'].to_numpy()
 			binClose = binance_df['binClose'].to_numpy()
@@ -85,9 +85,9 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 				
 				# ==== bybit ticksize ====
 				all_ticks = list(bybOpen[-1:-1 - 300:-1]) + \
-				            list(bybHigh[-1:-1 - 300:-1]) + \
-				            list(bybLow[-1:-1 - 300:-1]) + \
-				            list(bybClose[-1:-1 - 300:-1])
+			            list(bybHigh[-1:-1 - 300:-1]) + \
+			            list(bybLow[-1:-1 - 300:-1]) + \
+			            list(bybClose[-1:-1 - 300:-1])
 				all_ticks = sorted(all_ticks)
 				
 				diffs = 10
@@ -107,17 +107,16 @@ def calculation(instr, atr_filter, ticksize_filter, for_signal, for_status):
 					distance_per = float('{:.2f}'.format(distance_per))
 					divers.append(distance_per)
 				
-				hd_min = abs(divers[0] - min(divers))
-				hd_max = abs(divers[0] - max(divers))
-				historical_divergence = max([hd_min, hd_max])
+				historical_divergence = divers[0] - min(divers)
 				
 				clean_profit = historical_divergence - bybit_tick_size * 2 - 0.04 * 2 - 0.055 * 2
 				clean_profit = float('{:.4f}'.format(clean_profit))
 				
 				if bybit_tick_size <= ticksize_filter and clean_profit >= divergence_filter:
-						print(f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nDivers: {divers}\n')
-						bot3.send_message(662482931, f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nDivers: {divers}\n')
+					print(f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last min: {min(divers)}\nDivers: {divers}\n')
+					bot3.send_message(662482931, f'{symbol}:\nPotential profit: {clean_profit}%\nHistorical max diver: {historical_divergence}%\nCurrent: {divers[0]}, last min: {min(divers)}\nDivers: {divers}\n')
 				
+
 def search_activale(price_filter, ticksize_filter, atr_filter):
 	time1 = time.perf_counter()
 	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
@@ -128,13 +127,11 @@ def search_activale(price_filter, ticksize_filter, atr_filter):
 	total_count = sum(len(sublist) for sublist in instr)
 	
 	print(f"{total_count} coins: Price <= ${price_filter}, Tick <= {ticksize_filter}%, avg.ATR >= {atr_filter}%")
-	
-	for_signal = Queue()
-	for_status = Queue()
+
 	the_processes = []
 	
 	for i in range(threads):
-		process = Process(target=calculation, args=(instr[i], atr_filter, ticksize_filter, for_signal, for_status,))
+		process = Process(target=calculation, args=(instr[i], atr_filter, ticksize_filter))
 		the_processes.append(process)
 	
 	for pro in the_processes:
@@ -143,7 +140,6 @@ def search_activale(price_filter, ticksize_filter, atr_filter):
 	for pro in the_processes:
 		pro.join()
 
-	
 	time2 = time.perf_counter()
 	time3 = time2 - time1
 	
@@ -153,8 +149,8 @@ def search_activale(price_filter, ticksize_filter, atr_filter):
 def waiting():
 	while True:
 		now = datetime.datetime.now()
-		last_hour_digit = int(now.strftime('%H'))
-		last_minute_digit = int(now.strftime('%M')[-1])
+		# last_hour_digit = int(now.strftime('%H'))
+		# last_minute_digit = int(now.strftime('%M')[-1])
 		last_second_digit = int(now.strftime('%S'))
 		if last_second_digit == 0:
 			break
@@ -170,4 +166,3 @@ if __name__ == '__main__':
 			atr_filter=atr_filter,
 		)
 		waiting()
-
