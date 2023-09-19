@@ -139,12 +139,14 @@ def calculation(instr, atr_filter, ticksize_filter):
 						if bybit_tick_size <= ticksize_filter and historical_divergence_clean >= divergence_filter and current_clean >= divergence_filter:
 							current_price_diff = float('{:.4f}'.format(abs(binClose[-1]-bybClose[-1])))
 							print(f"{symbol}:\n"
-							      f"Current clean [0]: {current_clean}% ({binClose[-1]}/{bybClose[-1]}, -{current_price_diff})\n"
-							      f"Divs ranges is: {min(divers)} -> {max(divers)}")
+							      f"Current clean [0]: {current_clean}%\n"
+							      f"({binClose[-1]} - {bybClose[-1]} = {current_price_diff})\n"
+							      f"Divs ranges is: {min(divers)} -> {max(divers)}\n")
 							
 							bot3.send_message(662482931, f"{symbol}:\n"
-							      f"Current clean [0]: {current_clean}% ({binClose[-1]}/{bybClose[-1]}, -{current_price_diff})\n"
-							      f"Divs ranges is: {min(divers)} -> {max(divers)}")
+							      f"Current clean [0]: {current_clean}%\n"
+							      f"({binClose[-1]} - {bybClose[-1]} = {current_price_diff})\n"
+							      f"Divs ranges is: {min(divers)} -> {max(divers)}\n")
 					
 
 def search_activale(price_filter, ticksize_filter, atr_filter):
