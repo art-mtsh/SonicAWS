@@ -21,7 +21,7 @@ bybit_frame = ['1', '5', '15', '30', '60']
 price_filter = 100000
 ticksize_filter = 0.05
 
-divergence_filter = 0.4
+divergence_filter = 0.31
 
 
 def calculation(instr, ticksize_filter):
@@ -94,37 +94,55 @@ def calculation(instr, ticksize_filter):
 					bybit_tick_size = float('{:.4f}'.format(diffs / (bybClose[-1] / 100)))
 					
 					current_clean = float('{:.2f}'.format(abs(binClose[-1] - bybClose[-1]) / (binClose[-1] / 100)))
+		
+					# if len(binClose) > 725 and len(bybClose) > 725:
+					# 	divers = []
+					# 	for l in range(1, 721):
+					# 		distance_per = abs(binClose[-l] - bybClose[-l]) / (binClose[-l] / 100)
+					# 		distance_per = float('{:.2f}'.format(distance_per))
+					# 		divers.append(distance_per)
+					#
+					# 	if len(divers) > 1:
+					# 		if max(divers) - min(divers) >= 0.30:
+					# 			print(f"{symbol}, {divers}")
+					# 		results = []
+					# 		# for d in range(0, len(divers)-1):
+					# 		# 	if abs(divers[d] - divers[d+1]) >= 0.4:
+					# 		# 		results.append(abs(divers[d] - divers[d+1]))
+					#
+					# 		if len(results) != 0:
+					# 			print(f"{symbol} : {int(sum(results))}")
 					
 					if len(binClose) > 725 and \
 						len(bybClose) > 725 and \
 						current_clean >= divergence_filter and \
 						bybit_tick_size <= ticksize_filter:
-						
+
 						divers = []
 						for l in range(1, 721):
 							distance_per = abs(binClose[-l] - bybClose[-l]) / (binClose[-l] / 100)
 							distance_per = float('{:.2f}'.format(distance_per))
 							divers.append(distance_per)
-						
+
 						'''
 						Розраховувати "чисту" дивергенцію в моменті (за мінусом комісій, тіксайзу і т.д.) - не має сенсу, бо
 						нам важлива результуюча різниця між поточною дивергенцією (входу) і майбутньою дивергенцією (виходу)
 						від ЯКОЇ ВЖЕ ми і будемо віднімати комісії і т.д.
-						
+
 						Різниця між дивергенцією входу і дивергенцією виходу має бути 0.11% + 0.08% = 0.19% - аби вийти в нуль.
 						Усе, що далі - наш прибуток.
 						'''
-						
-						current_price_diff = float('{:.4f}'.format(abs(binClose[-1]-bybClose[-1])))
-						print(f"{symbol}:\n"
-						      f"Current divergence: {current_clean}% > {divergence_filter}\n"
-						      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
-						      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
-						
-						bot3.send_message(662482931, f"{symbol}:\n"
-						      f"Current divergence: {current_clean}% > {divergence_filter}\n"
-						      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
-						      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
+						if current_clean - min(divers) >= divergence_filter:
+							current_price_diff = float('{:.4f}'.format(abs(binClose[-1]-bybClose[-1])))
+							print(f"{symbol}:\n"
+							      f"Current divergence: {current_clean}% > {divergence_filter}\n"
+							      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
+							      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
+	
+							bot3.send_message(662482931, f"{symbol}:\n"
+							      f"Current divergence: {current_clean}% > {divergence_filter}\n"
+							      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
+							      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
 					
 
 def search_activale(price_filter, ticksize_filter):
