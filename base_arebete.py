@@ -21,14 +21,14 @@ bybit_frame = ['1', '5', '15', '30', '60']
 price_filter = 100000
 ticksize_filter = 0.05
 
-divergence_filter = 0.31
+divergence_filter = 0.3
 
 
 def calculation(instr, ticksize_filter):
 	for frame in range(0, 1):
 		for symbol in instr:
 			# --- BINANCE DATA ---
-			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=200'
+			binance_klines = 'https://fapi.binance.com/fapi/v1/klines?symbol=' + symbol + '&interval=' + binance_frame[frame] + '&limit=61'
 			binance_data = get(binance_klines).json()
 			binance_pd = pd.DataFrame(binance_data)
 			if not binance_pd.empty:
@@ -59,7 +59,7 @@ def calculation(instr, ticksize_filter):
 				binClose = binance_df['binClose'].to_numpy()
 			
 				# --- BYBIT DATA ---
-				bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=200'
+				bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame[frame]}&limit=61'
 				bybit_data = get(bybit_klines).json()
 				bybit_pd = pd.DataFrame(bybit_data)
 				
@@ -79,10 +79,10 @@ def calculation(instr, ticksize_filter):
 					bybClose = bybit_df['bybClose'].to_numpy()[::-1]
 					
 					# ==== bybit ticksize ====
-					all_ticks = list(bybOpen[-1:-1 - 195:-1]) + \
-				            list(bybHigh[-1:-1 - 195:-1]) + \
-				            list(bybLow[-1:-1 - 195:-1]) + \
-				            list(bybClose[-1:-1 - 195:-1])
+					all_ticks = list(bybOpen[-1:-1 - 60:-1]) + \
+				            list(bybHigh[-1:-1 - 60:-1]) + \
+				            list(bybLow[-1:-1 - 60:-1]) + \
+				            list(bybClose[-1:-1 - 60:-1])
 					all_ticks = sorted(all_ticks)
 					
 					diffs = 10
@@ -103,7 +103,7 @@ def calculation(instr, ticksize_filter):
 					# 		divers.append(distance_per)
 					#
 					# 	if len(divers) > 1:
-					# 		if max(divers) - min(divers) >= 0.30:
+					# 		if max(divers) - min(divers) >= 0.50:
 					# 			print(f"{symbol}, {divers}")
 					# 		results = []
 					# 		# for d in range(0, len(divers)-1):
@@ -113,13 +113,14 @@ def calculation(instr, ticksize_filter):
 					# 		if len(results) != 0:
 					# 			print(f"{symbol} : {int(sum(results))}")
 					
-					if len(binClose) > 195 and \
-						len(bybClose) > 195 and \
+					
+					if len(binClose) > 60 and \
+						len(bybClose) > 60 and \
 						current_clean >= divergence_filter and \
 						bybit_tick_size <= ticksize_filter:
 
 						divers = []
-						for l in range(1, 181):
+						for l in range(1, 61):
 							distance_per = abs(binClose[-l] - bybClose[-l]) / (binClose[-l] / 100)
 							distance_per = float('{:.2f}'.format(distance_per))
 							divers.append(distance_per)
@@ -138,7 +139,7 @@ def calculation(instr, ticksize_filter):
 							      f"Current divergence: {current_clean}% > {divergence_filter}\n"
 							      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
 							      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")
-	
+
 							bot3.send_message(662482931, f"#{symbol}:\n"
 							      f"Current divergence: {current_clean}% > {divergence_filter}\n"
 							      f"{binClose[-1]} - {bybClose[-1]} = {current_price_diff}\n"
