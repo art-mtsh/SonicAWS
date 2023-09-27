@@ -240,7 +240,7 @@ def calculating():
                     bot3.send_message(662482931, f"{key}. Closed trades with div range {unrealized_range}%")
                     trades.pop(key)
                     
-    print(f"{datetime.now().strftime('%H:%M:%S')} {trades}")
+    print(f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {trades}")
     
     bybit_ts_done = False
     bybit_pr_done = False
