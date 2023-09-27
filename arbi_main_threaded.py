@@ -214,10 +214,14 @@ def calculating():
                 entry_div = float('{:.2f}'.format(entry_div))
                 current_div = float('{:.2f}'.format(current_div))
                 
+                unrealized_range = entry_div - current_div
+                unrealized_range = float('{:.2f}'.format(unrealized_range))
+                
                 if entry_div - current_div >= profit + fee:
-                    print(f"{key}. Closed trades with div range {entry_div - current_div}")
-                    bot3.send_message(662482931, f"{key}. Closed trades with div range {entry_div - current_div}")
+                    print(f"{key}. Closed trades with div range {unrealized_range}%")
+                    bot3.send_message(662482931, f"{key}. Closed trades with div range {unrealized_range}%")
                     trades.pop(key)
+            
             
             elif trades.get(key).get("type") == "bybit_higher":
                 entry_div = (trades.get(key).get("bybit_sell_price") - trades.get(key).get("binance_buy_price")) / (
@@ -227,9 +231,12 @@ def calculating():
                 entry_div = float('{:.2f}'.format(entry_div))
                 current_div = float('{:.2f}'.format(current_div))
                 
+                unrealized_range = entry_div - current_div
+                unrealized_range = float('{:.2f}'.format(unrealized_range))
+                
                 if entry_div - current_div >= profit + fee:
-                    print(f"{key}. Closed trades with div range {entry_div - current_div}")
-                    bot3.send_message(662482931, f"{key}. Closed trades with div range {entry_div - current_div}")
+                    print(f"{key}. Closed trades with div range {unrealized_range}%")
+                    bot3.send_message(662482931, f"{key}. Closed trades with div range {unrealized_range}%")
                     trades.pop(key)
                     
     print(trades)
