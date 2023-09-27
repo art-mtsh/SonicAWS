@@ -13,6 +13,8 @@ bot3 = telebot.TeleBot(TOKEN3)
 
 ticksize_filter = 0.03
 
+
+
 def check_for_arbi():
     # =============================== BYBIT TICK SIZES
     
@@ -128,16 +130,24 @@ def check_for_arbi():
         
         if binance_higher_p >= alert:
             print(f"{key}. bin_bid {binance_bid} - byb_ask {bybit_ask} = {binance_higher} ({binance_higher_p}%)")
-            bot3.send_message(662482931, f"{key}. bin_bid {binance_bid} - byb_ask {bybit_ask} = {binance_higher} ({binance_higher_p}%)")
+            # bot3.send_message(662482931, f"{key}. bin_bid {binance_bid} - byb_ask {bybit_ask} = {binance_higher} ({binance_higher_p}%)")
             
         elif bybit_higher_p >= alert:
             print(f"{key}. byb_bid {bybit_bid} - bin_ask {binance_ask} = {bybit_higher} ({bybit_higher_p}%)")
-            bot3.send_message(662482931, f"{key}. byb_bid {bybit_bid} - bin_ask {binance_ask} = {bybit_higher} ({bybit_higher_p}%)")
+            # bot3.send_message(662482931, f"{key}. byb_bid {bybit_bid} - bin_ask {binance_ask} = {bybit_higher} ({bybit_higher_p}%)")
             
         # else:
         #     print(f"{key}: {max([binance_higher_p, bybit_higher_p])}%")
 
 if __name__ == '__main__':
     while True:
+        time1 = time.perf_counter()
+        
         check_for_arbi()
-        time.sleep(10)
+        
+        time2 = time.perf_counter()
+        time3 = time2 - time1
+        
+        print(f"Finished processes in {time3} seconds")
+        
+        time.sleep(60)
