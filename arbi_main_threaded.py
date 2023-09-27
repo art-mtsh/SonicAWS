@@ -190,7 +190,7 @@ def calculating():
             )
             
             print(f"{key}. Open trades. Binance sell at {binance_bid}, Bybit buy at {bybit_ask} ({binance_higher_p}%)")
-            bot3.send_message(662482931, f"{key}. Open trades. Binance_sell at {binance_bid}, Bybit buy at {bybit_ask} ({binance_higher_p}%)")
+            bot3.send_message(662482931, f"{key}. Open trades. Binance sell at {binance_bid}, Bybit buy at {bybit_ask} ({binance_higher_p}%)")
         
         elif bybit_higher_p >= alert and key not in trades.keys():
             
