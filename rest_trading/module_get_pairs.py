@@ -16,7 +16,7 @@ def get_pairs(price_filter, ticksize_filter, num_chunks):
 	
 	excluded_pairs = []
 	
-	perpetual_pairs = [pair for pair in perpetual_pairs if ("USDCUSDT" not in pair)]
+	perpetual_pairs = [pair for pair in perpetual_pairs if ("USDCUSDT" not in pair) and ("BUSDT" not in pair)]
 	
 	# Get ticker prices for all pairs
 	ticker_prices_response = requests.get(base_url + "ticker/price")
