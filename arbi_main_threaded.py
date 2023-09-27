@@ -1,4 +1,5 @@
 import threading
+from datetime import datetime
 import time
 import requests
 import telebot
@@ -239,7 +240,7 @@ def calculating():
                     bot3.send_message(662482931, f"{key}. Closed trades with div range {unrealized_range}%")
                     trades.pop(key)
                     
-    print(trades)
+    print(f"{datetime.now().strftime('%H:%M:%S')} {trades}")
     
     bybit_ts_done = False
     bybit_pr_done = False
