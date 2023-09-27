@@ -232,7 +232,7 @@ def calculating():
                     bot3.send_message(662482931, f"{key}. Closed trades with div range {entry_div - current_div}")
                     trades.pop(key)
                     
-        print(trades)
+    print(trades)
     
     bybit_ts_done = False
     bybit_pr_done = False
