@@ -189,8 +189,8 @@ def calculating():
                 }}
             )
             
-            print(f"{key}. bin_bid {binance_bid} - byb_ask {bybit_ask} = {binance_higher} ({binance_higher_p}%)")
-            bot3.send_message(662482931, f"{key}. bin_bid {binance_bid} - byb_ask {bybit_ask} = {binance_higher} ({binance_higher_p}%)")
+            print(f"{key}. Open trades. Binance sell at {binance_bid}, Bybit buy at {bybit_ask} ({binance_higher_p}%)")
+            bot3.send_message(662482931, f"{key}. Open trades. Binance_sell at {binance_bid}, Bybit buy at {bybit_ask} ({binance_higher_p}%)")
         
         elif bybit_higher_p >= alert and key not in trades.keys():
             
@@ -202,27 +202,37 @@ def calculating():
                 }}
             )
             
-            print(f"{key}. byb_bid {bybit_bid} - bin_ask {binance_ask} = {bybit_higher} ({bybit_higher_p}%)")
-            bot3.send_message(662482931, f"{key}. byb_bid {bybit_bid} - bin_ask {binance_ask} = {bybit_higher} ({bybit_higher_p}%)")
+            print(f"{key}. Open trades. Bybit sell at {bybit_bid}, Binance buy at {binance_ask} ({bybit_higher_p}%)")
+            bot3.send_message(662482931, f"{key}. Open trades. Bybit sell at {bybit_bid}, Binance buy at {binance_ask} ({bybit_higher_p}%)")
         
         elif key in trades.keys():
             if trades.get(key).get("type") == "binance_higher":
                 entry_div = (trades.get(key).get("binance_sell_price") - trades.get(key).get("bybit_buy_price")) / (
                             trades.get(key).get("binance_sell_price") / 100)
                 current_div = abs((binance_ask - bybit_bid) / (max([binance_ask, bybit_bid]) / 100))
+                
+                entry_div = float('{:.2f}'.format(entry_div))
+                current_div = float('{:.2f}'.format(current_div))
+                
                 if entry_div - current_div >= profit + fee:
-                    print(f"Closed profit trade on {key}, div range {entry_div - current_div}")
-                    bot3.send_message(662482931, f"Closed profit trade on {key}, div range {entry_div - current_div}")
+                    print(f"{key}. Closed trades with div range {entry_div - current_div}")
+                    bot3.send_message(662482931, f"{key}. Closed trades with div range {entry_div - current_div}")
                     trades.pop(key)
             
             elif trades.get(key).get("type") == "bybit_higher":
                 entry_div = (trades.get(key).get("bybit_sell_price") - trades.get(key).get("binance_buy_price")) / (
                             trades.get(key).get("bybit_sell_price") / 100)
                 current_div = abs((binance_bid - bybit_ask) / (max([binance_bid, bybit_ask]) / 100))
+                
+                entry_div = float('{:.2f}'.format(entry_div))
+                current_div = float('{:.2f}'.format(current_div))
+                
                 if entry_div - current_div >= profit + fee:
-                    print(f"Closed profit trade on {key}, div range {entry_div - current_div}")
-                    bot3.send_message(662482931, f"Closed profit trade on {key}, div range {entry_div - current_div}")
+                    print(f"{key}. Closed trades with div range {entry_div - current_div}")
+                    bot3.send_message(662482931, f"{key}. Closed trades with div range {entry_div - current_div}")
                     trades.pop(key)
+                    
+        print(trades)
     
     bybit_ts_done = False
     bybit_pr_done = False
@@ -252,8 +262,5 @@ if __name__ == '__main__':
         binance_ts_thread.join()
         binance_pr_thread.join()
         calculating_thread.join()
-        
-        print("")
-        print("done cycle")
         
         time.sleep(2)
