@@ -271,4 +271,4 @@ if __name__ == '__main__':
         binance_pr_thread.join()
         calculating_thread.join()
         
-        time.sleep(2)
+        time.sleep(1)
