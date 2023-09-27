@@ -24,6 +24,7 @@ binance_pr_done = False
 
 trades = {}
 
+
 def bybit_tick_sizes():
     global bybit_ts_done
     
@@ -41,7 +42,7 @@ def bybit_tick_sizes():
     
     dictionary_manager.put(("bybit_tick_sizes", bybit_tick_sizes))
     bybit_ts_done = True
-    
+
 
 def bybit_prices():
     global bybit_pr_done
@@ -61,7 +62,7 @@ def bybit_prices():
     
     dictionary_manager.put(("bybit_prices", bybit_prices))
     bybit_pr_done = True
-    
+
 
 def binance_tick_sizes():
     global binance_ts_done
@@ -78,10 +79,10 @@ def binance_tick_sizes():
         tick_size_binance = float(tick_size_binance.get("tickSize"))
         
         binance_tick_sizes.update({symbol: tick_size_binance})
-        
+    
     dictionary_manager.put(("binance_tick_sizes", binance_tick_sizes))
     binance_ts_done = True
-    
+
 
 def binance_prices():
     global binance_pr_done
@@ -100,7 +101,7 @@ def binance_prices():
     
     dictionary_manager.put(("binance_prices", binance_prices))
     binance_pr_done = True
-    
+
 
 def calculating():
     global bybit_ts_done, bybit_pr_done, binance_ts_done, binance_pr_done
@@ -130,10 +131,10 @@ def calculating():
         
         finally:
             dictionary_manager.task_done()
-            
+    
     common_keys_in_ticksizes = set(bybit_tick_sizes.keys()) & set(binance_tick_sizes.keys())
     common_keys_in_prices = set(bybit_prices.keys()) & set(binance_prices.keys())
-
+    
     max_tss = {}
     max_pss = {}
     
@@ -182,40 +183,41 @@ def calculating():
             
             trades.update(
                 {key: {
-                "type" : "binance_higher",
-                "binance_sell_price" : binance_bid,
-                "bybit_buy_price" : bybit_ask
-            }}
+                    "type": "binance_higher",
+                    "binance_sell_price": binance_bid,
+                    "bybit_buy_price": bybit_ask
+                }}
             )
             
             print(f"{key}. bin_bid {binance_bid} - byb_ask {bybit_ask} = {binance_higher} ({binance_higher_p}%)")
             bot3.send_message(662482931, f"{key}. bin_bid {binance_bid} - byb_ask {bybit_ask} = {binance_higher} ({binance_higher_p}%)")
-            
+        
         elif bybit_higher_p >= alert and key not in trades.keys():
             
             trades.update(
                 {key: {
-                "type" : "bybit_higher",
-                "bybit_sell_price" : bybit_bid,
-                "binance_buy_price" : binance_ask
-            }}
+                    "type": "bybit_higher",
+                    "bybit_sell_price": bybit_bid,
+                    "binance_buy_price": binance_ask
+                }}
             )
             
             print(f"{key}. byb_bid {bybit_bid} - bin_ask {binance_ask} = {bybit_higher} ({bybit_higher_p}%)")
             bot3.send_message(662482931, f"{key}. byb_bid {bybit_bid} - bin_ask {binance_ask} = {bybit_higher} ({bybit_higher_p}%)")
-
+        
         elif key in trades.keys():
             if trades.get(key).get("type") == "binance_higher":
-                entry_div = (trades.get(key).get("binance_sell_price") - trades.get(key).get("bybit_buy_price")) / (trades.get(key).get("binance_sell_price") / 100)
+                entry_div = (trades.get(key).get("binance_sell_price") - trades.get(key).get("bybit_buy_price")) / (
+                            trades.get(key).get("binance_sell_price") / 100)
                 current_div = abs((binance_ask - bybit_bid) / (max([binance_ask, bybit_bid]) / 100))
                 if entry_div - current_div >= profit + fee:
                     print(f"Closed profit trade on {key}, div range {entry_div - current_div}")
                     bot3.send_message(662482931, f"Closed profit trade on {key}, div range {entry_div - current_div}")
                     trades.pop(key)
-                    
-                
+            
             elif trades.get(key).get("type") == "bybit_higher":
-                entry_div = (trades.get(key).get("bybit_sell_price") - trades.get(key).get("binance_buy_price")) / (trades.get(key).get("bybit_sell_price") / 100)
+                entry_div = (trades.get(key).get("bybit_sell_price") - trades.get(key).get("binance_buy_price")) / (
+                            trades.get(key).get("bybit_sell_price") / 100)
                 current_div = abs((binance_bid - bybit_ask) / (max([binance_bid, bybit_ask]) / 100))
                 if entry_div - current_div >= profit + fee:
                     print(f"Closed profit trade on {key}, div range {entry_div - current_div}")
@@ -227,10 +229,12 @@ def calculating():
     binance_ts_done = False
     binance_pr_done = False
 
+
 if __name__ == '__main__':
     
+    print("Starting...")
+    
     while True:
-       
         bybit_ts_thread = threading.Thread(target=bybit_tick_sizes)
         bybit_pr_thread = threading.Thread(target=bybit_prices)
         binance_ts_thread = threading.Thread(target=binance_tick_sizes)
@@ -248,5 +252,8 @@ if __name__ == '__main__':
         binance_ts_thread.join()
         binance_pr_thread.join()
         calculating_thread.join()
-  
-        time.sleep(1)
+        
+        print("")
+        print("done cycle")
+        
+        time.sleep(2)
