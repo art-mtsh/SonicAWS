@@ -17,8 +17,7 @@ def ticksize_dictionary(ticksize_filter, price_filter):
 				]
 			for s in response_data
 		}
-		# print(bybit_tick_sizes)
-		return bybit_tick_sizes # {"symbol": [tick_size, minQty]}
+		return bybit_tick_sizes
 	
 	def bybit_prices():
 		
@@ -32,10 +31,8 @@ def ticksize_dictionary(ticksize_filter, price_filter):
 			data.get("symbol"): [float(data.get("bid1Price")), float(data.get("ask1Price"))]
 			for data in response_data
 		}
-		
-		# print(bybit_prices)
+
 		return bybit_prices
-	
 	
 	def binance_tick_sizes():
 		
@@ -52,9 +49,8 @@ def ticksize_dictionary(ticksize_filter, price_filter):
 			]
 			for s in response_data
 		}
-		# print(binance_tick_sizes)
-		return binance_tick_sizes # {"symbol": [tick_size, minQty]}
-	
+
+		return binance_tick_sizes
 	
 	def binance_prices():
 		
@@ -88,19 +84,23 @@ def ticksize_dictionary(ticksize_filter, price_filter):
 			ts = max_tss[key] / (max_pss[key] / 100)
 			ts = float('{:.3f}'.format(ts))
 			
-			if ts <= ticksize_filter and max_pss[key] <= price_filter:
-				# result[key] = ts
-				binance_qty_step = int(float(binance_tick_sizes[key][1])) \
-					if int(float(binance_tick_sizes[key][1])) == float(binance_tick_sizes[key][1]) \
-					else float(binance_tick_sizes[key][1])
-				
-				bybit_qty_step = int(float(bybit_tick_sizes[key][1])) \
-					if int(float(bybit_tick_sizes[key][1])) == float(bybit_tick_sizes[key][1]) \
-					else float(bybit_tick_sizes[key][1])
-				
+			binance_qty_step = int(float(binance_tick_sizes[key][1])) \
+				if int(float(binance_tick_sizes[key][1])) == float(binance_tick_sizes[key][1]) \
+				else float(binance_tick_sizes[key][1])
+			
+			bybit_qty_step = int(float(bybit_tick_sizes[key][1])) \
+				if int(float(bybit_tick_sizes[key][1])) == float(bybit_tick_sizes[key][1]) \
+				else float(bybit_tick_sizes[key][1])
+			
+			if ts <= ticksize_filter and max_pss[key] < price_filter:
+			
 				result[key] = [binance_qty_step, bybit_qty_step]
 				
 	return result
 
-# for key, value in ticksize_dictionary(0.05, 100).items():
+# res = ticksize_dictionary(0.05, 100)
+# for key, value in res.items():
 # 	print(f"{key}: Binace step {value[0]}, bybit step {value[1]}")
+#
+# print("")
+# print(len(res))

@@ -234,7 +234,7 @@ if __name__ == '__main__':
         last_second_digit = int(now.strftime('%S'))
 
         if last_minute_digit % 15 == 0 and 5 > last_second_digit > 0:
-            pairs = ticksize_dictionary(ticksize_filter=0.03, price_filter=100)
+            pairs = ticksize_dictionary(ticksize_filter=0.05, price_filter=100)
             print(f"Start dictionary updated...{len(pairs)} coins")
         
         bybit_pr_thread = threading.Thread(target=bybit_prices)

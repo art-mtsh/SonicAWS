@@ -1,5 +1,5 @@
 
-risk_dollars = 11
+risk_dollars = 8
 binance_ask = 50.440
 
 qty_bin = 0.1

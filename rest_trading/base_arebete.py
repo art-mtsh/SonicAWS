@@ -113,13 +113,14 @@ def calculation(instr, ticksize_filter):
 			profit = 0.2
 			alert = 0.6 #fee + spread + slippage + profit
 			
-			trades = []
-			
-			for d in range(0, len(divers)-1):
-				if d > alert:
-					for e in range(d+1, len(divers)-1):
-						if d - e > alert:
-							trades.append(d - e)
+			# trades = []
+			# counter = 0
+			# for d in range(0, len(divers)-1):
+			# 	if d > alert and d == counter:
+			# 		for e in range(d+1, len(divers)-1):
+			# 			if d - e > alert:
+			# 				trades.append(d - e)
+			# 				counter = e+1
 				
 			
 			if max(divers) - min(divers) >= alert:
