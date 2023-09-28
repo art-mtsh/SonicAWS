@@ -101,7 +101,7 @@ def search_activale(price_filter, ticksize_filter, atr_filter, search_distance):
 	
 	# if len(signal_message) != 0:
 	# 	print(f'For signal:\n{signal_message}')
-	# 	bot3.send_message(662482931, f'️{total_count}c({timeinterval}): <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter}cds\n'
+	# 	bot1.send_message(662482931, f'️{total_count}c({timeinterval}): <${price_filter}, <{ticksize_filter}%, >{atr_filter}%, >{cloud_filter}cds\n'
 	# 							f'\n'
 	# 							f'{signal_message}\n'
 	# 							f'\n'

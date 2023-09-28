@@ -1,13 +1,8 @@
 import hmac
 import hashlib
-import keys
-
-# Bybit API Key and Secret
-api_key = keys.BYBIT_API
-api_secret = keys.BYBIT_SECRET
 
 
-def auth(payload, recv_window, timestamp):
+def auth(payload, recv_window, timestamp, api_key, api_secret):
 	if api_key is None or api_secret is None:
 		raise PermissionError("Authenticated endpoints require keys.")
 	

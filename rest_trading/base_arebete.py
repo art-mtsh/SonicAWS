@@ -136,7 +136,7 @@ def calculation(instr, ticksize_filter):
 		Усе, що далі - наш прибуток.
 		'''
 
-		# 		bot3.send_message(662482931, f"#{symbol}:\n"
+		# 		bot1.send_message(662482931, f"#{symbol}:\n"
 		# 		      f"Current divergence: {current_clean}% > {divergence_filter}\n"
 		# 		      f"{bin_close[-1]} - {bybClose[-1]} = {current_price_diff}\n"
 		# 		      f"Divs ranges is: {min(divers)} --> {max(divers)}\n")

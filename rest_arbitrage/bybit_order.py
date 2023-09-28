@@ -1,17 +1,11 @@
 import json
 import requests
 import time
-import keys
 import bybit_prepare_payload
 import bybit_auth_hash
+import keys
 
-
-# Bybit API Key and Secret
-api_key = keys.BYBIT_API
-api_secret = keys.BYBIT_SECRET
-
-
-def bybit_trade(symbol, side, quantity):
+def bybit_market_trade(symbol, side, quantity, api_key, api_secret):
 	# Bybit API endpoint for creating market orders
 	endpoint = "https://api.bybit.com/v5/order/create"
 	
@@ -32,7 +26,7 @@ def bybit_trade(symbol, side, quantity):
 	
 	req_params = bybit_prepare_payload.prepare_payload(method=None, parameters=request_payload)
 	
-	signature = bybit_auth_hash.auth(payload=req_params, recv_window=5000, timestamp=timestamp)
+	signature = bybit_auth_hash.auth(payload=req_params, recv_window=5000, timestamp=timestamp, api_key=api_key, api_secret=api_secret)
 	
 	headers = {
 		"Content-Type": "application/json",
@@ -50,5 +44,3 @@ def bybit_trade(symbol, side, quantity):
 	response = requests.post(url=endpoint, data=payload_json, headers=headers)
 	
 	return response.json()
-	
-	

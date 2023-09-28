@@ -16,11 +16,25 @@ try:
     if response.status_code == 200:
         response_data = response.json()
         response_data = response_data.get("result").get("list")
+        # print(response_data)
         
-        for sym in response_data:
-            symbol = sym.get("symbol")
-            tick_size = sym.get("priceFilter").get("tickSize")
-            ticksizes.update({symbol: tick_size})
+        for data in response_data:
+            symbol = data.get("symbol")
+            tick_size = data.get("priceFilter").get("tickSize")
+            minQty = data.get("lotSizeFilter").get("qtyStep")
+            
+            print(f"{symbol}, {tick_size}, {minQty}")
+            
+        # response_data = response_data.get("symbols")
+        # for sym in response_data:
+        #     symbol = sym.get("symbol")
+        #     # tick_size = sym.get("priceFilter").get("tickSize")
+        #     quantityPrecision = sym.get("quantityPrecision")
+        #     minQty = sym.get("filters")[1]
+        #     minQty = minQty.get("minQty")
+        #     # ticksizes.update({symbol: tick_size})
+        #
+        #     print(f"{symbol}, {quantityPrecision}, {minQty}")
             
         
         

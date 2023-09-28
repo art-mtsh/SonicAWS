@@ -2,8 +2,8 @@ import websocket
 import json
 import threading
 import time
-from websocket_trading import keys
-from binance_trade import binance_trade
+import keys
+from rest_arbitrage.binance_order import binance_market_trade
 from binance_account_info import binance_positions
 
 # Binance API Key and Secret
@@ -28,7 +28,7 @@ def on_message_depth(ws, message):
     if asks > 0.10:
         if asks > 0.182 and f"Binance-{sym}-BUY" not in sent_positions.keys():
 
-            response = binance_trade(sym.upper(), "BUY", quantity)
+            response = binance_market_trade(sym.upper(), "BUY", quantity,,
             sent_positions.update({f"Binance-{sym}-BUY" : response.get('orderId')})
 
             print("Market Order Response:", response)
@@ -36,7 +36,7 @@ def on_message_depth(ws, message):
 
         elif asks <= 0.182 and f"Binance-{sym}-SELL" not in sent_positions.keys():
 
-            response = binance_trade(sym.upper(), "SELL", quantity)
+            response = binance_market_trade(sym.upper(), "SELL", quantity,,
             sent_positions.update({f"Binance-{sym}-SELL": response.get('orderId')})
 
             print("Market Order Response:", response)
@@ -51,14 +51,14 @@ def on_message_depth(ws, message):
             
             if sent_positions.get(f"Binance-{sym}-BUY") is not None:
                 
-                response = binance_trade(sym.upper(), "SELL", quantity)
+                response = binance_market_trade(sym.upper(), "SELL", quantity,,
                 sent_positions.pop(f"Binance-{sym}-BUY")
                 print("Market Order Response:", response)
                 print(f"Current sent dict: {sent_positions}")
 
             elif sent_positions.get(f"Binance-{sym}-SELL") is not None:
                 
-                response = binance_trade(sym.upper(), "BUY", quantity)
+                response = binance_market_trade(sym.upper(), "BUY", quantity,,
                 sent_positions.pop(f"Binance-{sym}-SELL")
                 print("Market Order Response:", response)
                 print(f"Current sent dict: {sent_positions}")

@@ -2,8 +2,7 @@ import requests
 import hashlib
 import hmac
 import time
-from websocket_trading import keys
-
+import keys
 
 # API credentials
 api_key = keys.BINANCE_API

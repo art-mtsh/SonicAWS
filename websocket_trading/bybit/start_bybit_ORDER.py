@@ -1,7 +1,7 @@
 import websocket
 import json
 import time
-from websocket_trading import keys
+import keys
 from pybit.unified_trading import HTTP
 
 api_key = keys.BYBIT_API_V2
