@@ -25,7 +25,7 @@ binance_pr_done = False
 trades = {}
 keep_trading = True
 
-alert = 0.7
+alert = 0.6
 exit_div = 0.1
 
 risk_dollars = 10
