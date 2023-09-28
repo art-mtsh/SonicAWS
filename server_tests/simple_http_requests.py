@@ -18,12 +18,12 @@ try:
         response_data = response_data.get("result").get("list")
         # print(response_data)
         
-        for data in response_data:
-            symbol = data.get("symbol")
-            tick_size = data.get("priceFilter").get("tickSize")
-            minQty = data.get("lotSizeFilter").get("qtyStep")
-            
-            print(f"{symbol}, {tick_size}, {minQty}")
+        # for data in response_data:
+        #     symbol = data.get("symbol")
+        #     tick_size = data.get("priceFilter").get("tickSize")
+        #     minQty = data.get("lotSizeFilter").get("qtyStep")
+        #
+        #     print(f"{symbol}, {tick_size}, {minQty}")
             
         # response_data = response_data.get("symbols")
         # for sym in response_data:
@@ -35,8 +35,6 @@ try:
         #     # ticksizes.update({symbol: tick_size})
         #
         #     print(f"{symbol}, {quantityPrecision}, {minQty}")
-            
-        
         
     else:
         print(f"Received status code: {response.status_code}")
