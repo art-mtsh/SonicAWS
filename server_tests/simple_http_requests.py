@@ -28,7 +28,7 @@ try:
             # print(f"{symbol}, {tick_size}, step: {minQty}, min trade: {mintradeQty}")
             
         response_data = response_data.get("symbols")
-        print(response_data)
+        # print(response_data)
         
         for sym in response_data:
             symbol = sym.get("symbol")

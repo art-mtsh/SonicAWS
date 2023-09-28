@@ -2,8 +2,9 @@ from requests import get
 from multiprocessing import Process
 import telebot
 import time
-import datetime
-from module_get_pairs import get_pairs
+from module_get_pairs_binance import binance_pairs
+from datetime import datetime, timedelta
+
 
 TOKEN1 = '5657267406:AAExhEvjG3tjb0KL6mTM9otoFiL6YJ_1aSA'
 bot1 = telebot.TeleBot(TOKEN1)
@@ -20,15 +21,17 @@ bybit_frame = '1'
 price_filter = 100000
 ticksize_filter = 100
 
-atr_calculation_length = 10
-history_lookback = 720
-request_limit_length = history_lookback + atr_calculation_length + 5
+atr_calculation_length = 0
+history_lookback = 960
+request_limit_length = 990
 
 
-def calculation(instr, ticksize_filter):
+def calculation(instr, end_date):
 	
 	for symbol in instr:
 		
+		bin_timestamp = []
+		byb_timestamp = []
 		bin_open = []
 		bin_high = []
 		bin_low = []
@@ -39,7 +42,7 @@ def calculation(instr, ticksize_filter):
 		byb_close = []
 		
 		# # --- BINANCE DATA ---
-		binance_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}'
+		binance_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}'
 		binance_klines = get(binance_klines)
 		
 		if binance_klines.status_code == 200:
@@ -47,13 +50,14 @@ def calculation(instr, ticksize_filter):
 	
 			if response_length == request_limit_length:
 				binance_candle_data = binance_klines.json()
+				bin_timestamp = list(float(i[0]) for i in binance_candle_data)
 				bin_open = list(float(i[1]) for i in binance_candle_data)
 				bin_high = list(float(i[2]) for i in binance_candle_data)
 				bin_low = list(float(i[3]) for i in binance_candle_data)
 				bin_close = list(float(i[4]) for i in binance_candle_data)
 		
 		# --- BYBIT DATA ---
-		bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame}&limit={request_limit_length}'
+		bybit_klines = f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame}&limit={request_limit_length}&end={int(end_date)}'
 		bybit_klines = get(bybit_klines)
 		
 		if bybit_klines.status_code == 200:
@@ -62,12 +66,17 @@ def calculation(instr, ticksize_filter):
 			
 			if response_length == request_limit_length:
 				bybit_candle_data = bybit_klines.json().get("result").get("list")
+				byb_timestamp = list(float(i[0]) for i in bybit_candle_data)[::-1]
 				byb_open = list(float(i[1]) for i in bybit_candle_data)[::-1]
 				byb_high = list(float(i[2]) for i in bybit_candle_data)[::-1]
 				byb_low = list(float(i[3]) for i in bybit_candle_data)[::-1]
 				byb_close = list(float(i[4]) for i in bybit_candle_data)[::-1]
 				
 		if len(bin_close) == request_limit_length and len(byb_close) == request_limit_length:
+			# print(symbol)
+			# print(f"{symbol}")
+			# print(f"{byb_timestamp}")
+			# print(f"{bin_timestamp}")
 			# --- COUNTING DIVERGENCES ---
 			divers = []
 			for candle in range(history_lookback, 1, -1):
@@ -103,9 +112,12 @@ def calculation(instr, ticksize_filter):
 				# 	distance_per = abs(bin_close[-candle] - byb_close[-candle]) / (bin_close[-candle] / 100)
 				# 	distance_per = float('{:.2f}'.format(distance_per))
 				# 	divers.append(distance_per)
-				distance_per = abs(bin_close[-candle] - byb_close[-candle]) / (bin_close[-candle] / 100)
-				distance_per = float('{:.2f}'.format(distance_per))
-				divers.append(distance_per)
+				if byb_timestamp[-candle] == bin_timestamp[-candle]:
+					distance_per = abs(bin_close[-candle] - byb_close[-candle]) / (bin_close[-candle] / 100)
+					distance_per = float('{:.2f}'.format(distance_per))
+					divers.append(distance_per)
+				else:
+					print(f"{symbol} {byb_timestamp[-candle]} / {bin_timestamp[-candle]}")
 			
 			fee = 0.18
 			spread = 0.14
@@ -122,20 +134,35 @@ def calculation(instr, ticksize_filter):
 			# 				trades.append(d - e)
 			# 				counter = e+1
 				
-			
-			if max(divers) - min(divers) >= alert:
-				print(f"{symbol}, minimum divergence: {min(divers)}%, maximum divergence: {max(divers)}%")
-				print(divers)
+			# print(f"{symbol}: {divers}")
+			if max(divers) - min(divers) >= 1.0 and len(set(divers)) >= 30:
+				# print(f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}')
+				# print(f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame}&limit={request_limit_length}&end={int(end_date)}')
+				print(f"{symbol}, minimum divergence: {min(divers)}%, maximum divergence: {max(divers)}%, unique values: {len(set(divers))}/{len(divers)}")
+				print(f"{symbol}", end=", ")
+				for div in divers:
+					print(str(div), end=", ")
+					
+				# # Calculate the minimum difference
+				# min_difference = float('inf')  # Initialize with positive infinity
+				#
+				# for i in range(1, len(unique_sorted_list)):
+				# 	difference = unique_sorted_list[i] - unique_sorted_list[i - 1]
+				# 	if difference < min_difference:
+				# 		min_difference = difference
+				# print(f"Min step: {min_difference}")
 				
-			results = []
-
-			for d in range(0, len(divers) - 1):
-				if divers[d] - divers[d + 1] >= alert:
-					results.append(abs(divers[d] - divers[d + 1]))
-
-			if len(results) != 0:
-				print(f"{symbol} : {sum(results)} по сусіднім хвилинам")
 				print("")
+				
+			# results = []
+			#
+			# for d in range(0, len(divers) - 1):
+			# 	if divers[d] - divers[d + 1] >= alert:
+			# 		results.append(abs(divers[d] - divers[d + 1]))
+			#
+			# if len(results) != 0:
+			# 	print(f"{symbol} : {sum(results)} по сусіднім хвилинам")
+			# 	print("")
 				
 		'''
 		Розраховувати "чисту" дивергенцію в моменті (за мінусом комісій, тіксайзу і т.д.) - не має сенсу, бо
@@ -154,37 +181,51 @@ def calculation(instr, ticksize_filter):
 
 def search_activale(price_filter, ticksize_filter):
 	time1 = time.perf_counter()
-	print(f"Starting processes at {datetime.datetime.now().strftime('%H:%M:%S')}")
+	print(f"Starting processes at {datetime.now().strftime('%H:%M:%S')}")
 	
 	threads = 16
 	
-	instr = get_pairs(price_filter, ticksize_filter, num_chunks=threads)
+	instr = binance_pairs(chunks=threads)
 	total_count = sum(len(sublist) for sublist in instr)
 	
 	print(f"{total_count} coins: Price <= ${price_filter}, Tick <= {ticksize_filter}%")
 	print("")
 	
-	the_processes = []
 	
-	for i in range(threads):
-		process = Process(target=calculation, args=(instr[i], ticksize_filter))
-		the_processes.append(process)
 	
-	for pro in the_processes:
-		pro.start()
-	
-	for pro in the_processes:
-		pro.join()
+	for day in range(1, 31):
+		print(f"Day {day}")
+		print("")
+		the_processes = []
+		
+		for i in range(threads):
+			
+			end_date_timestamp = datetime(2023, 8, day).timestamp()
+			end_date = datetime.fromtimestamp(end_date_timestamp)
+			hours_to_add = 20  # +++++++++++++++++++++++++
+			minutes_to_add = 0  # +++++++++++++++++++++++++
+			time_to_add = timedelta(hours=hours_to_add, minutes=minutes_to_add)
+			new_date = end_date + time_to_add
+			end_date = new_date.timestamp() * 1000
+			
+			process = Process(target=calculation, args=(instr[i], end_date))
+			the_processes.append(process)
+		
+		for pro in the_processes:
+			pro.start()
+		
+		for pro in the_processes:
+			pro.join()
 
 	time2 = time.perf_counter()
 	time3 = time2 - time1
 	
-	print(f"Finished processes in {int(time3)} seconds, at {datetime.datetime.now().strftime('%H:%M:%S')}\n")
+	print(f"Finished processes in {int(time3)} seconds, at {datetime.now().strftime('%H:%M:%S')}\n")
 
 
 def waiting():
 	while True:
-		now = datetime.datetime.now()
+		now = datetime.now()
 		# last_hour_digit = int(now.strftime('%H'))
 		last_minute_digit = int(now.strftime('%M'))
 		last_second_digit = int(now.strftime('%S'))
