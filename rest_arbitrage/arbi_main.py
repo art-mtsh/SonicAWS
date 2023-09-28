@@ -1,4 +1,3 @@
-import json
 import threading
 from datetime import datetime
 import time
