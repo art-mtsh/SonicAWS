@@ -223,7 +223,7 @@ def calculating(filtered_pairs_ready_to_trade):
 if __name__ == '__main__':
     
     print("Starting...")
-    pairs = ticksize_dictionary(ticksize_filter=0.03, price_filter=100)
+    pairs = ticksize_dictionary(ticksize_filter=0.05, price_filter=100)
     print(f"Start dictionary done...{len(pairs)} coins")
     time.sleep(1)
     
