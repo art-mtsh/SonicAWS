@@ -1,10 +1,10 @@
 import threading
-from datetime import datetime
-import time
 import requests
+import time
 import telebot
-from queue import Queue
 import keys
+from datetime import datetime
+from queue import Queue
 from binance_order import binance_market_trade
 from bybit_order import bybit_market_trade
 from ticksize_dictionary import ticksize_dictionary
@@ -28,7 +28,8 @@ keep_trading = True
 alert = 0.7
 exit_div = 0.1
 
-risk_dollars = 6
+risk_dollars = 10
+
 
 def bybit_prices():
     global bybit_pr_done
@@ -47,8 +48,9 @@ def bybit_prices():
         
         dictionary_manager.put(("bybit_prices", bybit_prices))
         bybit_pr_done = True
-    except Exception:
-        print(f"bybit_prices\n{Exception}")
+    except Exception as e:
+        print(f"bybit_prices\n{e}")
+
 
 def binance_prices():
     global binance_pr_done
@@ -68,8 +70,9 @@ def binance_prices():
         dictionary_manager.put(("binance_prices", binance_prices))
         binance_pr_done = True
         
-    except Exception:
-        print(f"binance_prices\n{Exception}")
+    except Exception as e:
+        print(f"binance_prices\n{e}")
+    
     
 def calculating(filtered_pairs_ready_to_trade):
     global bybit_pr_done, binance_pr_done, keep_trading
@@ -120,11 +123,7 @@ def calculating(filtered_pairs_ready_to_trade):
                 100000: str(int(qty / 100000) * 100000),
             }
             
-            qty_binance_sell = format_map.get(value[0], "Invalid qty input")
-            qty_binance_buy = format_map.get(value[0], "Invalid qty input")
-            
-            qty_bybit_sell = format_map.get(value[1], "Invalid qty input")
-            qty_bybit_buy = format_map.get(value[1], "Invalid qty input")
+            qty_uni = format_map.get(max([value[0], value[1]]), "Invalid qty input")
             
             # if key == "TRBUSDT": print(max(['{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100)), '{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100))]))
 
@@ -141,8 +140,8 @@ def calculating(filtered_pairs_ready_to_trade):
                 
                 if (binance_bid - bybit_ask) / (binance_bid / 100) >= alert:
                     higher = "Binance"
-                    bin_data = binance_market_trade(key, "SELL", qty_binance_sell, binance_key, binance_secret)
-                    byb_data = bybit_market_trade(key, "Buy", qty_bybit_buy, bybit_key, bybit_secret)
+                    bin_data = binance_market_trade(key, "SELL", qty_uni, binance_key, binance_secret)
+                    byb_data = bybit_market_trade(key, "Buy", qty_uni, bybit_key, bybit_secret)
                     tried_to_trade = True
                     
                     trades.update({key: {"type": "binance_higher", "binance_sell_price": binance_bid, "bybit_buy_price": bybit_ask}})
@@ -151,8 +150,8 @@ def calculating(filtered_pairs_ready_to_trade):
                 
                 elif (bybit_bid - binance_ask) / (bybit_bid / 100) >= alert:
                     higher = "Bybit"
-                    bin_data = binance_market_trade(key, "BUY", qty_binance_buy, binance_key, binance_secret)
-                    byb_data = bybit_market_trade(key, "Sell", qty_bybit_sell, bybit_key, bybit_secret)
+                    bin_data = binance_market_trade(key, "BUY", qty_uni, binance_key, binance_secret)
+                    byb_data = bybit_market_trade(key, "Sell", qty_uni, bybit_key, bybit_secret)
                     tried_to_trade = True
                     
                     trades.update({key: {"type": "bybit_higher", "bybit_sell_price": bybit_bid, "binance_buy_price": binance_ask}})
@@ -160,18 +159,19 @@ def calculating(filtered_pairs_ready_to_trade):
                                                  f"Open trades. Div: {float('{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100)))}%")
                 
                 if tried_to_trade:
-                    if not('status' in bin_data.keys() and bin_data['status'] == 'FILLED') or not('retMsg' in byb_data.keys() and byb_data['retMsg'] == 'OK'):
+                    if not('status' in bin_data.keys() and bin_data['status'] == 'FILLED') or \
+                            not('retMsg' in byb_data.keys() and byb_data['retMsg'] == 'OK'):
                         keep_trading = False
                         if not('status' in bin_data.keys() and bin_data['status'] == 'FILLED'):
                             binance_market_trade(symbol=key,
                                                  side="BUY" if higher == "Binance" else "SELL",
-                                                 quantity=qty_binance_buy,
+                                                 quantity=qty_uni,
                                                  binance_key=binance_key,
                                                  binance_secret=binance_secret)
                         else:
                             bybit_market_trade(symbol=key,
                                                side="Sell" if higher == "Binance" else "Buy",
-                                               quantity=qty_bybit_sell,
+                                               quantity=qty_uni,
                                                api_key=bybit_key,
                                                api_secret=bybit_secret)
 
@@ -186,26 +186,27 @@ def calculating(filtered_pairs_ready_to_trade):
                 
                 if trades.get(key).get("type") == "binance_higher" and abs(binance_ask - bybit_bid) / (binance_ask / 100) < exit_div:
                         
-                        bin_data = binance_market_trade(key, "BUY", qty_binance_buy, binance_key, binance_secret)
-                        byb_data = bybit_market_trade(key, "Sell", qty_bybit_sell, bybit_key, bybit_secret)
-                        tried_to_trade = True
-                        
-                        trades.pop(key)
-                        bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key}.\n"
-                                                     f"Closed trades. Binance buy at {binance_ask}, Bybit sell at {bybit_bid}")
+                    bin_data = binance_market_trade(key, "BUY", qty_uni, binance_key, binance_secret)
+                    byb_data = bybit_market_trade(key, "Sell", qty_uni, bybit_key, bybit_secret)
+                    tried_to_trade = True
+                    
+                    trades.pop(key)
+                    bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key}.\n"
+                                                 f"Closed trades. Binance buy at {binance_ask}, Bybit sell at {bybit_bid}")
                 
                 elif trades.get(key).get("type") == "bybit_higher" and abs(bybit_ask - binance_bid) / (bybit_ask / 100) < exit_div:
                         
-                        bin_data = binance_market_trade(key, "SELL", qty_binance_sell, binance_key, binance_secret)
-                        byb_data = bybit_market_trade(key, "Buy", qty_bybit_buy, bybit_key, bybit_secret)
-                        tried_to_trade = True
-                        
-                        trades.pop(key)
-                        bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key}.\n"
-                                                     f"Closed trades. Binance sell at {binance_bid}, Bybit buy at {bybit_ask}")
+                    bin_data = binance_market_trade(key, "SELL", qty_uni, binance_key, binance_secret)
+                    byb_data = bybit_market_trade(key, "Buy", qty_uni, bybit_key, bybit_secret)
+                    tried_to_trade = True
+                    
+                    trades.pop(key)
+                    bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key}.\n"
+                                                 f"Closed trades. Binance sell at {binance_bid}, Bybit buy at {bybit_ask}")
                         
                 if tried_to_trade:
-                    if not('status' in bin_data.keys() and bin_data['status'] == 'FILLED') or not('retMsg' in byb_data.keys() and byb_data['retMsg'] == 'OK'):
+                    if not('status' in bin_data.keys() and bin_data['status'] == 'FILLED') or \
+                            not('retMsg' in byb_data.keys() and byb_data['retMsg'] == 'OK'):
                         keep_trading = False
                         bot1.send_message(662482931, f"{key}\nBinance response:\n{bin_data}\nBybit response:\n{byb_data}")
                     
@@ -218,14 +219,12 @@ def calculating(filtered_pairs_ready_to_trade):
     bybit_pr_done = False
     binance_pr_done = False
 
+
 if __name__ == '__main__':
     
     print("Starting...")
-    
-    pairs = ticksize_dictionary(ticksize_filter = 0.03, price_filter = 100)
-    
+    pairs = ticksize_dictionary(ticksize_filter=0.03, price_filter=100)
     print(f"Start dictionary done...{len(pairs)} coins")
-    
     time.sleep(1)
     
     while keep_trading:
@@ -235,7 +234,7 @@ if __name__ == '__main__':
         last_second_digit = int(now.strftime('%S'))
 
         if last_minute_digit % 15 == 0 and 5 > last_second_digit > 0:
-            pairs = ticksize_dictionary(ticksize_filter = 0.03, price_filter = 100)
+            pairs = ticksize_dictionary(ticksize_filter=0.03, price_filter=100)
             print(f"Start dictionary updated...{len(pairs)} coins")
         
         bybit_pr_thread = threading.Thread(target=bybit_prices)

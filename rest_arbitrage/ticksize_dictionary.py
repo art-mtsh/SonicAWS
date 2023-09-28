@@ -102,5 +102,5 @@ def ticksize_dictionary(ticksize_filter, price_filter):
 				
 	return result
 
-# for key, value in ticksize_dictionary(0.03, 100).items():
-# 	print(f"{key}: Binace step {value[0]}, bybit step {value[1]}")
+for key, value in ticksize_dictionary(0.05, 100).items():
+	print(f"{key}: Binace step {value[0]}, bybit step {value[1]}")

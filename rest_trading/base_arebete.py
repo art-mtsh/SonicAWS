@@ -21,7 +21,7 @@ price_filter = 100000
 ticksize_filter = 100
 
 atr_calculation_length = 10
-history_lookback = 60
+history_lookback = 720
 request_limit_length = history_lookback + atr_calculation_length + 5
 
 
@@ -111,7 +111,16 @@ def calculation(instr, ticksize_filter):
 			spread = 0.14
 			slippage = 0.3
 			profit = 0.2
-			alert = fee + spread + slippage + profit
+			alert = 0.6 #fee + spread + slippage + profit
+			
+			trades = []
+			
+			for d in range(0, len(divers)-1):
+				if d > alert:
+					for e in range(d+1, len(divers)-1):
+						if d - e > alert:
+							trades.append(d - e)
+				
 			
 			if max(divers) - min(divers) >= alert:
 				print(f"{symbol}, minimum divergence: {min(divers)}%, maximum divergence: {max(divers)}%")
