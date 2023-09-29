@@ -137,6 +137,6 @@ def waiting():
 
 
 if __name__ == '__main__':
-	while True:
-		search_activale()
-		waiting()
+	# while True:
+	search_activale()
+	# waiting()
