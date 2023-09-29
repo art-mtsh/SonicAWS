@@ -57,10 +57,10 @@ def calculation(instr, end_date):
 					distance_per = abs(bin_close[-candle] - byb_close[-candle]) / (bin_close[-candle] / 100)
 					distance_per = float('{:.2f}'.format(distance_per))
 					divers.append(distance_per)
-				else:
-					print(f"{symbol} {byb_timestamp[-candle]} / {bin_timestamp[-candle]}")
+				# else:
+				# 	print(f"{symbol} {byb_timestamp[-candle]} / {bin_timestamp[-candle]}")
 
-			if max(divers) - min(divers) >= 1.0 and len(set(divers)) >= 30:
+			if max(divers) > 0.8 and (max(divers) - min(divers)) / len(set(divers)) <= 0.02:
 				# print(f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}')
 				# print(f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame}&limit={request_limit_length}&end={int(end_date)}')
 				print(f"{symbol}, {min(divers)}% < {max(divers)}%, {len(set(divers))}/{len(divers)}", end=", ")
@@ -83,6 +83,7 @@ def search_activale():
 	
 	threads = 16
 	
+	
 	instr = binance_pairs(chunks=threads)
 	total_count = sum(len(sublist) for sublist in instr)
 	
@@ -90,7 +91,7 @@ def search_activale():
 	
 	time_of_day = [11, 23]
 	
-	for day in range(1, 31):
+	for day in range(25, 31):
 		print("")
 		print(f"Day {day}")
 		
@@ -100,7 +101,7 @@ def search_activale():
 			
 			for i in range(threads):
 				
-				end_date_timestamp = datetime(2023, 8, day).timestamp()
+				end_date_timestamp = datetime(2023, 9, day).timestamp()
 				end_date = datetime.fromtimestamp(end_date_timestamp)
 				hours_to_add = hour  # +++++++++++++++++++++++++
 				minutes_to_add = 0  # +++++++++++++++++++++++++
@@ -125,15 +126,15 @@ def search_activale():
 	print(f"Finished processes in {int(time3)} seconds, at {datetime.now().strftime('%H:%M:%S')}\n")
 
 
-def waiting():
-	while True:
-		now = datetime.now()
-		# last_hour_digit = int(now.strftime('%H'))
-		last_minute_digit = int(now.strftime('%M'))
-		last_second_digit = int(now.strftime('%S'))
-		time.sleep(0.1)
-		if last_minute_digit % 15 == 0 and last_second_digit == 0:
-			break
+# def waiting():
+# 	while True:
+# 		now = datetime.now()
+# 		# last_hour_digit = int(now.strftime('%H'))
+# 		last_minute_digit = int(now.strftime('%M'))
+# 		last_second_digit = int(now.strftime('%S'))
+# 		time.sleep(0.1)
+# 		if last_minute_digit % 15 == 0 and last_second_digit == 0:
+# 			break
 
 
 if __name__ == '__main__':
