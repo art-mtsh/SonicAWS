@@ -104,25 +104,25 @@ def calculating(filtered_pairs_ready_to_trade):
             bybit_bid = bybit_prices.get(key)[0]
             bybit_ask = bybit_prices.get(key)[1]
             
-            # qty = risk_dollars / binance_ask
-            # format_map = {
-            #     0.00000001: f"{qty:.8f}",
-            #     0.0000001: f"{qty:.7f}",
-            #     0.000001: f"{qty:.6f}",
-            #     0.00001: f"{qty:.5f}",
-            #     0.0001: f"{qty:.4f}",
-            #     0.001: f"{qty:.3f}",
-            #     0.01: f"{qty:.2f}",
-            #     0.1: f"{qty:.1f}",
-            #     1: str(int(qty)),
-            #     10: str(int(qty / 10) * 10),
-            #     100: str(int(qty / 100) * 100),
-            #     1000: str(int(qty / 1000) * 1000),
-            #     10000: str(int(qty / 10000) * 10000),
-            #     100000: str(int(qty / 100000) * 100000),
-            # }
-            #
-            # qty_uni = format_map.get(max([value[0], value[1]]), "Invalid qty input")
+            qty = risk_dollars / binance_ask
+            format_map = {
+                0.00000001: f"{qty:.8f}",
+                0.0000001: f"{qty:.7f}",
+                0.000001: f"{qty:.6f}",
+                0.00001: f"{qty:.5f}",
+                0.0001: f"{qty:.4f}",
+                0.001: f"{qty:.3f}",
+                0.01: f"{qty:.2f}",
+                0.1: f"{qty:.1f}",
+                1: str(int(qty)),
+                10: str(int(qty / 10) * 10),
+                100: str(int(qty / 100) * 100),
+                1000: str(int(qty / 1000) * 1000),
+                10000: str(int(qty / 10000) * 10000),
+                100000: str(int(qty / 100000) * 100000),
+            }
+
+            qty_uni = format_map.get(max([value[0], value[1]]), "Invalid qty input")
             
             # if key == "TRBUSDT": print(max(['{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100)), '{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100))]))
             divs.append(max(['{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100)), '{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100))]))
@@ -188,7 +188,8 @@ def calculating(filtered_pairs_ready_to_trade):
                 
                 if trades.get(key):
                     if trades.get(key) >= 5:
-                        bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key} is wait above {alert}%\n"
+                        bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}\n"
+                                                     f"{key} is wait above {alert}%, qty {qty_uni} coins\n"
                                                      f"Bin high: {'{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100))}\n"
                                                      f"Byb high: {'{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100))}")
                         trades.pop(key)
