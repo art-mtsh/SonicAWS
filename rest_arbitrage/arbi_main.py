@@ -187,7 +187,7 @@ def calculating(filtered_pairs_ready_to_trade):
                     trades.pop(key)
                 
                 if trades.get(key) >= 5:
-                    bot1.send_message(662482931, f"5 values found\n"
+                    bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key} is wait above {alert}%\n"
                                                  f"Bin high: {'{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100))}\n"
                                                  f"Byb high: {'{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100))}")
                     trades.pop(key)
