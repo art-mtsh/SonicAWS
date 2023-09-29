@@ -100,7 +100,7 @@ def search_activale():
 			
 			for i in range(threads):
 				
-				end_date_timestamp = datetime(2023, 7, day).timestamp()
+				end_date_timestamp = datetime(2023, 8, day).timestamp()
 				end_date = datetime.fromtimestamp(end_date_timestamp)
 				hours_to_add = hour  # +++++++++++++++++++++++++
 				minutes_to_add = 0  # +++++++++++++++++++++++++
@@ -116,6 +116,8 @@ def search_activale():
 			
 			for pro in the_processes:
 				pro.join()
+				
+			print("")
 
 	time2 = time.perf_counter()
 	time3 = time2 - time1
