@@ -184,8 +184,9 @@ def calculating(filtered_pairs_ready_to_trade):
                                                        quantity=qty_uni,
                                                        api_key=bybit_key,
                                                        api_secret=bybit_secret)
-                        
-                        
+                                
+                                bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} failed to trade. Processes stopped.")
+                                
                         bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}\n"
                                                      f"TRADE IS IN RUN !"
                                                      f"{key} is above {alert}%, qty {qty_uni} coins\n"
@@ -226,6 +227,9 @@ def calculating(filtered_pairs_ready_to_trade):
                     
         else:
             print(f"{key} is fucked")
+            keep_trading = False
+            bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key} is fucked. Processes stopped.")
+            
         
     if len(divs) != 0:
         print(f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, max div: {max(divs)}%, ({len(divs)} coins). Watchlist: {trades}")
