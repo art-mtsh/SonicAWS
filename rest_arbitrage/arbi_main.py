@@ -9,8 +9,7 @@ from binance_order import binance_market_trade
 from bybit_order import bybit_market_trade
 from ticksize_dictionary import ticksize_dictionary
 
-TOKEN1 = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
-bot1 = telebot.TeleBot(TOKEN1)
+bot1 = telebot.TeleBot(keys.TELEGRAM_TOKEN)
 
 binance_key = keys.BINANCE_API
 binance_secret = keys.BINANCE_SECRET
@@ -22,12 +21,6 @@ bybit_pr_done = False
 binance_pr_done = False
 trades = {}
 keep_trading = True
-
-alert = 0.7
-exit_div = 0.1
-ticksize_filter=0.05
-price_filter=150
-risk_dollars = 10
 
 
 def bybit_prices():
@@ -103,7 +96,7 @@ def calculating(filtered_pairs_ready_to_trade):
             bybit_bid = bybit_prices.get(key)[0]
             bybit_ask = bybit_prices.get(key)[1]
             
-            qty = risk_dollars / binance_ask
+            qty = keys.RISK_DOLLARS / binance_ask
             format_map = {
                 0.00000001: f"{qty:.8f}",
                 0.0000001: f"{qty:.7f}",
@@ -128,12 +121,12 @@ def calculating(filtered_pairs_ready_to_trade):
             
             if key not in trades.keys():
                 
-                if (binance_bid - bybit_ask) / (binance_bid / 100) >= alert or (bybit_bid - binance_ask) / (bybit_bid / 100) >= alert:
+                if (binance_bid - bybit_ask) / (binance_bid / 100) >= keys.ENTRY_DIVERGENCE or (bybit_bid - binance_ask) / (bybit_bid / 100) >= keys.ENTRY_DIVERGENCE:
                     trades.update({key: 1})
             
             elif key in trades.keys():
                 
-                if (binance_bid - bybit_ask) / (binance_bid / 100) >= alert or (bybit_bid - binance_ask) / (bybit_bid / 100) >= alert:
+                if (binance_bid - bybit_ask) / (binance_bid / 100) >= keys.ENTRY_DIVERGENCE or (bybit_bid - binance_ask) / (bybit_bid / 100) >= keys.ENTRY_DIVERGENCE:
                     old_val = trades.get(key)
                     trades.update({key: old_val+1})
                 else:
@@ -148,7 +141,7 @@ def calculating(filtered_pairs_ready_to_trade):
 
                         tried_to_trade = False
 
-                        if (binance_bid - bybit_ask) / (binance_bid / 100) >= alert:
+                        if (binance_bid - bybit_ask) / (binance_bid / 100) >= keys.ENTRY_DIVERGENCE:
                             higher = "Binance"
                             bin_data = binance_market_trade(key, "SELL", qty_uni, binance_key, binance_secret)
                             byb_data = bybit_market_trade(key, "Buy", qty_uni, bybit_key, bybit_secret)
@@ -158,7 +151,7 @@ def calculating(filtered_pairs_ready_to_trade):
                             bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key}.\n"
                                                          f"Open trades. Div: {float('{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100)))}%")
 
-                        elif (bybit_bid - binance_ask) / (bybit_bid / 100) >= alert:
+                        elif (bybit_bid - binance_ask) / (bybit_bid / 100) >= keys.ENTRY_DIVERGENCE:
                             higher = "Bybit"
                             bin_data = binance_market_trade(key, "BUY", qty_uni, binance_key, binance_secret)
                             byb_data = bybit_market_trade(key, "Sell", qty_uni, bybit_key, bybit_secret)
@@ -189,7 +182,7 @@ def calculating(filtered_pairs_ready_to_trade):
                                 
                         bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}\n"
                                                      f"TRADE IS IN RUN !"
-                                                     f"{key} is above {alert}%, qty {qty_uni} coins\n"
+                                                     f"{key} is above {keys.ENTRY_DIVERGENCE}%, qty {qty_uni} coins\n"
                                                      f"Bin high: {'{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100))}%, diff {binance_bid - bybit_ask}\n"
                                                      f"Byb high: {'{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100))}%, diff{bybit_bid - binance_ask}")
                         trades.pop(key)
@@ -241,7 +234,7 @@ def calculating(filtered_pairs_ready_to_trade):
 if __name__ == '__main__':
     
     print("Starting...")
-    pairs = ticksize_dictionary(ticksize_filter=ticksize_filter, price_filter=price_filter)
+    pairs = ticksize_dictionary(ticksize_filter=keys.TICKSIZE_FILTER, price_filter=keys.PRICE_FILTER)
     print(f"Start dictionary done...{len(pairs)} coins")
     time.sleep(1)
     
@@ -252,7 +245,7 @@ if __name__ == '__main__':
         last_second_digit = int(now.strftime('%S'))
 
         if last_minute_digit % 30 == 0 and 5 > last_second_digit > 0:
-            pairs = ticksize_dictionary(ticksize_filter=ticksize_filter, price_filter=price_filter)
+            pairs = ticksize_dictionary(ticksize_filter=keys.TICKSIZE_FILTER, price_filter=keys.PRICE_FILTER)
             print(f"Start dictionary updated...{len(pairs)} coins")
         
         bybit_pr_thread = threading.Thread(target=bybit_prices)

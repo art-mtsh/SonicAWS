@@ -4,7 +4,10 @@ BINANCE_SECRET = "nb7PVHZaP8kNJbZHQZD8yJdI5yvlIyg6y4FBHXac0Ug4iw9JQo6ZdWf0srcZEk
 BYBIT_API = "sFFvmltbIBKRgZAuix"
 BYBIT_SECRET = "vwA4MCKGMySBggbNWD4Ps3qiQDh3rH3c2EoN"
 
+TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 
-"""
-Contracts - Orders Positions Initiate Copy Trades  , USDC Contracts - Trade  , Unified Trading - Trade  , SPOT - Trade  , CopyTrading - Initiate Copy Trades  , Wallet - Account Transfer Subaccount Transfer  , Exchange - Exchange History  , NFT - NFT products and transaction history
-"""
+ENTRY_DIVERGENCE = 0.7
+EXIT_DIVERGENCE = 0.1
+TICKSIZE_FILTER = 0.05
+PRICE_FILTER = 150
+RISK_DOLLARS = 10
