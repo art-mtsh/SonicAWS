@@ -227,7 +227,7 @@ def calculating(filtered_pairs_ready_to_trade):
             print(f"{key} is fucked")
         
     if len(divs) != 0:
-        print(f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, max div: {max(divs)}%, ({len(divs)} coins)")
+        print(f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, max div: {max(divs)}%, ({len(divs)} coins). Watchlist: {trades}")
         
     bybit_pr_done = False
     binance_pr_done = False
