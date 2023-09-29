@@ -18,16 +18,15 @@ bybit_key = keys.BYBIT_API
 bybit_secret = keys.BYBIT_SECRET
 
 dictionary_manager = Queue()
-
 bybit_pr_done = False
 binance_pr_done = False
-
 trades = {}
 keep_trading = True
 
 alert = 0.7
 exit_div = 0.1
-
+ticksize_filter=0.05
+price_filter=150
 risk_dollars = 10
 
 
@@ -238,7 +237,7 @@ def calculating(filtered_pairs_ready_to_trade):
 if __name__ == '__main__':
     
     print("Starting...")
-    pairs = ticksize_dictionary(ticksize_filter=0.05, price_filter=150)
+    pairs = ticksize_dictionary(ticksize_filter=ticksize_filter, price_filter=price_filter)
     print(f"Start dictionary done...{len(pairs)} coins")
     time.sleep(1)
     
@@ -249,7 +248,7 @@ if __name__ == '__main__':
         last_second_digit = int(now.strftime('%S'))
 
         if last_minute_digit % 30 == 0 and 5 > last_second_digit > 0:
-            pairs = ticksize_dictionary(ticksize_filter=0.05, price_filter=150)
+            pairs = ticksize_dictionary(ticksize_filter=ticksize_filter, price_filter=price_filter)
             print(f"Start dictionary updated...{len(pairs)} coins")
         
         bybit_pr_thread = threading.Thread(target=bybit_prices)
