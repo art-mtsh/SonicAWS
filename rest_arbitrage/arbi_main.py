@@ -133,7 +133,7 @@ def calculating(filtered_pairs_ready_to_trade):
                     trades.pop(key)
                 
                 if trades.get(key):
-                    if trades.get(key) >= 5:
+                    if trades.get(key) >= keys.REPEAT_AT_LEAST:
                         higher = ""
 
                         bin_data = {}
