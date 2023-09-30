@@ -142,49 +142,47 @@ def calculating(filtered_pairs_ready_to_trade):
                         tried_to_trade = False
 
                         if (binance_bid - bybit_ask) / (binance_bid / 100) >= keys.ENTRY_DIVERGENCE:
-                            higher = "Binance"
-                            bin_data = binance_market_trade(key, "SELL", qty_uni, binance_key, binance_secret)
-                            byb_data = bybit_market_trade(key, "Buy", qty_uni, bybit_key, bybit_secret)
-                            tried_to_trade = True
+                            # higher = "Binance"
+                            # bin_data = binance_market_trade(key, "SELL", qty_uni, binance_key, binance_secret)
+                            # byb_data = bybit_market_trade(key, "Buy", qty_uni, bybit_key, bybit_secret)
+                            # tried_to_trade = True
 
-                            trades.update({key: {"type": "binance_higher", "binance_sell_price": binance_bid, "bybit_buy_price": bybit_ask}})
                             bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key}.\n"
                                                          f"Open trades. Div: {float('{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100)))}%")
 
                         elif (bybit_bid - binance_ask) / (bybit_bid / 100) >= keys.ENTRY_DIVERGENCE:
-                            higher = "Bybit"
-                            bin_data = binance_market_trade(key, "BUY", qty_uni, binance_key, binance_secret)
-                            byb_data = bybit_market_trade(key, "Sell", qty_uni, bybit_key, bybit_secret)
-                            tried_to_trade = True
+                            # higher = "Bybit"
+                            # bin_data = binance_market_trade(key, "BUY", qty_uni, binance_key, binance_secret)
+                            # byb_data = bybit_market_trade(key, "Sell", qty_uni, bybit_key, bybit_secret)
+                            # tried_to_trade = True
 
-                            trades.update({key: {"type": "bybit_higher", "bybit_sell_price": bybit_bid, "binance_buy_price": binance_ask}})
                             bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} {key}.\n"
                                                          f"Open trades. Div: {float('{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100)))}%")
 
-                        if tried_to_trade:
-                            if not('status' in bin_data.keys() and bin_data['status'] == 'FILLED') or \
-                                    not('retMsg' in byb_data.keys() and byb_data['retMsg'] == 'OK'):
-                                keep_trading = False
-                                if not('status' in bin_data.keys() and bin_data['status'] == 'FILLED'):
-                                    binance_market_trade(symbol=key,
-                                                         side="BUY" if higher == "Binance" else "SELL",
-                                                         quantity=qty_uni,
-                                                         binance_key=binance_key,
-                                                         binance_secret=binance_secret)
-                                else:
-                                    bybit_market_trade(symbol=key,
-                                                       side="Sell" if higher == "Binance" else "Buy",
-                                                       quantity=qty_uni,
-                                                       api_key=bybit_key,
-                                                       api_secret=bybit_secret)
-                                
-                                bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} failed to trade. Processes stopped.")
-                                
-                        bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}\n"
-                                                     f"TRADE IS IN RUN !"
-                                                     f"{key} is above {keys.ENTRY_DIVERGENCE}%, qty {qty_uni} coins\n"
-                                                     f"Bin high: {'{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100))}%, diff {binance_bid - bybit_ask}\n"
-                                                     f"Byb high: {'{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100))}%, diff{bybit_bid - binance_ask}")
+                        # if tried_to_trade:
+                        #     if not('status' in bin_data.keys() and bin_data['status'] == 'FILLED') or \
+                        #             not('retMsg' in byb_data.keys() and byb_data['retMsg'] == 'OK'):
+                        #         keep_trading = False
+                        #         if not('status' in bin_data.keys() and bin_data['status'] == 'FILLED'):
+                        #             binance_market_trade(symbol=key,
+                        #                                  side="BUY" if higher == "Binance" else "SELL",
+                        #                                  quantity=qty_uni,
+                        #                                  binance_key=binance_key,
+                        #                                  binance_secret=binance_secret)
+                        #         else:
+                        #             bybit_market_trade(symbol=key,
+                        #                                side="Sell" if higher == "Binance" else "Buy",
+                        #                                quantity=qty_uni,
+                        #                                api_key=bybit_key,
+                        #                                api_secret=bybit_secret)
+                        #
+                        #         bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]} failed to trade. Processes stopped.")
+                        #
+                        # bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}\n"
+                        #                              f"TRADE IS IN RUN !"
+                        #                              f"{key} is above {keys.ENTRY_DIVERGENCE}%, qty {qty_uni} coins\n"
+                        #                              f"Bin high: {'{:.2f}'.format((binance_bid - bybit_ask) / (binance_bid / 100))}%, diff {binance_bid - bybit_ask}\n"
+                        #                              f"Byb high: {'{:.2f}'.format((bybit_bid - binance_ask) / (bybit_bid / 100))}%, diff{bybit_bid - binance_ask}")
                         trades.pop(key)
 
                 # bin_data = {}

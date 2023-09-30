@@ -60,7 +60,7 @@ def calculation(instr, end_date):
 				# else:
 				# 	print(f"{symbol} {byb_timestamp[-candle]} / {bin_timestamp[-candle]}")
 
-			if max(divers) > 0.8 and (max(divers) - min(divers)) / len(set(divers)) <= 0.02:
+			if max(divers) > 0.7 and (max(divers) - min(divers)) / len(set(divers)) <= 0.02:
 				# print(f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}')
 				# print(f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame}&limit={request_limit_length}&end={int(end_date)}')
 				print(f"{symbol}, {min(divers)}% < {max(divers)}%, {len(set(divers))}/{len(divers)}", end=", ")
@@ -91,7 +91,7 @@ def search_activale():
 	
 	time_of_day = [11, 23]
 	
-	for day in range(25, 31):
+	for day in range(1, 31):
 		print("")
 		print(f"Day {day}")
 		
