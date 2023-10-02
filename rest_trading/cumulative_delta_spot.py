@@ -2,7 +2,7 @@
 import time
 import requests
 import telebot
-from rest_arbitrage import keys
+import keys
 
 bot1 = telebot.TeleBot(keys.TELEGRAM_TOKEN)
 
