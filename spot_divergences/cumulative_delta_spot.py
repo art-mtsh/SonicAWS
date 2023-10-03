@@ -56,8 +56,8 @@ def search(filtered_dictionary, binance_frame, request_limit_length, distance_to
 				
 				if dist_to_low >= distance_to_low and cumulative_delta.get(request_limit_length-1) <= cumulative_delta.get(lowest_cd_index):
 
-					print(f"{symbol}: {dist_to_low}%")
-					bot1.send_message(662482931, f"{symbol}: {dist_to_low}%")
+					print(f"{symbol}: {dist_to_low}%, {low[-1]} > {low[lowest_low_index]}")
+					bot1.send_message(662482931, f"{symbol}: {dist_to_low}%, {low[-1]} > {low[lowest_low_index]}")
 
 		else:
 			print(f"Received status code: {binance_klines.status_code}")
