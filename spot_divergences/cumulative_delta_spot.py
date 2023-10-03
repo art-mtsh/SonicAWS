@@ -65,17 +65,16 @@ def search(filtered_dictionary, binance_frame, request_limit_length, distance_to
 
 if __name__ == '__main__':
 	
+	binance_frame = str(input("Timeframe (1h, 30m, 15m, 5m, 1m): "))
+	request_limit_length = int(input("Request length, bars: "))
+	sleep_time = int(input("Sleep time, minutes: ")) * 60
+	distance_to_low = float(input("Distance to low, %: "))
+	
 	while True:
-		
-		binance_frame = str(input("Timeframe (1h, 30m, 15m, 5m, 1m): "))
-		request_limit_length = int(input("Request length, bars: "))
-		sleep_time = int(input("Sleep time, minutes: ")) * 60
-		distance_to_low = float(input("Distance to low, %: "))
 		
 		time1 = time.perf_counter()
 		
 		pairs = binance_pairs(4)
-		
 		print(f"pairs: {sum(len(inner_list) for inner_list in pairs)}")
 		
 		t1 = threading.Thread(target=search(pairs[0], binance_frame, request_limit_length, distance_to_low))
