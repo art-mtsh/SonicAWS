@@ -100,5 +100,6 @@ if __name__ == '__main__':
 		time3 = time2 - time1
 		
 		print(f"Finished processes in {int(time3)} seconds")
+		print("")
 		
-		time.sleep(1800)
+		time.sleep(900)
