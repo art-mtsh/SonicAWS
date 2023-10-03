@@ -52,7 +52,7 @@ def search(filtered_dictionary, binance_frame, request_limit_length, distance_to
 						lowest_low_index = i
 						
 				dist_to_low = (low[-1] - low[lowest_low_index]) / (low[-1] / 100)
-				dist_to_low = '{:.2f}'.format(dist_to_low)
+				dist_to_low = float('{:.2f}'.format(dist_to_low))
 				
 				if dist_to_low >= distance_to_low and cumulative_delta.get(request_limit_length-1) <= cumulative_delta.get(lowest_cd_index):
 
