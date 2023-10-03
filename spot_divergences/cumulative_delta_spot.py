@@ -8,7 +8,7 @@ TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 
-def search(filtered_dictionary, binance_frame, request_limit_length):
+def search(filtered_dictionary, binance_frame, request_limit_length, distance_to_low):
 	
 	# end_date_timestamp = datetime(2023, 9, 30).timestamp()
 	# end_date = datetime.fromtimestamp(end_date_timestamp)
@@ -51,7 +51,7 @@ def search(filtered_dictionary, binance_frame, request_limit_length):
 					if low[lowest_low_index] > low[i]:
 						lowest_low_index = i
 				
-				if low[-1] > low[lowest_low_index] and cumulative_delta.get(request_limit_length-1) <= cumulative_delta.get(lowest_cd_index):
+				if low[-1] - low[lowest_low_index] >= distance_to_low and cumulative_delta.get(request_limit_length-1) <= cumulative_delta.get(lowest_cd_index):
 					dist_to_low = (low[-1] - low[lowest_low_index]) / (low[-1] / 100)
 					dist_to_low = '{:.2f}'.format(dist_to_low)
 					print(f"{symbol}: {dist_to_low}%")
@@ -66,8 +66,9 @@ if __name__ == '__main__':
 	while True:
 		
 		binance_frame = str(input("Timeframe (1h, 30m, 15m, 5m, 1m): "))
-		request_limit_length = int(input("Request length: "))
+		request_limit_length = int(input("Request length, bars: "))
 		sleep_time = int(input("Sleep time, minutes: ") * 60)
+		distance_to_low = float(input("Distance to low, %: "))
 		
 		time1 = time.perf_counter()
 		
@@ -75,10 +76,10 @@ if __name__ == '__main__':
 		
 		print(f"pairs: {sum(len(inner_list) for inner_list in pairs)}")
 		
-		t1 = threading.Thread(target=search(pairs[0], binance_frame, request_limit_length))
-		t2 = threading.Thread(target=search(pairs[1], binance_frame, request_limit_length))
-		t3 = threading.Thread(target=search(pairs[2], binance_frame, request_limit_length))
-		t4 = threading.Thread(target=search(pairs[3], binance_frame, request_limit_length))
+		t1 = threading.Thread(target=search(pairs[0], binance_frame, request_limit_length, distance_to_low))
+		t2 = threading.Thread(target=search(pairs[1], binance_frame, request_limit_length, distance_to_low))
+		t3 = threading.Thread(target=search(pairs[2], binance_frame, request_limit_length, distance_to_low))
+		t4 = threading.Thread(target=search(pairs[3], binance_frame, request_limit_length, distance_to_low))
 		
 		t1.start()
 		t2.start()
