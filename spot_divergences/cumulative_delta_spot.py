@@ -50,10 +50,12 @@ def search(filtered_dictionary, binance_frame, request_limit_length, distance_to
 				for i in range(lowest_cd_index, len(low) - 1):
 					if low[lowest_low_index] > low[i]:
 						lowest_low_index = i
+						
+				dist_to_low = (low[-1] - low[lowest_low_index]) / (low[-1] / 100)
+				dist_to_low = '{:.2f}'.format(dist_to_low)
 				
-				if low[-1] - low[lowest_low_index] >= distance_to_low and cumulative_delta.get(request_limit_length-1) <= cumulative_delta.get(lowest_cd_index):
-					dist_to_low = (low[-1] - low[lowest_low_index]) / (low[-1] / 100)
-					dist_to_low = '{:.2f}'.format(dist_to_low)
+				if dist_to_low >= distance_to_low and cumulative_delta.get(request_limit_length-1) <= cumulative_delta.get(lowest_cd_index):
+
 					print(f"{symbol}: {dist_to_low}%")
 					bot1.send_message(662482931, f"{symbol}: {dist_to_low}%")
 
