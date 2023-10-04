@@ -83,9 +83,12 @@ def search(filtered_symbols, binance_frame, request_limit_length, distance_to_lo
 						print(f"{symbol} ({binance_frame}), \n"
 				        f"range: {price_range}%, \n"
 				        f"dist to low: {dist_to_low}%, \n"
-				        f"gap: {max_gap}%")
+				        f"gap: {max_gap}%\n")
 				
-						bot1.send_message(662482931, f"{symbol} ({binance_frame}): range {price_range}%, gap {max_gap}%")
+						bot1.send_message(662482931, f"{symbol} ({binance_frame}), \n"
+				        f"range: {price_range}%, \n"
+				        f"dist to low: {dist_to_low}%, \n"
+				        f"gap: {max_gap}%")
 
 
 if __name__ == '__main__':
@@ -95,7 +98,7 @@ if __name__ == '__main__':
 	request_limit_length = int(input("Request length (def. 92): ") or 92)
 	distance_to_low = float(input("Distance to low (def. 0.5): ") or 0.5)
 	gap_filter = float(input("Gap filter (def. 0.1): ") or 0.1)
-	sleep_time = int(input("Sleep time (def. 5): ") or 5) * 60
+	sleep_time = int(input("Sleep time (def. 2): ") or 2) * 60
 	proc = int(input("Processes (def. 8): ") or 8)
 	
 	bot1.send_message(662482931, f"STARTING WITH:\n"
