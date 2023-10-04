@@ -1,7 +1,7 @@
 import threading
 import time
+from datetime import datetime, timedelta
 from multiprocessing import Process
-
 import requests
 import telebot
 from module_get_pairs_binanceV2 import binance_pairs
@@ -10,9 +10,18 @@ TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 
+# end_date_timestamp = datetime(2023, 10, 4).timestamp()
+# end_date = datetime.fromtimestamp(end_date_timestamp)
+# hours_to_add = 8  # +++++++++++++++++++++++++
+# minutes_to_add = 0  # +++++++++++++++++++++++++
+# time_to_add = timedelta(hours=hours_to_add, minutes=minutes_to_add)
+# new_date = end_date + time_to_add
+# end_date = new_date.timestamp() * 1000
+
 def search(filtered_symbols, binance_frame, request_limit_length, distance_to_low, gap_filter):
 	
 	for symbol in filtered_symbols:
+		# binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}'
 		binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}'
 		binance_klines = requests.get(binance_klines)
 		
@@ -60,8 +69,8 @@ def search(filtered_symbols, binance_frame, request_limit_length, distance_to_lo
 				if dist_to_low >= distance_to_low and \
 					cumulative_delta.get(request_limit_length - 1) <= cumulative_delta.get(lowest_cd_index) and \
 					max_gap <= gap_filter:
-					print(f"{symbol} ({binance_frame}): price range = {price_range}, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
-					bot1.send_message(662482931, f"{symbol} ({binance_frame}): price range = {price_range}, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
+					print(f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
+					bot1.send_message(662482931, f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
 
 if __name__ == '__main__':
 	print("PARAMETERS:")
