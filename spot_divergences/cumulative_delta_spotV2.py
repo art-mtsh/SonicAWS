@@ -54,14 +54,17 @@ def search(filtered_symbols, binance_frame, request_limit_length, distance_to_lo
 				dist_to_low = (low[-1] - low[lowest_low_index]) / (low[-1] / 100)
 				dist_to_low = float('{:.2f}'.format(dist_to_low))
 				
+				price_range = abs(max(high) - min(low)) / (close[-1] / 100) if close[-1] != 0 else 0
+				price_range = float('{:.2f}'.format(price_range))
+				
 				if dist_to_low >= distance_to_low and \
 					cumulative_delta.get(request_limit_length - 1) <= cumulative_delta.get(lowest_cd_index) and \
 					max_gap <= gap_filter:
-					print(f"{symbol} ({binance_frame}): {dist_to_low}%, {low[-1]} > {low[lowest_low_index]}")
-					bot1.send_message(662482931, f"{symbol} ({binance_frame}): {dist_to_low}%, {low[-1]} > {low[lowest_low_index]}")
+					print(f"{symbol} ({binance_frame}): price range = {price_range}, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
+					bot1.send_message(662482931, f"{symbol} ({binance_frame}): price range = {price_range}, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
 
 if __name__ == '__main__':
-	
+	print("PARAMETERS:")
 	price_filter = float(input("Price filter: ")) # 0.0001
 	binance_frame = str(input("Timeframe (1h, 30m, 15m, 5m, 1m): ")) # "5m"
 	request_limit_length = int(input("Request length, bars: "))
@@ -72,16 +75,18 @@ if __name__ == '__main__':
 	
 	bot1.send_message(662482931, f"STARTING WITH:\n"
 	        f"price_filter = {price_filter}, \n"
-			f"binance_frame = {binance_frame}, "
+			f"binance_frame = {binance_frame}, \n"
 			f"request_limit_length = {request_limit_length} candles, \n"
 			f"distance_to_low = {distance_to_low}%, \n"
 			f"gap_filter = {gap_filter}%, \n"
 			f"sleep_time = {sleep_time} seconds")
 	
+	print("")
+	
 	while True:
 		time1 = time.perf_counter()
 		pairs = binance_pairs(threads, price_filter)
-		print(f"pairs: {sum(len(inner_list) for inner_list in pairs)}")
+		print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs:")
 		
 		the_processes = []
 		for proc_number in range(threads):
