@@ -111,7 +111,7 @@ if __name__ == '__main__':
 		time2 = time.perf_counter()
 		time3 = time2 - time1
 		
-		print(f"finished processes in {int(time3)} seconds")
+		print(f"Finished search in {int(time3)} seconds")
 		print("")
 		
 		time.sleep(sleep_time)
