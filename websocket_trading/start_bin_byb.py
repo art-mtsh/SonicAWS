@@ -245,17 +245,17 @@ if __name__ == "__main__":
 	ws_bybit = websocket.WebSocketApp(url_bybit, on_message=on_message_bybit, on_error=on_error, on_close=on_close)
 	ws_bybit.on_open = on_open_bybit
 	
-	# Create threads for WebSocket connections and message processing
+	# Create proc for WebSocket connections and message processing
 	binance_thread = threading.Thread(target=ws_binance.run_forever)
 	bybit_thread = threading.Thread(target=ws_bybit.run_forever)
 	message_processing_thread = threading.Thread(target=process_messages)
 	
-	# Start the threads
+	# Start the proc
 	binance_thread.start()
 	bybit_thread.start()
 	message_processing_thread.start()
 	
-	# Wait for all threads to finish
+	# Wait for all proc to finish
 	binance_thread.join()
 	bybit_thread.join()
 	message_processing_thread.join()
