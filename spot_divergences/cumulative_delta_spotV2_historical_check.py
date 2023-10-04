@@ -9,10 +9,19 @@ from module_get_pairs_binanceV2 import binance_pairs
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
+
+end_date_timestamp = datetime(2023, 10, 4).timestamp()
+end_date = datetime.fromtimestamp(end_date_timestamp)
+hours_to_add = 8  # +++++++++++++++++++++++++
+minutes_to_add = 25  # +++++++++++++++++++++++++
+time_to_add = timedelta(hours=hours_to_add, minutes=minutes_to_add)
+new_date = end_date + time_to_add
+end_date = new_date.timestamp() * 1000
+
 def search(filtered_symbols, binance_frame, request_limit_length, distance_to_low, gap_filter):
 	
 	for symbol in filtered_symbols:
-		binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}'
+		binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}'
 		binance_klines = requests.get(binance_klines)
 		
 		if binance_klines.status_code == 200:
@@ -28,7 +37,8 @@ def search(filtered_symbols, binance_frame, request_limit_length, distance_to_lo
 				buy_volume = list(float(i[9]) for i in binance_candle_data)
 		
 				max_gap = 0
-				cumulative_delta = [buy_volume[0] - (volume[0] - buy_volume[0])]
+				cumulative_delta = {}
+				new_delta = 0
 		
 				for i in range(1, len(close)):
 					gap = abs(open[i] - close[i-1])
@@ -38,50 +48,40 @@ def search(filtered_symbols, binance_frame, request_limit_length, distance_to_lo
 					
 					b_vol = buy_volume[i]
 					s_vol = volume[i] - buy_volume[i]
-					new_delta = b_vol - s_vol
-					new_delta = cumulative_delta[-1] + new_delta
-					cumulative_delta.append(new_delta)
+					new_delta += b_vol - s_vol
+					cumulative_delta[i] = new_delta
 				
 				max_gap = float('{:.2f}'.format(max_gap))
-
-				cumulative_delta_lows = {}
-				low_lows = {}
-			
-				for i in range(5, len(cumulative_delta) - 6):
-
-					if cumulative_delta[i] == min(list(cumulative_delta[i-5:i+6])):
-						cumulative_delta_lows.update({i: cumulative_delta[i]})
-
-					if low[i] == min(list(low[i-5:i+6])):
-						low_lows.update({i: low[i]})
-
-				last_cd_fractal = list(cumulative_delta_lows.values())[-1] if len(cumulative_delta_lows) != 0 else 0
-				last_low_fractal = list(low_lows.values())[-1]
+				lowest_cd_index = min(cumulative_delta, key=cumulative_delta.get)
+				lowest_low_index = lowest_cd_index
 				
-				dist_to_low = (low[-1] - last_low_fractal) / (low[-1] / 100)
+				for i in range(lowest_cd_index, len(low) - 1):
+					if low[lowest_low_index] > low[i]:
+						lowest_low_index = i
+				
+				dist_to_low = (low[-1] - low[lowest_low_index]) / (low[-1] / 100)
 				dist_to_low = float('{:.2f}'.format(dist_to_low))
-
+				
 				price_range = abs(max(high) - min(low)) / (close[-1] / 100) if close[-1] != 0 else 0
 				price_range = float('{:.2f}'.format(price_range))
-
+				
 				if dist_to_low >= distance_to_low and \
-					cumulative_delta[-1] <= last_cd_fractal and \
-					max_gap <= gap_filter and price_range:
-					print(f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {last_low_fractal} ({dist_to_low}%)")
-					bot1.send_message(662482931, f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {last_low_fractal} ({dist_to_low}%)")
-
+					cumulative_delta.get(request_limit_length - 1) <= cumulative_delta.get(lowest_cd_index) and \
+					max_gap <= gap_filter:
+					print(f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
+					# bot1.send_message(662482931, f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
 
 if __name__ == '__main__':
 	print("PARAMETERS:")
-	price_filter = float(input("Price filter: "))
-	binance_frame = str(input("Timeframe (1h, 30m, 15m, 5m, 1m): "))
-	request_limit_length = int(input("Request length, bars: "))
-	distance_to_low = float(input("Distance to low, %: "))
-	gap_filter = float(input("Gap filter, %: "))
-	sleep_time = int(input("Sleep time, minutes: ")) * 60
-	threads = int(input("Threads: "))
+	price_filter = 0.000001 # float(input("Price filter: "))
+	binance_frame = "5m" # str(input("Timeframe (1h, 30m, 15m, 5m, 1m): "))
+	request_limit_length = 72 # int(input("Request length, bars: "))
+	distance_to_low = 0.05 # float(input("Distance to low, %: "))
+	gap_filter = 0.1 # float(input("Gap filter, %: "))
+	sleep_time = 10000 # int(input("Sleep time, minutes: ")) * 60
+	threads = 8 # int(input("Threads: "))
 	
-	bot1.send_message(662482931, f"STARTING WITH:\n"
+	print(f"STARTING WITH:\n"
 	        f"price_filter = {price_filter}, \n"
 			f"binance_frame = {binance_frame}, \n"
 			f"request_limit_length = {request_limit_length} candles, \n"
