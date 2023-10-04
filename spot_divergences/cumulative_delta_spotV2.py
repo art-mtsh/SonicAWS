@@ -66,7 +66,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, distance_to_lo
 
 				if dist_to_low >= distance_to_low and \
 					cumulative_delta[-1] <= last_cd_fractal and \
-					max_gap <= gap_filter and price_range:
+					max_gap <= gap_filter:
 					print(f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {last_low_fractal} ({dist_to_low}%)")
 					bot1.send_message(662482931, f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {last_low_fractal} ({dist_to_low}%)")
 
