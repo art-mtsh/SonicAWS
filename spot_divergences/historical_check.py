@@ -1,4 +1,3 @@
-import threading
 import time
 from datetime import datetime, timedelta
 from multiprocessing import Process
@@ -9,7 +8,6 @@ from module_get_pairs_binanceV2 import binance_pairs
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
-
 end_date_timestamp = datetime(2023, 10, 4).timestamp()
 end_date = datetime.fromtimestamp(end_date_timestamp)
 hours_to_add = 8  # +++++++++++++++++++++++++
@@ -17,6 +15,7 @@ minutes_to_add = 25  # +++++++++++++++++++++++++
 time_to_add = timedelta(hours=hours_to_add, minutes=minutes_to_add)
 new_date = end_date + time_to_add
 end_date = new_date.timestamp() * 1000
+
 
 def search(filtered_symbols, binance_frame, request_limit_length, distance_to_low, gap_filter):
 	
@@ -37,8 +36,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, distance_to_lo
 				buy_volume = list(float(i[9]) for i in binance_candle_data)
 		
 				max_gap = 0
-				cumulative_delta = {}
-				new_delta = 0
+				cumulative_delta = [int(buy_volume[0] - (volume[0] - buy_volume[0]))]
 		
 				for i in range(1, len(close)):
 					gap = abs(open[i] - close[i-1])
@@ -48,56 +46,77 @@ def search(filtered_symbols, binance_frame, request_limit_length, distance_to_lo
 					
 					b_vol = buy_volume[i]
 					s_vol = volume[i] - buy_volume[i]
-					new_delta += b_vol - s_vol
-					cumulative_delta[i] = new_delta
+					new_delta = b_vol - s_vol
+					new_delta = cumulative_delta[-1] + new_delta
+					cumulative_delta.append(int(new_delta))
 				
 				max_gap = float('{:.2f}'.format(max_gap))
-				lowest_cd_index = min(cumulative_delta, key=cumulative_delta.get)
-				lowest_low_index = lowest_cd_index
 				
-				for i in range(lowest_cd_index, len(low) - 1):
-					if low[lowest_low_index] > low[i]:
-						lowest_low_index = i
-				
-				dist_to_low = (low[-1] - low[lowest_low_index]) / (low[-1] / 100)
-				dist_to_low = float('{:.2f}'.format(dist_to_low))
-				
-				price_range = abs(max(high) - min(low)) / (close[-1] / 100) if close[-1] != 0 else 0
-				price_range = float('{:.2f}'.format(price_range))
-				
-				if dist_to_low >= distance_to_low and \
-					cumulative_delta.get(request_limit_length - 1) <= cumulative_delta.get(lowest_cd_index) and \
-					max_gap <= gap_filter:
-					print(f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
-					# bot1.send_message(662482931, f"{symbol} ({binance_frame}): price range = {price_range}%, {low[-1]} > {low[lowest_low_index]} ({dist_to_low}%)")
+				# last_cd_low_index = None
+				# last_cd_low_value = None
+				last_lowerlow_index = None
+				last_lowerlow_value = None
+
+				for i in range(5, len(low) - 7):
+
+				# 	if cumulative_delta[i] == min(list(cumulative_delta[i-5 : i+6])):
+				# 		last_cd_low_index = i
+				# 		last_cd_low_value = cumulative_delta[i]
+
+					if low[i] == min(list(low[i-5 : i+6])):
+						last_lowerlow_index = i
+						last_lowerlow_value = low[i]
+
+				if last_lowerlow_value: # and last_cd_low_value:
+					
+					# clean_cd_vector = True
+					clean_low_vector = True
+					
+					# for i in range(last_cd_low_index+1, len(cumulative_delta)-1):
+					# 	if cumulative_delta[i] < cumulative_delta[last_cd_low_index]:
+					# 		clean_cd_vector = False
+					
+					for i in range(last_lowerlow_index+1, len(low)-1):
+						if low[i] < low[last_lowerlow_index]:
+							clean_low_vector = False
+					
+					dist_to_low = (low[-1] - last_lowerlow_value) / (low[-1] / 100)
+					dist_to_low = float('{:.2f}'.format(dist_to_low))
+
+					price_range = abs(max(high) - min(low)) / (close[-1] / 100) if close[-1] != 0 else 0
+					price_range = float('{:.2f}'.format(price_range))
+
+					if max_gap <= gap_filter and \
+						clean_low_vector and \
+						dist_to_low > distance_to_low and \
+						cumulative_delta[-1] == min(cumulative_delta) :
+						
+							print(f"{symbol} ({binance_frame}), "
+							      f"range: {price_range}%"
+							      f"fractal low: {last_lowerlow_value}, "
+							      f"current low: {low[-1]}"
+							      f"dist to low: {dist_to_low}%")
+
 
 if __name__ == '__main__':
 	print("PARAMETERS:")
-	price_filter = 0.000001 # float(input("Price filter: "))
-	binance_frame = "5m" # str(input("Timeframe (1h, 30m, 15m, 5m, 1m): "))
-	request_limit_length = 72 # int(input("Request length, bars: "))
-	distance_to_low = 0.05 # float(input("Distance to low, %: "))
-	gap_filter = 0.1 # float(input("Gap filter, %: "))
-	sleep_time = 10000 # int(input("Sleep time, minutes: ")) * 60
-	threads = 8 # int(input("Threads: "))
-	
-	print(f"STARTING WITH:\n"
-	        f"price_filter = {price_filter}, \n"
-			f"binance_frame = {binance_frame}, \n"
-			f"request_limit_length = {request_limit_length} candles, \n"
-			f"distance_to_low = {distance_to_low}%, \n"
-			f"gap_filter = {gap_filter}%, \n"
-			f"sleep_time = {sleep_time} seconds")
-	
+	price_filter = float(input("Price filter (def. 0.000001): ") or 0.000001)
+	binance_frame = str(input("Timeframe (def. 5m): ") or "5m")
+	request_limit_length = int(input("Request length (def. 92): ") or 92)
+	distance_to_low = float(input("Distance to low (def. 0.5): ") or 0.5)
+	gap_filter = float(input("Gap filter (def. 0.1): ") or 0.1)
+	sleep_time = int(input("Sleep time (def. 5): ") or 5) * 60
+	proc = int(input("Processes (def. 8): ") or 8)
+
 	print("")
 	
 	while True:
 		time1 = time.perf_counter()
-		pairs = binance_pairs(threads, price_filter)
+		pairs = binance_pairs(proc, price_filter)
 		print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs:")
 		
 		the_processes = []
-		for proc_number in range(threads):
+		for proc_number in range(proc):
 			process = Process(target=search, args=(pairs[proc_number], binance_frame, request_limit_length, distance_to_low, gap_filter,))
 			the_processes.append(process)
 		
