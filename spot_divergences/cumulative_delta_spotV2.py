@@ -1,13 +1,16 @@
-import requests
+import threading
+import time
+from multiprocessing import Process
 
-def search():
-	binance_ticker_url = "https://api.binance.com/api/v3/ticker/bookTicker"
-	response = requests.get(binance_ticker_url)
-	response_data = response.json()
-	filtered_symbols = []
-	for data in response_data:
-		if float(data["bidPrice"]) >= price_filter and "RUB" not in data["symbol"]:
-			filtered_symbols.append(data["symbol"])
+import requests
+import telebot
+from module_get_pairs_binanceV2 import binance_pairs
+
+TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
+bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
+
+
+def search(filtered_symbols, binance_frame, request_limit_length, distance_to_low, gap_filter):
 	
 	for symbol in filtered_symbols:
 		binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}'
@@ -31,6 +34,7 @@ def search():
 		
 				for i in range(1, len(close)):
 					gap = abs(open[i] - close[i-1])
+					gap_p = 0
 					if open[i] !=0: gap_p = gap / (open[i] / 100)
 					if gap_p > max_gap: max_gap = gap_p
 					
@@ -53,48 +57,42 @@ def search():
 				if dist_to_low >= distance_to_low and \
 					cumulative_delta.get(request_limit_length - 1) <= cumulative_delta.get(lowest_cd_index) and \
 					max_gap <= gap_filter:
-					print(f"=========================================>>>>> {symbol}: DIVERGENCE max gap: {max_gap}%")
-					
-				elif max_gap <= gap_filter:
-					print(f"{symbol}, "
-					      f"max gap: {max_gap}%, "
-					      f"lowest low index: {lowest_low_index}, "
-					      f"lowest cd index: {lowest_cd_index}")
+					print(f"{symbol} ({binance_frame}): {dist_to_low}%, {low[-1]} > {low[lowest_low_index]}")
+					bot1.send_message(662482931, f"{symbol} ({binance_frame}): {dist_to_low}%, {low[-1]} > {low[lowest_low_index]}")
 
 if __name__ == '__main__':
 	
-	price_filter = 0.0001
-	binance_frame = "5m"
-	request_limit_length = 24
-	distance_to_low = 0.1
-	gap_filter = 0.5
+	price_filter = float(input("Price filter: ")) # 0.0001
+	binance_frame = str(input("Timeframe (1h, 30m, 15m, 5m, 1m): ")) # "5m"
+	request_limit_length = int(input("Request length, bars: "))
+	distance_to_low = float(input("Distance to low, %: "))
+	gap_filter = float(input("Gap filter, %: "))
+	sleep_time = int(input("Sleep time, minutes: ")) * 60
+	threads = int(input("Threads: "))
+	
+	bot1.send_message(662482931, f"STARTING WITH:\n"
+	        f"price_filter = {price_filter}, \n"
+			f"binance_frame = {binance_frame}, "
+			f"request_limit_length = {request_limit_length} candles, \n"
+			f"distance_to_low = {distance_to_low}%, \n"
+			f"gap_filter = {gap_filter}%, \n"
+			f"sleep_time = {sleep_time} seconds")
 	
 	while True:
-		binance_frame = str(input("Timeframe (1h, 30m, 15m, 5m, 1m): "))
-		request_limit_length = int(input("Request length, bars: "))
-		sleep_time = int(input("Sleep time, minutes: ")) * 60
-		distance_to_low = float(input("Distance to low, %: "))
-		
 		time1 = time.perf_counter()
-		
-		pairs = binance_pairs(4)
-		
+		pairs = binance_pairs(threads, price_filter)
 		print(f"pairs: {sum(len(inner_list) for inner_list in pairs)}")
 		
-		t1 = threading.Thread(target=search(pairs[0], binance_frame, request_limit_length, distance_to_low))
-		t2 = threading.Thread(target=search(pairs[1], binance_frame, request_limit_length, distance_to_low))
-		t3 = threading.Thread(target=search(pairs[2], binance_frame, request_limit_length, distance_to_low))
-		t4 = threading.Thread(target=search(pairs[3], binance_frame, request_limit_length, distance_to_low))
+		the_processes = []
+		for proc_number in range(threads):
+			process = Process(target=search, args=(pairs[proc_number], binance_frame, request_limit_length, distance_to_low, gap_filter,))
+			the_processes.append(process)
 		
-		t1.start()
-		t2.start()
-		t3.start()
-		t4.start()
+		for pro in the_processes:
+			pro.start()
 		
-		t1.join()
-		t2.join()
-		t3.join()
-		t4.join()
+		for pro in the_processes:
+			pro.join()
 		
 		time2 = time.perf_counter()
 		time3 = time2 - time1
