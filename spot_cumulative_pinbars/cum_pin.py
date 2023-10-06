@@ -120,7 +120,7 @@ if __name__ == '__main__':
 			last_second_digit = now.strftime('%S')
 			time.sleep(0.1)
 			if int(last_second_digit) == 0:
-				if last_minute_digit[-1] == 4 and last_minute_digit[-1] == 9:
+				if int(last_minute_digit[-1]) == 4 and int(last_minute_digit[-1]) == 9:
 					break
 				
 	while True:
