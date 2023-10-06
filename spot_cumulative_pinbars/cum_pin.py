@@ -87,9 +87,9 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 
 if __name__ == '__main__':
 	print("PARAMETERS:")
-	price_filter = float(input("Price filter (def. 0.000000001): ") or 0.000000001)
+	price_filter = 0 # float(input("Price filter (def. 0.000000001): ") or 0.000000001)
 	binance_frame = "5m" # str(input("Timeframe (def. 5m): ") or "5m")
-	request_limit_length = 150 # int(input("Request length (def. 384): ") or 384)
+	request_limit_length = 250 # int(input("Request length (def. 384): ") or 384)
 	body_percent_filter = int(input("Body percent (def. 33): ") or 33)
 	pin_close_part = int(input("Close at part (def. 3): ") or 3)
 	total_range_filter = float(input("Pin range (def. 0.8): ") or 0.8)
@@ -99,7 +99,7 @@ if __name__ == '__main__':
 	proc = int(input("Processes (def. 8): ") or 8)
 	print("")
 	
-	bot1.send_message(662482931, f"STARTING WITH:\n"
+	bot1.send_message(662482931, f"STARTING WITH:\n\n"
 	        f"price_filter = {price_filter}, \n"
 			f"binance_frame = {binance_frame}, \n"
 			f"request_limit_length = {request_limit_length} candles, \n"
@@ -109,7 +109,8 @@ if __name__ == '__main__':
 			f"gap_filter = {gap_filter}%, \n"
             f"tick_size_filter = {tick_size_filter}%, \n"
             f"room_to_the_left = {room_to_the_left} pins, \n"
-            f"proc = {proc} cores"
+            f"proc = {proc} cores\n"
+            f"💵💵💵💵💵"
 	        )
 	
 	def waiting():
