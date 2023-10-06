@@ -4,6 +4,7 @@ from multiprocessing import Process
 import requests
 import telebot
 from module_get_pairs_binanceV2 import binance_pairs
+from queue import Queue
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -11,6 +12,9 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 def search(filtered_symbols, binance_frame, request_limit_length, body_percent_filter, total_range_filter, pin_close_part, gap_filter, tick_size_filter, room_to_the_left):
 	
 	for symbol in filtered_symbols:
+		
+		not_sent = True
+		
 		binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}'
 		binance_klines = requests.get(binance_klines)
 		
@@ -38,7 +42,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 				
 				curr_index = -1
 				
-				for b in range(2, 24):
+				for b in range(24, 1, -1):
 					pin_open = open[curr_index - b]
 					pin_high = max(high[curr_index:curr_index - b - 1:-1])
 					pin_low = min(low[curr_index:curr_index - b - 1:-1])
@@ -64,7 +68,8 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 							pin_high >= pin_close >= (pin_high - part) and \
 							total_range >= total_range_filter and \
 							pin_low <= min(low[curr_index:curr_index - b * room_to_the_left-1:-1]) and \
-							binance_tick_size <= tick_size_filter:
+							binance_tick_size <= tick_size_filter and \
+							not_sent:
 							
 							print(
 								f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, "
@@ -80,19 +85,22 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 							)
 							
 							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}\n"
-							    f"{symbol}, "
-							    f"cum pin of {b} candles, \n"
-							    f"{pin_open}-{pin_high}-{pin_low}-{pin_close}"
-								)
+							                             f"{symbol}, "
+							                             f"cum pin of {b} candles")
+							
+							not_sent = False
+
+
+
 
 if __name__ == '__main__':
 	print("PARAMETERS:")
-	price_filter = 0.0000001 # float(input("Price filter (def. 0.000000001): ") or 0.000000001)
+	price_filter = 0.000000001 # float(input("Price filter (def. 0.000000001): ") or 0.000000001)
 	binance_frame = "5m" # str(input("Timeframe (def. 5m): ") or "5m")
 	request_limit_length = 250 # int(input("Request length (def. 384): ") or 384)
 	body_percent_filter = int(input("Body percent (def. 20): ") or 20)
 	pin_close_part = int(input("Close at part (def. 4): ") or 4)
-	total_range_filter = float(input("Pin range (def. 0.8): ") or 0.8)
+	total_range_filter = float(input("Pin range (def. 1): ") or 1)
 	gap_filter = float(input("Max gap (def. 0.1): ") or 0.1)
 	tick_size_filter = float(input("Max tick size (def. 0.1): ") or 0.1)
 	room_to_the_left = int(input("Room to the left (def. 2): ") or 2)
@@ -134,13 +142,13 @@ if __name__ == '__main__':
 		for proc_number in range(proc):
 			process = Process(target=search, args=(pairs[proc_number], binance_frame, request_limit_length, body_percent_filter, total_range_filter, pin_close_part, gap_filter, tick_size_filter, room_to_the_left, ))
 			the_processes.append(process)
-		
+			
 		for pro in the_processes:
 			pro.start()
 		
 		for pro in the_processes:
 			pro.join()
-		
+
 		time2 = time.perf_counter()
 		time3 = time2 - time1
 		
