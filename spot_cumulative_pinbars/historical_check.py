@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from multiprocessing import Process
 import requests
 import telebot
-from module_get_pairs_binanceV2 import binance_pairs
+from spot_divergences.module_get_pairs_binanceV2 import binance_pairs
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -107,6 +107,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 										print(
 											f"{symbol}, "
 											f"{request_limit_length - i}, "
+											f"{b}, "
 											f"[{pin_open}-{pin_high}-{pin_low}-{pin_close}], "
 											f"{total_range}, "
 											f"PROFIT")
@@ -116,6 +117,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 										print(
 											f"{symbol}, "
 											f"{request_limit_length - i}, "
+											f"{b}, "
 											f"[{pin_open}-{pin_high}-{pin_low}-{pin_close}], "
 											f"{total_range}, "
 											f"LOSS")
@@ -125,6 +127,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 								if not closed: print(
 									f"{symbol}, "
 									f"{request_limit_length - i}, "
+									f"{b}, "
 									f"[{pin_open}-{pin_high}-{pin_low}-{pin_close}], "
 									f"{total_range}, "
 									f"never closed...")
