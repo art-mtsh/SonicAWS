@@ -109,7 +109,7 @@ if __name__ == '__main__':
 			f"gap_filter = {gap_filter}%, \n"
             f"tick_size_filter = {tick_size_filter}%, \n"
             f"room_to_the_left = {room_to_the_left} pins, \n"
-            f"proc = {proc} cores\n"
+            f"proc = {proc} cores\n\n"
             f"💵💵💵💵💵"
 	        )
 	
