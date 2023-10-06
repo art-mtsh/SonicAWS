@@ -19,5 +19,5 @@ def binance_pairs(chunks, price_filter):
     
     return chunked_symbols
 
-# for i in binance_pairs(16, 0.0001):
-#     print(i)
+for i in binance_pairs(16, 0.0001):
+    print(i)

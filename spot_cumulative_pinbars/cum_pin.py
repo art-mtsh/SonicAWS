@@ -87,7 +87,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 
 if __name__ == '__main__':
 	print("PARAMETERS:")
-	price_filter = 0 # float(input("Price filter (def. 0.000000001): ") or 0.000000001)
+	price_filter = 0.0000001 # float(input("Price filter (def. 0.000000001): ") or 0.000000001)
 	binance_frame = "5m" # str(input("Timeframe (def. 5m): ") or "5m")
 	request_limit_length = 250 # int(input("Request length (def. 384): ") or 384)
 	body_percent_filter = int(input("Body percent (def. 20): ") or 20)
