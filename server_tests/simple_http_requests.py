@@ -4,9 +4,9 @@ import requests
 
 url1 = "https://fapi.binance.com/fapi/v1/ping"
 url2 = "https://fapi.binance.com/fapi/v1/time"
-url3 = "https://fapi.binance.com/fapi/v1/exchangeInfo"
+binance_futures = "https://fapi.binance.com/fapi/v1/ticker/bookTicker"
 url4 = "https://api.binance.com/api/v3/exchangeInfo"
-url5 = "https://api.binance.com/api/v3/ticker/bookTicker"
+binance_spot = "https://api.binance.com/api/v3/ticker/bookTicker"
 url10 = "https://api.binance.com/api/v3/trades?symbol=BTCUSDT&limit=1"
 url10 = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=5"
 
@@ -17,69 +17,62 @@ url9 = "https://api.bybit.com/derivatives/v3/public/mark-price-kline?symbol=BTCU
 
 
 ticksizes = {}
+price_filter = 0.0000001
 
 while True:
     try:
-        response = requests.get(url10)
-        response.raise_for_status()  # Check for any HTTP errors
-    
+        response = requests.get(binance_futures)
+        response.raise_for_status()
+        futures = []
         if response.status_code == 200:
             response_data = response.json()
-            # response_data = response_data.get("result").get("list")
-            for binance_candle_data in response_data:
-                
-                timestamp = binance_candle_data[0]
-                open = float(binance_candle_data[1])
-                high = binance_candle_data[2]
-                low = binance_candle_data[3]
-                close = float(binance_candle_data[4])
-                volume = float(binance_candle_data[5])
-                quote_asset_volume = float(binance_candle_data[7])
-                buy_volume = float(binance_candle_data[9])
-                taker_buy_quote_volume = float(binance_candle_data[10])
-                
-                print(f"volume {volume}, quote_asset_volume {quote_asset_volume}, taker_buy_asset_volume {buy_volume}, taker_buy_quote_volume {taker_buy_quote_volume}")
-                print(f"volume {volume}, buys {buy_volume}, sells {volume - buy_volume}")
-                print("")
-            # for data in response_data:
-            #     symbol = data.get("s")
-            #     bid = data.get("bp")
-            #     ask = data.get("ap")
-            #     print(f"{symbol}, {bid}, {ask}")
-            #     # tick_size = data.get("priceFilter").get("tickSize")
-            #     minQtySell = data.get("minTradeQty")
-            #     minPricePrecision = data.get("minPricePrecision")
-            # #     mintradeQty = data.get("lotSizeFilter").get("minTradingQty")
-            #     print(f"{symbol}, {minQtySell}, {minPricePrecision}")
-            
             # response_data = response_data.get("symbols")
             # print(response_data)
-            # syms = []
-            # for sym in response_data:
-            #     symbol = sym.get("symbol")
-            #     filters = sym.get("filters")
-            #     tick_size = sym.get("filters")[0].get("tickSize")
-            #     minQty = sym.get("filters")[1].get("minQty")
-            #     syms.append(sym)
-            #     print(f"{symbol}, {tick_size}, {minQty}")
-            
-            # for sym in response_data:
-            #     symbol = sym.get("symbol")
-            #     bid = float(sym.get("bidPrice"))
-            #     ask = float(sym.get("askPrice"))
-            #     spread: float
-            #     if bid != 0:
-            #         spread = abs(bid - ask) / (bid / 100)
-            #
-            #     if 1000 >= float(bid) >= 0.0001 and spread < 0.2:
-            #         print(f"{symbol}: {bid}")
-            #         syms.append(sym)
-            #
-            # print(len(syms))
-            
+            for data in response_data:
+            #     print(data)
+                if float(data["bidPrice"]) >= price_filter and \
+                        "RUB" not in data["symbol"] and \
+                        "USDPUSDT" not in data["symbol"] and \
+                        "EURBUSD" not in data["symbol"] and \
+                        "EURUSDT" not in data["symbol"] and \
+                        "TUSDUSDT" not in data["symbol"] and \
+                        "TUSDBUSD" not in data["symbol"]:
+                    futures.append(data["symbol"])
+
+        response = requests.get(binance_spot)
+        response.raise_for_status()  # Check for any HTTP errors
+        spots = []
+        if response.status_code == 200:
+            response_data = response.json()
+            # response_data = response_data.get("symbols")
+            # print(response_data)
+            for data in response_data:
+                #     print(data)
+                if float(data["bidPrice"]) >= price_filter and \
+                        "RUB" not in data["symbol"] and \
+                        "USDPUSDT" not in data["symbol"] and \
+                        "EURBUSD" not in data["symbol"] and \
+                        "EURUSDT" not in data["symbol"] and \
+                        "TUSDUSDT" not in data["symbol"] and \
+                        "TUSDBUSD" not in data["symbol"]:
+                    spots.append(data["symbol"])
+        
         else:
             print(f"Received status code: {response.status_code}")
-            
+        print(futures)
+        print(spots)
+        
+        print(len(futures))
+        print(len(spots))
+        
+        result_1 = list(set(spots).difference(futures))
+        print(result_1)
+        print(len(result_1))
+        
+        result_2 = list(set(futures).difference(spots))
+        print(result_2)
+        print(len(result_2))
+        
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
     
