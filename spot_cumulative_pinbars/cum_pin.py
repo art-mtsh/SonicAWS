@@ -47,6 +47,8 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 					pin_high = max(high[curr_index:curr_index - b - 1:-1])
 					pin_low = min(low[curr_index:curr_index - b - 1:-1])
 					pin_close = close[curr_index]
+					pin_volume = sum(volume[curr_index:curr_index - b - 1:-1])
+					prev_pin_volume = sum(volume[curr_index - b - 1:curr_index - b - 1 - b - 1:-1])
 					# ==== binance ticksize ====
 					bin_all_ticks = sorted(open + high + low + close)
 					bin_diffs = 10
@@ -85,8 +87,9 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 							)
 							
 							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}\n"
-							                             f"{symbol}, "
-							                             f"cum pin of {b} candles")
+							                             f"#{symbol}, "
+							                             f"cum pin of {b} candles, "
+							                             f"cv: {int(pin_volume)}, pv {int(prev_pin_volume)}")
 							
 							not_sent = False
 
