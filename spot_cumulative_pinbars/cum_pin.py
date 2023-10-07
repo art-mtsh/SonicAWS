@@ -4,7 +4,7 @@ from multiprocessing import Process
 import requests
 import telebot
 from module_get_pairs_binanceV2 import binance_pairs
-from queue import Queue
+
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
