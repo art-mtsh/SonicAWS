@@ -69,7 +69,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 							body_percent < body_percent_filter and \
 							pin_high >= pin_close >= (pin_high - part) and \
 							total_range >= total_range_filter and \
-							pin_low <= min(low[curr_index:curr_index - b * room_to_the_left-1:-1]) and \
+							pin_low <= min(low[curr_index:curr_index - b * room_to_the_left:-1]) and \
 							binance_tick_size <= tick_size_filter and \
 							not_sent:
 							
@@ -101,12 +101,12 @@ if __name__ == '__main__':
 	price_filter = 0.000000001 # float(input("Price filter (def. 0.000000001): ") or 0.000000001)
 	binance_frame = "5m" # str(input("Timeframe (def. 5m): ") or "5m")
 	request_limit_length = 250 # int(input("Request length (def. 384): ") or 384)
-	body_percent_filter = int(input("Body percent (def. 20): ") or 20)
+	body_percent_filter = int(input("Body percent (def. 15): ") or 15)
 	pin_close_part = int(input("Close at part (def. 4): ") or 4)
-	total_range_filter = float(input("Pin range (def. 1): ") or 1)
+	total_range_filter = float(input("Pin range (def. 0.8): ") or 0.8)
 	gap_filter = float(input("Max gap (def. 0.1): ") or 0.1)
 	tick_size_filter = float(input("Max tick size (def. 0.1): ") or 0.1)
-	room_to_the_left = int(input("Room to the left (def. 2): ") or 2)
+	room_to_the_left = int(input("Room to the left (def. 1): ") or 1)
 	proc = int(input("Processes (def. 8): ") or 8)
 	print("")
 	
