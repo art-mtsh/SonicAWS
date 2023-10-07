@@ -155,6 +155,8 @@ if __name__ == '__main__':
 		time2 = time.perf_counter()
 		time3 = time2 - time1
 		
+		bot1.send_message(662482931, "💵💵💵💵💵")
+		
 		print(f"Finished search in {int(time3)} seconds")
 		print("")
 		
