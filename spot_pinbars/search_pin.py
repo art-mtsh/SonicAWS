@@ -93,7 +93,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 if __name__ == '__main__':
 	print("PARAMETERS:")
 	price_filter = 0.0000000001 # float(input("Price filter (def. 0.000000001): ") or 0.000000001)
-	binance_frame = "1h" # str(input("Timeframe (def. 5m): ") or "5m")
+	binance_frame = "30m" # str(input("Timeframe (def. 5m): ") or "5m")
 	request_limit_length = 300 # int(input("Request length (def. 384): ") or 384)
 	body_percent_filter = int(input("Body percent (def. 20): ") or 20)
 	pin_close_part = int(input("Close at part (def. 4): ") or 4)
@@ -125,7 +125,7 @@ if __name__ == '__main__':
 			last_minute_digit = now.strftime('%M')
 			# last_second_digit = now.strftime('%S')
 			time.sleep(30)
-			if int(last_minute_digit) == 55:
+			if int(last_minute_digit) == 58 or int(last_minute_digit) == 28:
 				break
 				
 	while True:
