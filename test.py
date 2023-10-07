@@ -1,2 +1,7 @@
-for b in range(24, 1, -1):
-	print(b)
+from datetime import datetime
+
+now = datetime.now()
+# last_hour_digit = int(now.strftime('%H'))
+last_minute_digit = now.strftime('%M')
+last_second_digit = now.strftime('%S')
+print(last_minute_digit)

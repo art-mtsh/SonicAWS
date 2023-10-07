@@ -123,11 +123,10 @@ if __name__ == '__main__':
 			now = datetime.now()
 			# last_hour_digit = int(now.strftime('%H'))
 			last_minute_digit = now.strftime('%M')
-			last_second_digit = now.strftime('%S')
-			time.sleep(0.1)
-			if int(last_second_digit) == 0:
-				if int(last_minute_digit[-1]) == 4 or int(last_minute_digit[-1]) == 9:
-					break
+			# last_second_digit = now.strftime('%S')
+			time.sleep(30)
+			if int(last_minute_digit) == 55:
+				break
 				
 	while True:
 		
