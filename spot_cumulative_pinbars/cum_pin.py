@@ -89,7 +89,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}\n"
 							                             f"#{symbol}, "
 							                             f"cum pin of {b} candles, "
-							                             f"cv: {int(pin_volume)/1000}, pv {int(prev_pin_volume)/1000}")
+							                             f"cv: {int(pin_volume/10000)}, pv {int(prev_pin_volume/10000)}")
 							
 							not_sent = False
 
