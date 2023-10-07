@@ -7,7 +7,7 @@ url2 = "https://fapi.binance.com/fapi/v1/time"
 binance_futures = "https://fapi.binance.com/fapi/v1/ticker/bookTicker"
 url4 = "https://api.binance.com/api/v3/exchangeInfo"
 binance_spot = "https://api.binance.com/api/v3/ticker/bookTicker"
-url10 = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=5"
+url10 = "https://api.binance.com/api/v3/klines?symbol=TOMOUSDT&interval=5m&limit=5"
 
 url6 = "https://api.bybit.com/derivatives/v3/public/instruments-info"
 url7 = "https://api.bybit.com/spot/v3/public/symbols"
