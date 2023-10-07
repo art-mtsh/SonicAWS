@@ -42,7 +42,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 				
 				curr_index = -1
 				
-				for b in range(24, 1, -1):
+				for b in [24, 12]:
 					pin_open = open[curr_index - b]
 					pin_high = max(high[curr_index:curr_index - b:-1])
 					pin_low = min(low[curr_index:curr_index - b:-1])

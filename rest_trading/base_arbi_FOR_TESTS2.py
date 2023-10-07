@@ -101,7 +101,7 @@ def search_activale():
 			
 			for i in range(threads):
 				
-				end_date_timestamp = datetime(2023, 9, day).timestamp()
+				end_date_timestamp = datetime(2023, 10, day).timestamp()
 				end_date = datetime.fromtimestamp(end_date_timestamp)
 				hours_to_add = hour  # +++++++++++++++++++++++++
 				minutes_to_add = 0  # +++++++++++++++++++++++++

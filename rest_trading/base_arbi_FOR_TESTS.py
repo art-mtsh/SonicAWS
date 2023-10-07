@@ -200,7 +200,7 @@ def search_activale(price_filter, ticksize_filter):
 		
 		for i in range(threads):
 			
-			end_date_timestamp = datetime(2023, 8, day).timestamp()
+			end_date_timestamp = datetime(2023, 10, day).timestamp()
 			end_date = datetime.fromtimestamp(end_date_timestamp)
 			hours_to_add = 20  # +++++++++++++++++++++++++
 			minutes_to_add = 0  # +++++++++++++++++++++++++
