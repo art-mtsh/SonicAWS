@@ -64,9 +64,9 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 					for u in range(1, len(bin_all_ticks) - 1):
 						if 0 < bin_all_ticks[-u] - bin_all_ticks[-u - 1] < bin_diffs:
 							bin_diffs = bin_all_ticks[-u] - bin_all_ticks[-u - 1]
-					binance_tick_size = float('{:.3f}'.format(bin_diffs / (close[-1] / 100)))
 					
-					density = (high[-1] - low[-1]) / binance_tick_size if binance_tick_size != 0 else 0
+					density = (high[-1] - low[-1]) / bin_diffs if bin_diffs != 0 else 0
+					binance_tick_size = float('{:.3f}'.format(bin_diffs / (close[-1] / 100)))
 					
 					# ==== pin definition ====
 					if open[-1] != 0 and \
