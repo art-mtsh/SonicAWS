@@ -21,7 +21,7 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 			
 			if frame == "1h":
 				if int(last_minute_digit) > 45:
-					continue
+					pass
 				else:
 					continue
 				
