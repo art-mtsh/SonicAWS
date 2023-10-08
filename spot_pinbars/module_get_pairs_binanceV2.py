@@ -1,7 +1,7 @@
 import requests
 
 def binance_pairs(chunks, price_filter):
-    excluded_substrings = ["RUB", "USDPUSDT", "EURBUSD", "EURUSDT", "TUSDUSDT", "TUSDBUSD", "FDUSDBUSD", "USDCUSDT", "FDUSDUSDT", "BETH", "TRY"]
+    excluded_substrings = ["RUB", "USDPUSDT", "EURBUSD", "EURUSDT", "TUSDUSDT", "TUSDBUSD", "FDUSDBUSD", "USDCUSDT", "FDUSDUSDT", "BETH", "TRY", "ETH"]
     
     binance_ticker_url = "https://api.binance.com/api/v3/ticker/bookTicker"
     response = requests.get(binance_ticker_url)
