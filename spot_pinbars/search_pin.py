@@ -66,8 +66,16 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 							bin_diffs = bin_all_ticks[-u] - bin_all_ticks[-u - 1]
 					binance_tick_size = float('{:.3f}'.format(bin_diffs / (close[-1] / 100)))
 					
+					density = (high[-1] - low[-1]) / binance_tick_size if binance_tick_size != 0 else 0
+					
 					# ==== pin definition ====
-					if open[-1] != 0 and high[-1] != 0 and low[-1] != 0 and close[-1] != 0 and max_gap <= gap_filter and binance_tick_size <= tick_size_filter:
+					if open[-1] != 0 and \
+						high[-1] != 0 and \
+						low[-1] != 0 and \
+						close[-1] != 0 and \
+						max_gap <= gap_filter and \
+						binance_tick_size <= tick_size_filter and \
+						density >= 10:
 					
 						body_range = abs(open[-1] - close[-1])
 						total_range = abs(high[-1] - low[-1]) if high[-1] != low[-1] else 0.0000001
