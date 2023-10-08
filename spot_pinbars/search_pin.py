@@ -50,7 +50,7 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 					binance_tick_size = float('{:.3f}'.format(bin_diffs / (close[-1] / 100)))
 					
 					# ==== pin definition ====
-					if open[-1] != 0 and high[-1] != 0 and low[-1] != 0 and close[-1] != 0:
+					if open[-1] != 0 and high[-1] != 0 and low[-1] != 0 and close[-1] != 0 and max_gap <= gap_filter and binance_tick_size <= tick_size_filter:
 					
 						body_range = abs(open[-1] - close[-1])
 						total_range = abs(high[-1] - low[-1]) if high[-1] != low[-1] else 0.0000001
@@ -66,12 +66,10 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 						
 						delta_1 = buy_volume[-1] - sell_volume[-1]
 	
-						if max_gap <= gap_filter and \
-							body_percent < body_percent_filter and \
+						if body_percent < body_percent_filter and \
 							high[-1] >= close[-1] >= (high[-1] - part) and \
 							total_range >= total_range_filter and \
-							low[-1] <= min(low[-1:-room_to_the_left-1:-1]) and \
-							binance_tick_size <= tick_size_filter:
+							low[-1] <= min(low[-1:-room_to_the_left-1:-1]):
 							
 							print(
 								f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, "
