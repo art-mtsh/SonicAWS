@@ -13,7 +13,7 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 def search(filtered_symbols, request_limit_length, body_percent_filter, total_range_filter, pin_close_part, gap_filter, tick_size_filter, room_to_the_left):
 	
 	for symbol in filtered_symbols:
-		for frame in ["30m", "1h", "2h", "4h"]:
+		for frame in ["30m", "1h", "2h"]:
 			binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
 			binance_klines = requests.get(binance_klines)
 			
