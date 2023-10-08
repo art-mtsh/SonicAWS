@@ -134,7 +134,7 @@ if __name__ == '__main__':
 			f"total_range_filter = {total_range_filter}%, \n"
 			f"gap_filter = {gap_filter}%, \n"
             f"tick_size_filter = {tick_size_filter}%, \n"
-            f"density_filter = {density_filter}"
+            f"density_filter = {density_filter}, \n"
             f"room_to_the_left = {room_to_the_left} pins, \n"
             f"proc = {proc} cores\n\n"
             f"💵💵💵💵💵"
