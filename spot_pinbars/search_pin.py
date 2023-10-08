@@ -10,7 +10,7 @@ TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 
-def search(filtered_symbols, request_limit_length, body_percent_filter, total_range_filter, pin_close_part, gap_filter, tick_size_filter, room_to_the_left):
+def search(filtered_symbols, request_limit_length, body_percent_filter, total_range_filter, pin_close_part, gap_filter, tick_size_filter, density_filter, room_to_the_left):
 	
 	for symbol in filtered_symbols:
 		for frame in ["30m", "1h", "2h"]:
@@ -24,7 +24,7 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 					pass
 				else:
 					continue
-				
+
 			if frame == "2h":
 				if int(last_minute_digit) > 45 and int(last_hour_digit) % 2 == 0:
 					pass
@@ -75,27 +75,27 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 						close[-1] != 0 and \
 						max_gap <= gap_filter and \
 						binance_tick_size <= tick_size_filter and \
-						density >= 10:
-					
+						density >= density_filter:
+						
 						body_range = abs(open[-1] - close[-1])
 						total_range = abs(high[-1] - low[-1]) if high[-1] != low[-1] else 0.0000001
 						part = total_range / pin_close_part
 						body_percent = body_range / (total_range / 100)
 						total_range = float('{:.2f}'.format(total_range / (close[-1] / 100)))
-						
+
 						volume_scheme: str
-						
+
 						if volume[-1] > volume[-2] > volume[-3]: volume_scheme = "Strong rising"
 						elif volume[-1] > volume[-2]: volume_scheme = "Rising"
 						else: volume_scheme = "Casual"
-						
+
 						delta_1 = buy_volume[-1] - sell_volume[-1]
-	
+
 						if body_percent < body_percent_filter and \
 							high[-1] >= close[-1] >= (high[-1] - part) and \
 							total_range >= total_range_filter and \
 							low[-1] <= min(low[-1:-room_to_the_left-1:-1]):
-							
+
 							print(
 								f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, "
 								f"{symbol} ({frame}), "
@@ -107,7 +107,7 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 							    f"room to the left {room_to_the_left}, "
 							    f"tick size {binance_tick_size}%"
 							)
-							
+
 							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')}: #{symbol} ({frame}),\n"
 							                             f"{volume_scheme} volume, {'negative' if delta_1 <= 0 else 'positive'} delta,\n"
 							                             f"Gap: {max_gap}%, tick: {binance_tick_size}%")
@@ -121,7 +121,8 @@ if __name__ == '__main__':
 	total_range_filter = float(input("Pin range (def. 0.5): ") or 0.5)
 	gap_filter = 0.3 # float(input("Max gap (def. 0.3): ") or 0.3)
 	tick_size_filter = 0.3 # float(input("Max tick size (def. 0.3): ") or 0.3)
-	room_to_the_left = int(input("Room to the left (def. 1): ") or 1)
+	density_filter = 10
+	room_to_the_left = 1 # int(input("Room to the left (def. 1): ") or 1)
 	proc = int(input("Processes (def. 8): ") or 8)
 	print("")
 	
@@ -133,6 +134,7 @@ if __name__ == '__main__':
 			f"total_range_filter = {total_range_filter}%, \n"
 			f"gap_filter = {gap_filter}%, \n"
             f"tick_size_filter = {tick_size_filter}%, \n"
+            f"density_filter = {density_filter}"
             f"room_to_the_left = {room_to_the_left} pins, \n"
             f"proc = {proc} cores\n\n"
             f"💵💵💵💵💵"
@@ -156,7 +158,7 @@ if __name__ == '__main__':
 		
 		the_processes = []
 		for proc_number in range(proc):
-			process = Process(target=search, args=(pairs[proc_number], request_limit_length, body_percent_filter, total_range_filter, pin_close_part, gap_filter, tick_size_filter, room_to_the_left, ))
+			process = Process(target=search, args=(pairs[proc_number], request_limit_length, body_percent_filter, total_range_filter, pin_close_part, gap_filter, tick_size_filter, density_filter, room_to_the_left, ))
 			the_processes.append(process)
 			
 		for pro in the_processes:
