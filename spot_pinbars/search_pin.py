@@ -122,7 +122,7 @@ if __name__ == '__main__':
 			last_minute_digit = now.strftime('%M')
 			# last_second_digit = now.strftime('%S')
 			time.sleep(30)
-			if int(last_minute_digit) == 58 or int(last_minute_digit) == 28:
+			if int(last_minute_digit) == 55 or int(last_minute_digit) == 25:
 				break
 				
 	while True:
