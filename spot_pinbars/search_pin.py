@@ -122,7 +122,7 @@ if __name__ == '__main__':
 	total_range_filter = float(input("Pin range (def. 0.5): ") or 0.5)
 	gap_filter = 0.3
 	tick_size_filter = 0.3
-	density_filter = 10
+	density_filter = 20
 	room_to_the_left = 1
 	proc = int(input("Processes (def. 8): ") or 8)
 	print("")
