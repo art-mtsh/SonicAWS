@@ -110,7 +110,8 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 
 							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')}: #{symbol} ({frame}),\n"
 							                             f"{volume_scheme} volume, {'negative' if delta_1 <= 0 else 'positive'} delta,\n"
-							                             f"Gap: {max_gap}%, tick: {binance_tick_size}%")
+							                             f"Gap: {max_gap}%, tick: {binance_tick_size}%, \n"
+							                             f"Density: {int(density)}")
 					
 if __name__ == '__main__':
 	print("PARAMETERS:")
