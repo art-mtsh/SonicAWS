@@ -114,15 +114,15 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 					
 if __name__ == '__main__':
 	print("PARAMETERS:")
-	price_filter = 0.0 # float(input("Price filter (def. 0.000000001): ") or 0.000000001)
-	request_limit_length = 300 # int(input("Request length (def. 384): ") or 384)
+	price_filter = 0.0
+	request_limit_length = 300
 	body_percent_filter = int(input("Body percent (def. 20): ") or 20)
 	pin_close_part = int(input("Close at part (def. 4): ") or 4)
 	total_range_filter = float(input("Pin range (def. 0.5): ") or 0.5)
-	gap_filter = 0.3 # float(input("Max gap (def. 0.3): ") or 0.3)
-	tick_size_filter = 0.3 # float(input("Max tick size (def. 0.3): ") or 0.3)
+	gap_filter = 0.3
+	tick_size_filter = 0.3
 	density_filter = 10
-	room_to_the_left = 1 # int(input("Room to the left (def. 1): ") or 1)
+	room_to_the_left = 1
 	proc = int(input("Processes (def. 8): ") or 8)
 	print("")
 	
