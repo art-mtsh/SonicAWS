@@ -19,11 +19,17 @@ def search(filtered_symbols, request_limit_length, body_percent_filter, total_ra
 			last_hour_digit = int(now.strftime('%H'))
 			last_minute_digit = now.strftime('%M')
 			
-			if frame == "1h" and not ( int(last_minute_digit) > 45 and int(last_hour_digit) % 1 != 0 ):
-				continue
+			if frame == "1h":
+				if int(last_minute_digit) > 45:
+					continue
+				else:
+					continue
 				
-			if frame == "2h" and not ( int(last_minute_digit) > 45 and int(last_hour_digit) % 2 != 0 ):
-				continue
+			if frame == "2h":
+				if int(last_minute_digit) > 45 and int(last_hour_digit) % 2 == 0:
+					pass
+				else:
+					continue
 				
 			binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
 			binance_klines = requests.get(binance_klines)
