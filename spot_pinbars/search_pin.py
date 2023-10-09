@@ -80,7 +80,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 						# ===== PIN DEFINITION =====
 						if body_percent < body_percent_filter and \
 							total_range >= pin_range_filter and \
-							high[-1] >= close[-1] >= (high[-1] - part) or low[-1] <= close[-1] <= (low[-1] + part):
+							(high[-1] >= close[-1] >= (high[-1] - part) or low[-1] <= close[-1] <= (low[-1] + part)):
 							
 							volume_scheme: str
 							
@@ -116,7 +116,7 @@ if __name__ == '__main__':
 	pin_close_part = int(input("Close at part (def. 5): ") or 5)
 	pin_range_filter = float(input("Pin range (def. 0.5): ") or 0.5)
 	gap_filter = 0.3
-	tick_size_filter = 0.3
+	tick_size_filter = 0.1
 	density_filter = 30
 	proc = int(input("Processes (def. 8): ") or 8)
 	print("")
