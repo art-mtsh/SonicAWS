@@ -117,7 +117,7 @@ if __name__ == '__main__':
 	pin_range_filter = float(input("Pin range (def. 0.5): ") or 0.5)
 	gap_filter = 0.3
 	tick_size_filter = 0.1
-	density_filter = 30
+	density_filter = 25
 	proc = int(input("Processes (def. 8): ") or 8)
 	print("")
 	
