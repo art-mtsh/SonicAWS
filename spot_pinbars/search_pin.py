@@ -121,7 +121,7 @@ if __name__ == '__main__':
 	gap_filter = 0.3
 	tick_size_filter = 0.1
 	density_filter = 25
-	proc = int(input("Processes (def. 8): ") or 8)
+	proc = int(input("Processes (def. 16): ") or 16)
 	print("")
 	
 	bot1.send_message(662482931, f"STARTING WITH:\n\n"
@@ -144,8 +144,8 @@ if __name__ == '__main__':
 			last_second_digit = now.strftime('%S')
 			time.sleep(0.1)
 			
-			if int(last_minute_digit) == 58 or int(last_minute_digit) == 28:
-				if int(last_second_digit) == 30:
+			if int(last_minute_digit) == 59 or int(last_minute_digit) == 29:
+				if int(last_second_digit) == 00:
 					break
 				
 	while True:
