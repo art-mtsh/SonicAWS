@@ -104,10 +104,13 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							    f"pin total range {total_range}%, "
 							)
 
-							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')}: #{symbol} ({frame}),\n"
-							                             f"BR.ratio: {int(body_percent)}/100, pin%r: {total_range}%\n"
-							                             f"{volume_scheme} volume, buys/sells: {buy_volume_power}/{sell_volume_power}\n"
-							                             f"Max gap: {max_gap}%, density: {int(density)}")
+							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')}: #{symbol} ({frame}), \n"
+							                             f"{volume_scheme} volume, \n"
+							                             f"Buys/Sells: {buy_volume_power}/{sell_volume_power}, \n"
+							                             f"Pin range: {total_range}%, \n"
+							                             f"BR ratio: {int(body_percent)}/100, \n"
+							                             f"Max gap: {max_gap}%, \n"
+							                             f"Density: {int(density)}")
 					
 if __name__ == '__main__':
 	print("PARAMETERS:")
