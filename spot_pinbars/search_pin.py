@@ -144,8 +144,8 @@ if __name__ == '__main__':
 			last_second_digit = now.strftime('%S')
 			time.sleep(0.1)
 			
-			if int(last_minute_digit) == 59 or int(last_minute_digit) == 29:
-				if int(last_second_digit) == 00:
+			if int(last_minute_digit) == 28 or int(last_minute_digit) == 58:
+				if int(last_second_digit) == 50:
 					break
 				
 	while True:
