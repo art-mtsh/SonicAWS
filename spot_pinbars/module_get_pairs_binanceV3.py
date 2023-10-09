@@ -5,9 +5,9 @@ def binance_pairs(chunks, quote_assets, day_range_filter, day_density_filter, ti
     filtered_symbols = []
     
     ts_dict = {}
-    
-    binance_exchange_info_url = "https://api.binance.com/api/v3/exchangeInfo"
-    response = requests.get(binance_exchange_info_url)
+    futures_exchange_info_url = "https://fapi.binance.com/fapi/v1/exchangeInfo"
+    spot_exchange_info_url = "https://api.binance.com/api/v3/exchangeInfo"
+    response = requests.get(futures_exchange_info_url)
     response_data = response.json()
     response_data = response_data.get("symbols")
     for data in response_data:
@@ -19,8 +19,9 @@ def binance_pairs(chunks, quote_assets, day_range_filter, day_density_filter, ti
             ts_dict.update({symbol: tick_size})
         
     day_info_dict = {}
-    binance_day_info_url = "https://api.binance.com/api/v3/ticker/24hr"
-    response = requests.get(binance_day_info_url)
+    futures_day_info_url = "https://fapi.binance.com/fapi/v1/ticker/24hr"
+    spot_day_info_url = "https://api.binance.com/api/v3/ticker/24hr"
+    response = requests.get(futures_day_info_url)
     response_data = response.json()
     for data in response_data:
         symbol = data['symbol']
@@ -55,6 +56,6 @@ def binance_pairs(chunks, quote_assets, day_range_filter, day_density_filter, ti
     return chunked_symbols
 
  
-# pairs = binance_pairs(16, ["USDT", "BTC"], 2, 20, 0.6)
+# pairs = binance_pairs(16, ["USDT"], 2, 20, 0.6)
 # for i in pairs:
 #     print(i)

@@ -32,14 +32,15 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 					pass
 				else:
 					continue
-				
-			binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
-			binance_klines = requests.get(binance_klines)
 			
-			if binance_klines.status_code == 200:
-				response_length = len(binance_klines.json()) if binance_klines.json() != None else 0
+			futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
+			spot_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
+			klines = requests.get(futures_klines)
+			
+			if klines.status_code == 200:
+				response_length = len(klines.json()) if klines.json() != None else 0
 				if response_length == request_limit_length:
-					binance_candle_data = binance_klines.json()
+					binance_candle_data = klines.json()
 					open = list(float(i[1]) for i in binance_candle_data)
 					high = list(float(i[2]) for i in binance_candle_data)
 					low = list(float(i[3]) for i in binance_candle_data)
@@ -151,7 +152,7 @@ if __name__ == '__main__':
 	while True:
 		
 		time1 = time.perf_counter()
-		pairs = binance_pairs(chunks=proc, quote_assets=["USDT"], day_range_filter=pin_range_filter*2, day_density_filter=density_filter, tick_size_filter=tick_size_filter)
+		pairs = binance_pairs(chunks=proc, quote_assets=["USDT"], day_range_filter=pin_range_filter, day_density_filter=density_filter, tick_size_filter=tick_size_filter)
 		print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs:")
 		
 		the_processes = []

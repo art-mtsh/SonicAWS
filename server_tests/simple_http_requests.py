@@ -21,43 +21,6 @@ price_filter = 0.0000001
 
 while True:
     try:
-        # response = requests.get(binance_futures)
-        # response.raise_for_status()
-        # futures = []
-        # if response.status_code == 200:
-        #     response_data = response.json()
-        #     # response_data = response_data.get("symbols")
-        #     # print(response_data)
-        #     for data in response_data:
-        #     #     print(data)
-        #         if float(data["bidPrice"]) >= price_filter and \
-        #                 "RUB" not in data["symbol"] and \
-        #                 "USDPUSDT" not in data["symbol"] and \
-        #                 "EURBUSD" not in data["symbol"] and \
-        #                 "EURUSDT" not in data["symbol"] and \
-        #                 "TUSDUSDT" not in data["symbol"] and \
-        #                 "TUSDBUSD" not in data["symbol"]:
-        #             futures.append(data["symbol"])
-
-        # response = requests.get(binance_spot)
-        # response.raise_for_status()  # Check for any HTTP errors
-        # spots = []
-        # if response.status_code == 200:
-        #     response_data = response.json()
-        #     # response_data = response_data.get("symbols")
-        #     # print(response_data)
-        #     for data in response_data:
-        #         #     print(data)
-        #         if float(data["bidPrice"]) >= price_filter and \
-        #                 "RUB" not in data["symbol"] and \
-        #                 "USDPUSDT" not in data["symbol"] and \
-        #                 "EURBUSD" not in data["symbol"] and \
-        #                 "EURUSDT" not in data["symbol"] and \
-        #                 "TUSDUSDT" not in data["symbol"] and \
-        #                 "TUSDBUSD" not in data["symbol"] and \
-        #                 "BTCUSDT" in data["symbol"]:
-        #             spots.append(data["symbol"])
-        
         response = requests.get(url11)
         response.raise_for_status()
 
@@ -85,19 +48,7 @@ while True:
             
         else:
             print(f"Received status code: {response.status_code}")
-        # print(futures)
-        # print(spots)
-        #
-        # print(len(futures))
-        # print(len(spots))
-        #
-        # result_1 = list(set(spots).difference(futures))
-        # print(result_1)
-        # print(len(result_1))
-        #
-        # result_2 = list(set(futures).difference(spots))
-        # print(result_2)
-        # print(len(result_2))
+
         
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
