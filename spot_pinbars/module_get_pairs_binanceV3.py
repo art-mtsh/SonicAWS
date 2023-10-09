@@ -43,7 +43,7 @@ def binance_pairs(chunks, quote_assets, day_range_filter, day_density_filter, ti
                 ts_p = ts / (c / 100)
                 
                 if day_range >= day_range_filter and density >= day_density_filter and ts_p <= tick_size_filter:
-                    filtered_symbols.append(key)
+                    filtered_symbols.append([key, ts])
     
  
     # Calculate the chunk size
@@ -54,6 +54,6 @@ def binance_pairs(chunks, quote_assets, day_range_filter, day_density_filter, ti
 
     return chunked_symbols
 
-# pairs = binance_pairs(16, ["USDT", "BTC"], 2, 20, 0.6)
-# for i in pairs:
-#     print(i)
+pairs = binance_pairs(16, ["USDT", "BTC"], 2, 20, 0.6)
+for i in pairs:
+    print(i)

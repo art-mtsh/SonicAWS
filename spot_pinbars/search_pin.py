@@ -9,9 +9,12 @@ TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 
-def search(filtered_symbols, request_limit_length, gap_filter, body_percent_filter, pin_range_filter, pin_close_part, room_to_the_left):
+def search(filtered_symbols, request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, pin_close_part, room_to_the_left):
 	
-	for symbol in filtered_symbols:
+	for data in filtered_symbols:
+		symbol = data[0]
+		tick_size = data[1]
+		
 		for frame in ["30m", "1h", "2h"]:
 			
 			now = datetime.now()
@@ -56,13 +59,16 @@ def search(filtered_symbols, request_limit_length, gap_filter, body_percent_filt
 						s_v = volume[curr_index] - buy_volume[curr_index]
 						sell_volume.append(s_v)
 					max_gap = float('{:.3f}'.format(max_gap))
+					
+					density = (high[-1] - low[-1]) / tick_size
 				
 					# ==== pin definition ====
 					if open[-1] != 0 and \
 						high[-1] != 0 and \
 						low[-1] != 0 and \
 						close[-1] != 0 and \
-						max_gap <= gap_filter:
+						max_gap <= gap_filter and \
+						density >= density_filter:
 						
 						body_range = abs(open[-1] - close[-1])
 						total_range = abs(high[-1] - low[-1]) if high[-1] != low[-1] else 0.0000001
@@ -108,7 +114,7 @@ if __name__ == '__main__':
 	pin_range_filter = float(input("Pin range (def. 0.5): ") or 0.5)
 	gap_filter = 0.3
 	tick_size_filter = 0.3
-	day_density_filter = 30
+	density_filter = 30
 	room_to_the_left = 1
 	proc = int(input("Processes (def. 8): ") or 8)
 	print("")
@@ -120,7 +126,7 @@ if __name__ == '__main__':
 			f"total_range_filter = {pin_range_filter}%, \n"
 			f"gap_filter = {gap_filter}%, \n"
             f"tick_size_filter = {tick_size_filter}%, \n"
-            f"day_density_filter = {day_density_filter}, \n"
+            f"day_density_filter = {density_filter}, \n"
             f"room_to_the_left = {room_to_the_left} pins, \n"
             f"proc = {proc} cores\n\n"
             f"💵💵💵💵💵"
@@ -141,12 +147,12 @@ if __name__ == '__main__':
 	while True:
 		
 		time1 = time.perf_counter()
-		pairs = binance_pairs(chunks=proc, quote_assets=["USDT"], day_range_filter=pin_range_filter*2, day_density_filter=day_density_filter, tick_size_filter=tick_size_filter)
+		pairs = binance_pairs(chunks=proc, quote_assets=["USDT"], day_range_filter=pin_range_filter*2, day_density_filter=density_filter, tick_size_filter=tick_size_filter)
 		print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs:")
 		
 		the_processes = []
 		for proc_number in range(proc):
-			process = Process(target=search, args=(pairs[proc_number], request_limit_length, gap_filter, body_percent_filter, pin_range_filter, pin_close_part, room_to_the_left, ))
+			process = Process(target=search, args=(pairs[proc_number], request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, pin_close_part, room_to_the_left,))
 			the_processes.append(process)
 			
 		for pro in the_processes:
