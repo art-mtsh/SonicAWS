@@ -141,7 +141,7 @@ if __name__ == '__main__':
 	while True:
 		
 		time1 = time.perf_counter()
-		pairs = binance_pairs(chunks=proc, quote_assets=["USDT"], day_range_filter=2, day_density_filter=day_density_filter, tick_size_filter=tick_size_filter)
+		pairs = binance_pairs(chunks=proc, quote_assets=["USDT"], day_range_filter=pin_range_filter*2, day_density_filter=day_density_filter, tick_size_filter=tick_size_filter)
 		print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs:")
 		
 		the_processes = []
