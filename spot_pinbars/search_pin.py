@@ -62,7 +62,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 					
 					density = (high[-1] - low[-1]) / tick_size
 				
-					# ==== pin definition ====
+					# ==== CURRENT CANDLE CHARACTERISTICS ====
 					if open[-1] != 0 and \
 						high[-1] != 0 and \
 						low[-1] != 0 and \
@@ -75,20 +75,24 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 						part = total_range / pin_close_part
 						body_percent = body_range / (total_range / 100)
 						total_range = float('{:.2f}'.format(total_range / (close[-1] / 100)))
-
-						volume_scheme: str
-
-						if volume[-1] > volume[-2] > volume[-3]: volume_scheme = "Strong rising"
-						elif volume[-1] > volume[-2]: volume_scheme = "Rising"
-						else: volume_scheme = "Casual"
-
-						buy_volume_power = int(buy_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
-						sell_volume_power = int(sell_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 						
+						# ===== PIN DEFINITION =====
 						if body_percent < body_percent_filter and \
 							high[-1] >= close[-1] >= (high[-1] - part) and \
 							total_range >= pin_range_filter and \
 							low[-1] <= min(low[-1:-room_to_the_left-1:-1]):
+							
+							volume_scheme: str
+							
+							if volume[-1] > volume[-2] > volume[-3]:
+								volume_scheme = "Strong rising"
+							elif volume[-1] > volume[-2]:
+								volume_scheme = "Rising"
+							else:
+								volume_scheme = "Casual"
+							
+							buy_volume_power = int(buy_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
+							sell_volume_power = int(sell_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 
 							print(
 								f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, "
@@ -104,7 +108,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')}: #{symbol} ({frame}),\n"
 							                             f"BR.ratio: {int(body_percent)}/100, pin%r: {total_range}%\n"
 							                             f"{volume_scheme} volume, buys/sells: {buy_volume_power}/{sell_volume_power}\n"
-							                             f"Max gap: {max_gap}%")
+							                             f"Max gap: {max_gap}%, density: {int(density)}")
 					
 if __name__ == '__main__':
 	print("PARAMETERS:")
@@ -141,7 +145,7 @@ if __name__ == '__main__':
 			time.sleep(0.1)
 			
 			if int(last_minute_digit) == 58 or int(last_minute_digit) == 28:
-				if int(last_second_digit) == 30:
+				if int(last_second_digit) == 45:
 					break
 				
 	while True:

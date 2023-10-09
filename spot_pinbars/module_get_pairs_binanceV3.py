@@ -54,6 +54,7 @@ def binance_pairs(chunks, quote_assets, day_range_filter, day_density_filter, ti
 
     return chunked_symbols
 
-pairs = binance_pairs(16, ["USDT", "BTC"], 2, 20, 0.6)
-for i in pairs:
-    print(i)
+ 
+# pairs = binance_pairs(16, ["USDT", "BTC"], 2, 20, 0.6)
+# for i in pairs:
+#     print(i)
