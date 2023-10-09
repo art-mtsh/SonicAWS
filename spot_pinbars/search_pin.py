@@ -142,7 +142,7 @@ if __name__ == '__main__':
 			time.sleep(0.1)
 			
 			if int(last_minute_digit) == 58 or int(last_minute_digit) == 28:
-				if int(last_second_digit) == 45:
+				if int(last_second_digit) == 30:
 					break
 				
 	while True:
