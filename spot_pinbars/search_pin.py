@@ -9,7 +9,7 @@ TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 
-def search(filtered_symbols, request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, pin_close_part, room_to_the_left):
+def search(filtered_symbols, request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, pin_close_part):
 	
 	for data in filtered_symbols:
 		symbol = data[0]
@@ -79,9 +79,8 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 						
 						# ===== PIN DEFINITION =====
 						if body_percent < body_percent_filter and \
-							high[-1] >= close[-1] >= (high[-1] - part) and \
 							total_range >= pin_range_filter and \
-							low[-1] <= min(low[-1:-room_to_the_left-1:-1]):
+							high[-1] >= close[-1] >= (high[-1] - part) or low[-1] <= close[-1] <= (low[-1] + part):
 							
 							volume_scheme: str
 							
@@ -103,7 +102,6 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							    f"body_percent {int(body_percent)}%, "
 							    f"close whithin 1/{pin_close_part} from high, "
 							    f"pin total range {total_range}%, "
-							    f"room to the left {room_to_the_left}, "
 							)
 
 							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')}: #{symbol} ({frame}),\n"
@@ -120,7 +118,6 @@ if __name__ == '__main__':
 	gap_filter = 0.3
 	tick_size_filter = 0.3
 	density_filter = 30
-	room_to_the_left = 1
 	proc = int(input("Processes (def. 8): ") or 8)
 	print("")
 	
@@ -132,7 +129,6 @@ if __name__ == '__main__':
 			f"gap_filter = {gap_filter}%, \n"
             f"tick_size_filter = {tick_size_filter}%, \n"
             f"day_density_filter = {density_filter}, \n"
-            f"room_to_the_left = {room_to_the_left} pins, \n"
             f"proc = {proc} cores\n\n"
             f"💵💵💵💵💵"
 	        )
@@ -157,7 +153,7 @@ if __name__ == '__main__':
 		
 		the_processes = []
 		for proc_number in range(proc):
-			process = Process(target=search, args=(pairs[proc_number], request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, pin_close_part, room_to_the_left,))
+			process = Process(target=search, args=(pairs[proc_number], request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, pin_close_part,))
 			the_processes.append(process)
 			
 		for pro in the_processes:
