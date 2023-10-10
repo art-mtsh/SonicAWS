@@ -85,11 +85,11 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							volume_scheme: str
 							
 							if volume[-1] > volume[-2] > volume[-3]:
-								volume_scheme = "Strong rising"
+								volume_scheme = "✅✅"
 							elif volume[-1] > volume[-2]:
-								volume_scheme = "Rising"
+								volume_scheme = "✅◻️️"
 							else:
-								volume_scheme = "Casual"
+								volume_scheme = "◻️️◻️"
 							
 							buy_volume_power = int(buy_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 							sell_volume_power = int(sell_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
@@ -103,14 +103,21 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							    f"close whithin 1/{pin_close_part} from high, "
 							    f"pin total range {total_range}%, "
 							)
-
-							bot1.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')}: #{symbol} ({frame}), \n"
-							                             f"{volume_scheme} volume, \n"
-							                             f"Buys/Sells: {buy_volume_power}/{sell_volume_power}, \n"
-							                             f"Pin range: {total_range}%, \n"
-							                             f"BR ratio: {int(body_percent)}/100, \n"
-							                             f"Max gap: {max_gap}%, \n"
-							                             f"Density: {int(density)}")
+							
+							symbol_status = close[-1] - close[0] > 0
+							pin_direction = high[-1] >= close[-1] >= (high[-1] - part)
+							
+							if density > 200:
+								density_scheme = "✅✅"
+							elif 200 >= density > 100:
+								density_scheme = "✅◻️️"
+							else:
+								density_scheme = "◻️️◻️"
+							
+							bot1.send_message(662482931, f"{'🟢' if symbol_status else '🔴'} #{symbol} ({frame})\n"
+							                             f"{'🟢' if pin_direction else '🔴'} pin: {total_range}% ({int(body_percent)}/100)\n"
+							                             f"{volume_scheme} volume, b.{buy_volume_power}/s.{sell_volume_power}\n"
+							                             f"{density_scheme} density ({int(density)})")
 					
 if __name__ == '__main__':
 	print("PARAMETERS:")
