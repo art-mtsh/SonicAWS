@@ -1,15 +1,25 @@
+import time
 from datetime import datetime
-from time import sleep
+from multiprocessing import Process
+import requests
+import telebot
 
-while True:
-	now = datetime.now()
-	last_hour_digit = int(now.strftime('%H'))
-	last_minute_digit = now.strftime('%M')
-	last_second_digit = now.strftime('%S')
-	
-	if int(last_hour_digit) % 2 != 0:
-		print(False)
-	else:
-		print(int(last_second_digit))
-	
-	sleep(1)
+TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
+bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
+
+symbol_status = True
+symbol = "BTCUSDT"
+framt = "1h"
+pin_direction
+total_range
+body_percent
+volume_scheme
+buy_volume_power
+sell_volume_power
+density_scheme
+density
+
+bot1.send_message(662482931, f"{'🟢' if symbol_status else '🔴'} #{symbol} ({frame})\n"
+                             f"{'🟢' if pin_direction else '🔴'} pin: {total_range}% ({int(body_percent)}/100)\n"
+                             f"{volume_scheme} volume, b.{buy_volume_power}/s.{sell_volume_power}\n"
+                             f"{density_scheme} density ({int(density)})")

@@ -90,10 +90,20 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 								volume_scheme = "✅◻️️"
 							else:
 								volume_scheme = "◻️️◻️"
+								
+							if density > 200:
+								density_scheme = "✅✅"
+							elif 200 >= density > 100:
+								density_scheme = "✅◻️️"
+							else:
+								density_scheme = "◻️️◻️"
 							
 							buy_volume_power = int(buy_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 							sell_volume_power = int(sell_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
-
+							
+							symbol_status = close[-1] - close[0] > 0
+							pin_direction = high[-1] >= close[-1] >= (high[-1] - part)
+							
 							print(
 								f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, "
 								f"{symbol} ({frame}), "
@@ -104,16 +114,6 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							    f"pin total range {total_range}%, "
 							)
 							
-							symbol_status = close[-1] - close[0] > 0
-							pin_direction = high[-1] >= close[-1] >= (high[-1] - part)
-							
-							if density > 200:
-								density_scheme = "✅✅"
-							elif 200 >= density > 100:
-								density_scheme = "✅◻️️"
-							else:
-								density_scheme = "◻️️◻️"
-							
 							bot1.send_message(662482931, f"{'🟢' if symbol_status else '🔴'} #{symbol} ({frame})\n"
 							                             f"{'🟢' if pin_direction else '🔴'} pin: {total_range}% ({int(body_percent)}/100)\n"
 							                             f"{volume_scheme} volume, b.{buy_volume_power}/s.{sell_volume_power}\n"
@@ -122,9 +122,9 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 if __name__ == '__main__':
 	print("PARAMETERS:")
 	request_limit_length = 48
-	body_percent_filter = int(input("Body percent (def. 20): ") or 20)
+	body_percent_filter = int(input("Body percent (def. 15): ") or 15)
 	pin_close_part = int(input("Close at part (def. 5): ") or 5)
-	pin_range_filter = float(input("Pin range (def. 0.5): ") or 0.5)
+	pin_range_filter = float(input("Pin range (def. 0.8): ") or 0.8)
 	gap_filter = 0.3
 	tick_size_filter = 0.1
 	density_filter = 25
