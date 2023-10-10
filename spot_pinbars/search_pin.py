@@ -116,7 +116,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							
 							bot1.send_message(662482931, f"{'🟢' if symbol_status else '🔴'} #{symbol} ({frame})\n"
 							                             f"{'🟢' if pin_direction else '🔴'} pin: {total_range}% ({int(body_percent)}/100)\n"
-							                             f"{volume_scheme} volume, b.{buy_volume_power}/s.{sell_volume_power}\n"
+							                             f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 							                             f"{density_scheme} density ({int(density)})")
 					
 if __name__ == '__main__':
