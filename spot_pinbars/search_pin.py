@@ -101,7 +101,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							buy_volume_power = int(buy_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 							sell_volume_power = int(sell_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 							
-							symbol_status = close[-1] - close[0] > 0
+							symbol_status = close[-1] - close[-24] > 0
 							pin_direction = high[-1] >= close[-1] >= (high[-1] - part)
 							
 							print(
