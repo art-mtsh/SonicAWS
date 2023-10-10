@@ -151,8 +151,8 @@ if __name__ == '__main__':
 			last_second_digit = now.strftime('%S')
 			time.sleep(0.1)
 			
-			if int(last_minute_digit) == 28 or int(last_minute_digit) == 58:
-				if int(last_second_digit) == 50:
+			if int(last_minute_digit) == 29 or int(last_minute_digit) == 59:
+				if int(last_second_digit) == 12:
 					break
 				
 	while True:
