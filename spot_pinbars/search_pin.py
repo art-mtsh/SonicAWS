@@ -103,6 +103,8 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							
 							symbol_status = close[-1] - close[-24] > 0
 							pin_direction = high[-1] >= close[-1] >= (high[-1] - part)
+							day_range = (max(high) - min(low)) / (max(high) / 100)
+							day_range = float('{:.1f}'.format(day_range))
 							
 							print(
 								f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, "
@@ -114,7 +116,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							    f"pin total range {total_range}%, "
 							)
 							
-							bot1.send_message(662482931, f"{'🟢' if symbol_status else '🔴'} #{symbol} ({frame})\n"
+							bot1.send_message(662482931, f"{'🟢' if symbol_status else '🔴'} #{symbol} ({frame}) {day_range}%\n"
 							                             f"{'🟢' if pin_direction else '🔴'} pin: {total_range}% ({int(body_percent)}/100)\n"
 							                             f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 							                             f"{density_scheme} density ({int(density)})")
