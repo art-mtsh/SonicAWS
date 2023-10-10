@@ -76,11 +76,16 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 						part = total_range / pin_close_part
 						body_percent = body_range / (total_range / 100)
 						total_range = float('{:.2f}'.format(total_range / (close[-1] / 100)))
+						symbol_status = close[-1] - close[-24] > 0
 						
 						# ===== PIN DEFINITION =====
 						if body_percent < body_percent_filter and \
 							total_range >= pin_range_filter and \
-							(high[-1] >= close[-1] >= (high[-1] - part) or low[-1] <= close[-1] <= (low[-1] + part)):
+							(
+							(high[-1] >= close[-1] >= (high[-1] - part) and symbol_status)
+							or
+							(low[-1] <= close[-1] <= (low[-1] + part) and not symbol_status)
+							):
 							
 							volume_scheme: str
 							
@@ -101,7 +106,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							buy_volume_power = int(buy_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 							sell_volume_power = int(sell_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 							
-							symbol_status = close[-1] - close[-24] > 0
+	
 							pin_direction = high[-1] >= close[-1] >= (high[-1] - part)
 							day_range = (max(high) - min(low)) / (max(high) / 100)
 							day_range = float('{:.1f}'.format(day_range))
