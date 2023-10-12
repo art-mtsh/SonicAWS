@@ -101,7 +101,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							if high[-1] >= close[-1] >= (high[-1] - part) and \
 								max(high[-2:-5:-1]) == max(high[-1:-25:-1]) and \
 								low[-1] <= low[-2]:
-								bot1.send_message(662482931, f"🔴 #{symbol} ({frame}) {day_range}%\n"
+								bot1.send_message(662482931, f"🔴 #{symbol} {'+' if day_range >= 0 else '-'}{day_range}% ({frame})\n"
 								                             f"🔴 pin: {total_range}% ({int(body_percent)}/100)\n"
 								                             f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 								                             f"{density_scheme} density ({int(density)})")
@@ -109,7 +109,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							if low[-1] <= close[-1] <= (low[-1] + part) and \
 								min(low[-2:-5:-1]) == min(low[-1:-25:-1]) and \
 								high[-1] >= high[-2]:
-								bot1.send_message(662482931, f"🟢 #{symbol} ({frame}) {day_range}%\n"
+								bot1.send_message(662482931, f"🟢 #{symbol} {'+' if day_range >= 0 else '-'}{day_range}% ({frame})\n"
 								                             f"🟢 pin: {total_range}% ({int(body_percent)}/100)\n"
 								                             f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 								                             f"{density_scheme} density ({int(density)})")
