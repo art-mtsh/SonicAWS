@@ -113,9 +113,9 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 if __name__ == '__main__':
 	print("PARAMETERS:")
 	request_limit_length = 48
-	body_percent_filter = int(input("Body percent (def. 20): ") or 20)
-	pin_close_part = int(input("Close at part (def. 5): ") or 5)
-	pin_range_filter = float(input("Pin range (def. 0.5): ") or 0.5)
+	body_percent_filter = int(input("Body percent (def. 15): ") or 15)
+	pin_close_part = int(input("Close at part (def. 4): ") or 4)
+	pin_range_filter = float(input("Pin range (def. 0.2): ") or 0.2)
 	gap_filter = 0.2
 	tick_size_filter = 0.1
 	density_filter = 25
