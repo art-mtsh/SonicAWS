@@ -98,13 +98,17 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 						
 						# ===== PIN DEFINITION =====
 						if body_percent <= body_percent_filter and total_range >= pin_range_filter:
-							if high[-1] >= close[-1] >= (high[-1] - part) and max(high[-2:-5:-1]) == max(high[-1:-25:-1]):
+							if high[-1] >= close[-1] >= (high[-1] - part) and \
+								max(high[-2:-5:-1]) == max(high[-1:-25:-1]) and \
+								low[-1] <= low[-2]:
 								bot1.send_message(662482931, f"🔴 #{symbol} ({frame}) {day_range}%\n"
 								                             f"🔴 pin: {total_range}% ({int(body_percent)}/100)\n"
 								                             f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 								                             f"{density_scheme} density ({int(density)})")
 							
-							if low[-1] <= close[-1] <= (low[-1] + part) and min(low[-2:-5:-1]) == min(low[-1:-25:-1]):
+							if low[-1] <= close[-1] <= (low[-1] + part) and \
+								min(low[-2:-5:-1]) == min(low[-1:-25:-1]) and \
+								high[-1] >= high[-2]:
 								bot1.send_message(662482931, f"🟢 #{symbol} ({frame}) {day_range}%\n"
 								                             f"🟢 pin: {total_range}% ({int(body_percent)}/100)\n"
 								                             f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
@@ -114,8 +118,8 @@ if __name__ == '__main__':
 	print("PARAMETERS:")
 	request_limit_length = 48
 	body_percent_filter = int(input("Body percent (def. 33): ") or 33)
-	pin_close_part = int(input("Close at part (def. 4): ") or 4)
-	pin_range_filter = float(input("Pin range (def. 0.2): ") or 0.2)
+	pin_close_part = int(input("Close at part (def. 3): ") or 3)
+	pin_range_filter = float(input("Pin range (def. 0.1): ") or 0.1)
 	gap_filter = 0.4
 	tick_size_filter = 0.1
 	density_filter = 20
