@@ -33,13 +33,13 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
     # plt.show()
     
     # SAVE AND SEND
-    plt.savefig(f'pics/FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', dpi=400, bbox_inches='tight', pad_inches=0.2)
-    pic = open(f'pics/FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', 'rb')
+    plt.savefig(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', dpi=400, bbox_inches='tight', pad_inches=0.2)
+    pic = open(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', 'rb')
     bot1.send_photo(662482931, pic)
     
     # CLEANING
     pic.close()
-    remove(f'pics/FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png')
+    remove(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png')
     plt.cla()
     plt.clf()
 
