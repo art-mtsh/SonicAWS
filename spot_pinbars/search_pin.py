@@ -146,7 +146,7 @@ if __name__ == '__main__':
 			# 		break
 			
 			if (int(last_minute_digit)+1) % 5 == 0:
-				if int(last_second_digit) == 40:
+				if int(last_second_digit) == 35:
 					break
 				
 	while True:
