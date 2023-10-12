@@ -14,9 +14,9 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 	for data in filtered_symbols:
 		symbol = data[0]
 		tick_size = data[1]
-		
-		for frame in ["30m", "1h", "2h"]:
-			
+
+		# for frame in ["30m", "1h", "2h"]:
+		for frame in ["5m"]:
 			now = datetime.now()
 			last_hour_digit = int(now.strftime('%H'))
 			last_minute_digit = now.strftime('%M')
@@ -64,77 +64,61 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 					density = (high[-1] - low[-1]) / tick_size
 				
 					# ==== CURRENT CANDLE CHARACTERISTICS ====
-					if open[-1] != 0 and \
-						high[-1] != 0 and \
-						low[-1] != 0 and \
-						close[-1] != 0 and \
-						max_gap <= gap_filter and \
-						density >= density_filter:
+					if open[-1] != 0 and high[-1] != 0 and \
+						low[-1] != 0 and close[-1] != 0 and \
+						max_gap <= gap_filter and density >= density_filter:
 						
 						body_range = abs(open[-1] - close[-1])
 						total_range = abs(high[-1] - low[-1]) if high[-1] != low[-1] else 0.0000001
 						part = total_range / pin_close_part
 						body_percent = body_range / (total_range / 100)
 						total_range = float('{:.2f}'.format(total_range / (close[-1] / 100)))
-						symbol_status = close[-1] - close[-24] > 0
+						
+						volume_scheme: str
+						
+						if volume[-1] > volume[-2] > volume[-3]:
+							volume_scheme = "✅✅"
+						elif volume[-1] > volume[-2]:
+							volume_scheme = "✅◻️️"
+						else:
+							volume_scheme = "◻️️◻️"
+						
+						if density > 200:
+							density_scheme = "✅✅"
+						elif 200 >= density > 100:
+							density_scheme = "✅◻️️"
+						else:
+							density_scheme = "◻️️◻️"
+						
+						buy_volume_power = int(buy_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
+						sell_volume_power = int(sell_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
+
+						day_range = (max(high) - min(low)) / (max(high) / 100)
+						day_range = float('{:.1f}'.format(day_range))
 						
 						# ===== PIN DEFINITION =====
-						if body_percent < body_percent_filter and \
-							total_range >= pin_range_filter and \
-							(
-							(high[-1] >= close[-1] >= (high[-1] - part) and symbol_status)
-							or
-							(low[-1] <= close[-1] <= (low[-1] + part) and not symbol_status)
-							):
+						if body_percent < body_percent_filter and total_range >= pin_range_filter:
+							if high[-1] >= close[-1] >= (high[-1] - part) and max(high[-2:-5:-1]) == max(high[-1:-25:-1]):
+								bot1.send_message(662482931, f"'🔴' #{symbol} ({frame}) {day_range}%\n"
+								                             f"'🔴' pin: {total_range}% ({int(body_percent)}/100)\n"
+								                             f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
+								                             f"{density_scheme} density ({int(density)})")
 							
-							volume_scheme: str
-							
-							if volume[-1] > volume[-2] > volume[-3]:
-								volume_scheme = "✅✅"
-							elif volume[-1] > volume[-2]:
-								volume_scheme = "✅◻️️"
-							else:
-								volume_scheme = "◻️️◻️"
-								
-							if density > 200:
-								density_scheme = "✅✅"
-							elif 200 >= density > 100:
-								density_scheme = "✅◻️️"
-							else:
-								density_scheme = "◻️️◻️"
-							
-							buy_volume_power = int(buy_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
-							sell_volume_power = int(sell_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
-							
-	
-							pin_direction = high[-1] >= close[-1] >= (high[-1] - part)
-							day_range = (max(high) - min(low)) / (max(high) / 100)
-							day_range = float('{:.1f}'.format(day_range))
-							
-							print(
-								f"{datetime.now().strftime('%H:%M:%S.%f')[:-3]}, "
-								f"{symbol} ({frame}), "
-							    f"[{open[-1]}-{high[-1]}-{low[-1]}-{close[-1]}], "
-							    f"max gap {max_gap}%, "
-							    f"body_percent {int(body_percent)}%, "
-							    f"close whithin 1/{pin_close_part} from high, "
-							    f"pin total range {total_range}%, "
-							)
-							
-							bot1.send_message(662482931, f"{'🟢' if symbol_status else '🔴'} #{symbol} ({frame}) {day_range}%\n"
-							                             f"{'🟢' if pin_direction else '🔴'} pin: {total_range}% ({int(body_percent)}/100)\n"
-							                             f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
-							                             f"{density_scheme} density ({int(density)})")
+							if low[-1] <= close[-1] <= (low[-1] + part) and min(low[-2:-5:-1]) == min(low[-1:-25:-1]):
+								bot1.send_message(662482931, f"'🟢' #{symbol} ({frame}) {day_range}%\n"
+								                             f"'🟢' pin: {total_range}% ({int(body_percent)}/100)\n"
+								                             f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
+								                             f"{density_scheme} density ({int(density)})")
 					
 if __name__ == '__main__':
 	print("PARAMETERS:")
 	request_limit_length = 48
 	body_percent_filter = int(input("Body percent (def. 15): ") or 15)
 	pin_close_part = int(input("Close at part (def. 5): ") or 5)
-	pin_range_filter = float(input("Pin range (def. 0.8): ") or 0.8)
-	gap_filter = 0.3
-	tick_size_filter = 0.1
-	density_filter = 25
+	pin_range_filter = float(input("Pin range (def. 0.8): ") or 0.5)
+	gap_filter = 0.1
+	tick_size_filter = 0.05
+	density_filter = 50
 	proc = int(input("Processes (def. 16): ") or 16)
 	print("")
 	
@@ -147,8 +131,7 @@ if __name__ == '__main__':
             f"tick_size_filter = {tick_size_filter}%, \n"
             f"day_density_filter = {density_filter}, \n"
             f"proc = {proc} cores\n\n"
-            f"💵💵💵💵💵"
-	        )
+            f"💵💵💵💵💵")
 	
 	def waiting():
 		while True:
@@ -158,8 +141,12 @@ if __name__ == '__main__':
 			last_second_digit = now.strftime('%S')
 			time.sleep(0.1)
 			
-			if int(last_minute_digit) == 29 or int(last_minute_digit) == 59:
-				if int(last_second_digit) == 12:
+			# if int(last_minute_digit) == 29 or int(last_minute_digit) == 59:
+			# 	if int(last_second_digit) == 12:
+			# 		break
+			
+			if (int(last_minute_digit)+1) % 5 == 0:
+				if int(last_second_digit) == 30:
 					break
 				
 	while True:
