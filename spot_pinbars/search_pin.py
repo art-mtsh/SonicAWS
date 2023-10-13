@@ -138,7 +138,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							
 							bot1.send_message(662482931,
 							                  f"#{symbol} 48-range: {range_range}%\n"
-							                  f"Inbar: {total_range}% ({int(body_percent)}/100)\n"
+							                  f"inbar: {total_range}% ({int(body_percent)}/100)\n"
 							                  f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 							                  f"{density_scheme} density: {int(density)}"
 							                  )
