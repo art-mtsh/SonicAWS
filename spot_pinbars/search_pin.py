@@ -10,7 +10,7 @@ TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 
-def search(filtered_symbols, request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, pin_close_part):
+def search(filtered_symbols, request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, range48_filter, pin_close_part):
 	
 	for data in filtered_symbols:
 		symbol = data[0]
@@ -93,11 +93,12 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 						buy_volume_power = int(buy_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 						sell_volume_power = int(sell_volume[-1] / (volume[-1] / 100)) if volume[-1] != 0 else 0
 
-						day_range = (max(high) - min(low)) / (max(high) / 100)
-						day_range = float('{:.1f}'.format(day_range))
+						range_range = (max(high) - min(low)) / (max(high) / 100)
+						range_range = float('{:.1f}'.format(range_range))
 						
 						# ===== PIN DEFINITION =====
-						if body_percent <= body_percent_filter and day_range / 3 >= total_range >= pin_range_filter:
+						if body_percent <= body_percent_filter and range_range / 3 >= total_range >= pin_range_filter and range_range >= range48_filter:
+							
 							if high[-1] >= close[-1] >= (high[-1] - part) and \
 								max(high[-2:-6:-1]) == max(high[-1:-25:-1]) and \
 								low[-1] <= low[-2]:
@@ -136,6 +137,7 @@ if __name__ == '__main__':
 	body_percent_filter = int(input("Body percent (def. 33): ") or 33)
 	pin_close_part = int(input("Close at part (def. 3): ") or 3)
 	pin_range_filter = float(input("Pin range (def. 0.1): ") or 0.1)
+	range48_filter = 1.5
 	gap_filter = 0.4
 	tick_size_filter = 0.1
 	density_filter = 20
@@ -148,6 +150,7 @@ if __name__ == '__main__':
 			f"pin_close_part = 1/{pin_close_part}, \n"
 			f"total_range_filter = {pin_range_filter}%, \n"
 			f"gap_filter = {gap_filter}%, \n"
+	        f"range48_filter = {range48_filter}%, \n"
             f"tick_size_filter = {tick_size_filter}%, \n"
             f"day_density_filter = {density_filter}, \n"
             f"proc = {proc} cores\n\n"
@@ -174,7 +177,7 @@ if __name__ == '__main__':
 		
 		the_processes = []
 		for proc_number in range(proc):
-			process = Process(target=search, args=(pairs[proc_number], request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, pin_close_part,))
+			process = Process(target=search, args=(pairs[proc_number], request_limit_length, gap_filter, density_filter, body_percent_filter, pin_range_filter, range48_filter, pin_close_part,))
 			the_processes.append(process)
 			
 		for pro in the_processes:
