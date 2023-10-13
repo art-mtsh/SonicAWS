@@ -11,7 +11,9 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list, chart_title):
     # Create a Matplotlib figure for the candlestick chart
     fig, ax = plt.subplots()
+    fig.set_facecolor("#F0F0F0")
     ax.set_facecolor("#E6E1BE")
+    
 
     for i in range(len(cClose)):
         body_up = cClose[i] - cOpen[i] if cClose[i] != cOpen[i] else cOpen[i] * 0.0001
@@ -47,7 +49,7 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
     remove(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png')
     plt.cla()
     plt.clf()
-    
+
     print("Screenshoter work is done.")
 
 # symbol = "BTCUSDT"
