@@ -47,6 +47,8 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
     remove(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png')
     plt.cla()
     plt.clf()
+    
+    print("Screenshoter work is done.")
 
 # symbol = "BTCUSDT"
 # timeinterval = "5m"
