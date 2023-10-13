@@ -13,14 +13,16 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
 
     for i in range(len(cClose)):
         body_up = cClose[i] - cOpen[i] if cClose[i] != cOpen[i] else cOpen[i] * 0.0001
+        body_dn = cOpen[i] - cClose[i] if cClose[i] != cOpen[i] else cClose[i] * 0.0001
+        
         if cClose[i] >= cOpen[i]:
             # Up candles
-            plt.bar(x=i, height=cClose[i] - cOpen[i], width=0.9, bottom=cOpen[i], color='green')
+            plt.bar(x=i, height=body_up, width=0.9, bottom=cOpen[i], color='green')
             plt.bar(x=i, height=cHigh[i] - cClose[i], width=0.07, bottom=cClose[i], color='green')
             plt.bar(x=i, height=cOpen[i] - cLow[i], width=0.07, bottom=cLow[i], color='green')
         else:
             # Down candles
-            plt.bar(x=i, height=cOpen[i] - cClose[i], width=0.9, bottom=cClose[i], color='red')
+            plt.bar(x=i, height=body_dn, width=0.9, bottom=cClose[i], color='red')
             plt.bar(x=i, height=cHigh[i] - cOpen[i], width=0.07, bottom=cOpen[i], color='red')
             plt.bar(x=i, height=cClose[i] - cLow[i], width=0.07, bottom=cLow[i], color='red')
             
