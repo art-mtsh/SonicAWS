@@ -103,10 +103,10 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 								max(high[-2:-6:-1]) == max(high[-1:-25:-1]) and \
 								low[-1] <= low[-2]:
 								
-								message_ss = f"{symbol} 48-range: {day_range}%. Pin: {total_range}% ({int(body_percent)}/100). Density: {int(density)}"
+								message_ss = f"{symbol} 48-range: {range_range}%. Pin: {total_range}% ({int(body_percent)}/100). Density: {int(density)}"
 								
 								bot1.send_message(662482931,
-								                  f"🔴 #{symbol} 48-range: {day_range}%\n"
+								                  f"🔴 #{symbol} 48-range: {range_range}%\n"
 								                  f"🔴 pin: {total_range}% ({int(body_percent)}/100)\n"
 								                  f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 								                  f"{density_scheme} density: {int(density)}"
@@ -119,10 +119,10 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 								min(low[-2:-6:-1]) == min(low[-1:-25:-1]) and \
 								high[-1] >= high[-2]:
 								
-								message_ss = f"{symbol} 48-range: {day_range}%. Pin: {total_range}% ({int(body_percent)}/100). Density: {int(density)}"
+								message_ss = f"{symbol} 48-range: {range_range}%. Pin: {total_range}% ({int(body_percent)}/100). Density: {int(density)}"
 								
 								bot1.send_message(662482931,
-								                  f"🟢 #{symbol} 48-range: {day_range}%\n"
+								                  f"🟢 #{symbol} 48-range: {range_range}%\n"
 								                  f"🟢 pin: {total_range}% ({int(body_percent)}/100)\n"
 								                  f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 								                  f"{density_scheme} density: {int(density)}"
@@ -131,6 +131,20 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 								screenshoter_send(symbol, open, high, low, close, message_ss)
 								print(message_ss)
 					
+						if range_range >= range48_filter and \
+							(high[-2] == max(high[-1:-25:-1]) or low[-2] == min(low[-1:-25:-1])) and \
+							high[-2] >= high[-1] >= low[-1] >= low[-2]:
+							
+							bot1.send_message(662482931,
+							                  f"#{symbol} 48-range: {range_range}%, inbar!\n"
+							                  f"{density_scheme} density: {int(density)}"
+							                  )
+							
+							message_ss = f"{symbol} 48-range: {range_range}%. Inbar! Density: {int(density)}"
+							screenshoter_send(symbol, open, high, low, close, message_ss)
+							print(message_ss)
+							
+						
 if __name__ == '__main__':
 	print("PARAMETERS:")
 	request_limit_length = 48
