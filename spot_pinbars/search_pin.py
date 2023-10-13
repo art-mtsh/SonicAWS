@@ -98,7 +98,7 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 						day_range = float('{:.1f}'.format(day_range))
 						
 						# ===== PIN DEFINITION =====
-						if body_percent <= body_percent_filter and total_range >= pin_range_filter:
+						if body_percent <= body_percent_filter and day_range / 3 >= total_range >= pin_range_filter:
 							if high[-1] >= close[-1] >= (high[-1] - part) and \
 								max(high[-2:-5:-1]) == max(high[-1:-25:-1]) and \
 								low[-1] <= low[-2]:
@@ -161,10 +161,6 @@ if __name__ == '__main__':
 			last_minute_digit = now.strftime('%M')
 			last_second_digit = now.strftime('%S')
 			time.sleep(0.1)
-			
-			# if int(last_minute_digit) == 29 or int(last_minute_digit) == 59:
-			# 	if int(last_second_digit) == 12:
-			# 		break
 			
 			if (int(last_minute_digit)+1) % 5 == 0:
 				if int(last_second_digit) == 20:
