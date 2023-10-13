@@ -187,7 +187,10 @@ if __name__ == '__main__':
 		
 		for pro in the_processes:
 			pro.join()
-
+			
+		for pro in the_processes:
+			pro.close()
+			
 		time2 = time.perf_counter()
 		time3 = time2 - time1
 		
