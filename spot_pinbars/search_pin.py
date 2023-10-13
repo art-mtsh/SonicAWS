@@ -137,11 +137,13 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 							abs(open[-1] - close[-1]) >= abs(high[-1] - low[-1]) / 2:
 							
 							bot1.send_message(662482931,
-							                  f"#{symbol} 48-range: {range_range}%, inbar!\n"
+							                  f"#{symbol} 48-range: {range_range}%\n"
+							                  f"Inbar: {total_range}% ({int(body_percent)}/100)\n"
+							                  f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 							                  f"{density_scheme} density: {int(density)}"
 							                  )
 							
-							message_ss = f"{symbol} 48-range: {range_range}%. Inbar! Density: {int(density)}"
+							message_ss = f"{symbol} 48-range: {range_range}%. Inbar: {total_range}% ({int(body_percent)}/100). Density: {int(density)}"
 							screenshoter_send(symbol, open, high, low, close, message_ss)
 							print(message_ss)
 							
