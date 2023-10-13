@@ -61,7 +61,6 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 						s_v = volume[curr_index] - buy_volume[curr_index]
 						sell_volume.append(s_v)
 					max_gap = float('{:.3f}'.format(max_gap))
-					
 					density = (high[-1] - low[-1]) / tick_size
 				
 					# ==== CURRENT CANDLE CHARACTERISTICS ====
