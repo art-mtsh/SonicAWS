@@ -12,6 +12,7 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
     # fig, ax = plt.subplots()
 
     for i in range(len(cClose)):
+        body_up = cClose[i] - cOpen[i] if cClose[i] != cOpen[i] else cOpen[i] * 0.0001
         if cClose[i] >= cOpen[i]:
             # Up candles
             plt.bar(x=i, height=cClose[i] - cOpen[i], width=0.9, bottom=cOpen[i], color='green')

@@ -103,17 +103,17 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 								max(high[-2:-5:-1]) == max(high[-1:-25:-1]) and \
 								low[-1] <= low[-2]:
 								
-								message = f"🔴 #{symbol} {'+' if day_range >= 0 else '-'}{day_range}% ({frame})\n"
-								f"🔴 pin: {total_range}% ({int(body_percent)}/100)\n"
-								f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
-								f"{density_scheme} density ({int(density)})"
+								message_ss = f"{symbol} {'+' if day_range >= 0 else '-'}{day_range}% ({frame}). Pin: {total_range}% ({int(body_percent)}/100). Density ({int(density)})"
 								
-								message_ss = f"#{symbol} {'+' if day_range >= 0 else '-'}{day_range}% ({frame}). "
-								f"Pin: {total_range}% ({int(body_percent)}/100). "
-								f"Density ({int(density)})"
+								bot1.send_message(662482931,
+								                  f"🔴 #{symbol} {'+' if day_range >= 0 else '-'}{day_range}% ({frame})\n"
+								                  f"🔴 pin: {total_range}% ({int(body_percent)}/100)\n"
+								                  f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
+								                  f"{density_scheme} density ({int(density)})"
+								                  )
 								
-								bot1.send_message(662482931, message)
 								screenshoter_send(symbol, open, high, low, close, message_ss)
+								print(message_ss)
 							
 							if low[-1] <= close[-1] <= (low[-1] + part) and \
 								min(low[-2:-5:-1]) == min(low[-1:-25:-1]) and \
@@ -124,12 +124,17 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 								f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
 								f"{density_scheme} density ({int(density)})"
 								
-								message_ss = f"#{symbol} {'+' if day_range >= 0 else '-'}{day_range}% ({frame}). "
-								f"Pin: {total_range}% ({int(body_percent)}/100). "
-								f"Density ({int(density)})"
+								message_ss = f"{symbol} {'+' if day_range >= 0 else '-'}{day_range}% ({frame}). Pin: {total_range}% ({int(body_percent)}/100). Density ({int(density)})"
 								
-								bot1.send_message(662482931, message)
+								bot1.send_message(662482931,
+								                  f"🟢 #{symbol} {'+' if day_range >= 0 else '-'}{day_range}% ({frame})\n"
+								                  f"🟢 pin: {total_range}% ({int(body_percent)}/100)\n"
+								                  f"{volume_scheme} volume, b_{buy_volume_power}/{sell_volume_power}_s\n"
+								                  f"{density_scheme} density ({int(density)})"
+								                  )
+								
 								screenshoter_send(symbol, open, high, low, close, message_ss)
+								print(message_ss)
 					
 if __name__ == '__main__':
 	print("PARAMETERS:")
