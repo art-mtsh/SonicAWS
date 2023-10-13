@@ -133,7 +133,8 @@ def search(filtered_symbols, request_limit_length, gap_filter, density_filter, b
 					
 						if range_range >= range48_filter and \
 							(high[-2] == max(high[-1:-25:-1]) or low[-2] == min(low[-1:-25:-1])) and \
-							high[-2] >= high[-1] >= low[-1] >= low[-2]:
+							high[-2] >= high[-1] >= low[-1] >= low[-2] and \
+							abs(open[-1] - close[-1]) >= abs(high[-1] - low[-1]) / 2:
 							
 							bot1.send_message(662482931,
 							                  f"#{symbol} 48-range: {range_range}%, inbar!\n"
