@@ -131,8 +131,8 @@ if __name__ == '__main__':
 	bot1.send_message(662482931,
 	                  f"Processes = {proc} \n\n"
 	                  f"Gap filter = {gap_filter}% \n"
-	                  f"Density filter = {density_filter} \n\n"
-	                  f"Tick size filter = {tick_size_filter}% \n"
+	                  f"Density filter = {density_filter} \n"
+	                  f"Tick size filter = {tick_size_filter}% \n\n"
 	                  f"Donchian length = {lengthdiver_filter} \n"
 	                  f"Extremum window search = {extremum_window_filter} \n"
 	                  f"Pin room t/t left = {room_filter} \n"
