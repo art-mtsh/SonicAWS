@@ -95,13 +95,17 @@ def search(
 						density_scheme = "◻️️◻️"
 					
 					# ===== PIN DEFINITION =====
-					if range_perc_range and pin_perc_range and bull_pin and bull_room and highest_high_room:
+					if range_perc_range and pin_perc_range and (
+							(bull_pin and bull_room and highest_high_room)
+							or
+							(bear_pin and bear_room and lowest_low_room)
+					):
 						
 						message_ss = f"{symbol} 48-range: {range_perc_range}%. Pin: {pin_perc_range}%. Density: {int(density)}"
 						
 						bot1.send_message(662482931,
-						                  f"🔴 #{symbol} 48-range: {range_perc_range}%\n"
-						                  f"🔴 pin: {pin_perc_range}% \n"
+						                  f"#{symbol} 48-range: {range_perc_range}%\n"
+						                  f"Pin: {pin_perc_range}% \n"
 						                  f"{volume_scheme} volume \n"
 						                  f"{density_scheme} density: {int(density)}"
 						                  )
@@ -109,21 +113,7 @@ def search(
 						screenshoter_send(symbol, open, high, low, close, message_ss)
 						print(message_ss)
 					
-					if range_perc_range and pin_perc_range and bear_pin and bear_room and lowest_low_room:
-						
-						message_ss = f"{symbol} 48-range: {range_perc_range}%. Pin: {pin_perc_range}%. Density: {int(density)}"
-						
-						bot1.send_message(662482931,
-						                  f"🟢 #{symbol} 48-range: {range_perc_range}%\n"
-						                  f"🟢 pin: {pin_perc_range}% \n"
-						                  f"{volume_scheme} volume \n"
-						                  f"{density_scheme} density: {int(density)}"
-						                  )
-						
-						screenshoter_send(symbol, open, high, low, close, message_ss)
-						print(message_ss)
-							
-						
+
 if __name__ == '__main__':
 	print("PARAMETERS:")
 	proc = 16
@@ -132,17 +122,17 @@ if __name__ == '__main__':
 	tick_size_filter = 0.1
 	lengthdiver_filter = int(input("Donchian length (def. 48): ") or 48)
 	extremum_window_filter = int(input("Extremum window search (def. 12): ") or 12)
-	room_filter = int(input("Pin room t/t left (def. 12): ") or 12)
-	range_range_filter = float(input("Range range (def. 1.5): ") or 1.5)
-	pin_range_filter = float(input("Pin range (def. 0.15): ") or 0.15)
-	pin_part_filter = int(input("Pin part (def. 4): ") or 4)
+	room_filter = int(input("Pin room t/t left (def. 6): ") or 6)
+	range_range_filter = float(input("Range range (def. 1.0): ") or 1.0)
+	pin_range_filter = float(input("Pin range (def. 0.1): ") or 0.1)
+	pin_part_filter = int(input("Pin part (def. 2): ") or 2)
 	print("")
 	
 	bot1.send_message(662482931,
 	                  f"Processes = {proc} \n\n"
 	                  f"Gap filter = {gap_filter}% \n"
-	                  f"Tick size filter = {tick_size_filter}% \n"
 	                  f"Density filter = {density_filter} \n\n"
+	                  f"Tick size filter = {tick_size_filter}% \n"
 	                  f"Donchian length = {lengthdiver_filter} \n"
 	                  f"Extremum window search = {extremum_window_filter} \n"
 	                  f"Pin room t/t left = {room_filter} \n"
