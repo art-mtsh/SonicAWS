@@ -78,7 +78,6 @@ def search(
 					lowest_low_room = min(low[-1: -extremum_window_filter - 1: -1]) == min(low[-1: - lengthdiver_filter - extremum_window_filter - 1: -1]) and \
 					                  high[-1] != min(low[-1: -extremum_window_filter - 1: -1])
 					
-					
 					volume_scheme: str
 
 					if volume[-1] > volume[-2] > volume[-3]:
@@ -147,9 +146,9 @@ if __name__ == '__main__':
 	                  f"Donchian length = {lengthdiver_filter} \n"
 	                  f"Extremum window search = {extremum_window_filter} \n"
 	                  f"Pin room t/t left = {room_filter} \n"
-	                  f"Range range = {range_range_filter}% \n\n"
+	                  f"Donhian range = {range_range_filter}% \n\n"
 	                  f"Pin range = {pin_range_filter}% \n"
-	                  f"Pin part = {pin_part_filter}% \n\n"
+	                  f"Pin part = {pin_part_filter} \n\n"
 	                  f"💵💵💵💵💵"
 					)
 	
