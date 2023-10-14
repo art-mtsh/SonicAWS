@@ -1,7 +1,7 @@
 import telebot
 import matplotlib.pyplot as plt
 from os import remove
-# import requests
+import requests
 
 # --- TELEGRAM ---
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
@@ -10,7 +10,7 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list, chart_title):
     # Create a Matplotlib figure for the candlestick chart
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(8, 5))
     fig.set_facecolor("#F0F0F0")
     ax.set_facecolor("#E6E1BE")
     
@@ -35,7 +35,15 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
 
     # Customize the chart title
     plt.suptitle(chart_title)
-
+    
+    left_pd = 0.1
+    right_pd = 0.03
+    top_pd = 0.08
+    bottom_pd = 0.09
+    
+    # Adjust padding
+    plt.subplots_adjust(left=left_pd, right=1 - right_pd, top=1 - top_pd, bottom=bottom_pd)
+    
     # Show the plot
     # plt.show()
     
@@ -50,9 +58,7 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
     plt.cla()
     plt.clf()
 
-    # print("Screenshoter work is done.")
-
-# symbol = "BTCUSDT"
+# symbol = "SPELLUSDT"
 # timeinterval = "5m"
 # distancetoSR = 10  # Replace with your desired value
 # direction = "UP"  # Replace with your desired direction
@@ -71,4 +77,4 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
 #         cLow = [float(entry[3]) for entry in binance_candle_data]
 #         cClose = [float(entry[4]) for entry in binance_candle_data]
 #
-#         screenshoter_send(symbol, cOpen, cHigh, cLow, cClose, chart_title="btc\nparameters1\nparameters2\nparameters3")
+#         screenshoter_send(symbol, cOpen, cHigh, cLow, cClose, chart_title=f"{symbol} parameters1")
