@@ -100,18 +100,10 @@ def search(
 							or
 							(bear_pin and bear_room and lowest_low_room)
 					):
-						
-						message_ss = f"{symbol} 48-range: {range_perc_range}%. Pin: {pin_perc_range}%. Density: {int(density)}"
-						
-						bot1.send_message(662482931,
-						                  f"#{symbol} 48-range: {range_perc_range}%\n"
-						                  f"Pin: {pin_perc_range}% \n"
-						                  f"{volume_scheme} volume \n"
-						                  f"{density_scheme} density: {int(density)}"
-						                  )
-						
-						screenshoter_send(symbol, open, high, low, close, message_ss)
-						print(message_ss)
+			
+						bot1.send_message(662482931, f"#{symbol}, density: {int(density)}")
+						screenshoter_send(symbol, open, high, low, close, f"{symbol}, density: {int(density)}")
+						print(f"{symbol}, density: {int(density)}")
 					
 
 if __name__ == '__main__':
