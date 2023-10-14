@@ -112,9 +112,10 @@ if __name__ == '__main__':
 	gap_filter = 0.5
 	density_filter = 20
 	tick_size_filter = 0.1
+	
 	lengthdiver_filter = int(input("Donchian length (def. 48): ") or 48)
 	extremum_window_filter = int(input("Extremum window search (def. 12): ") or 12)
-	room_filter = int(input("Pin room t/t left (def. 6): ") or 6)
+	room_filter = int(input("Pin room t/t left (def. 12): ") or 12)
 	range_range_filter = float(input("Range range (def. 1.0): ") or 1.0)
 	pin_range_filter = float(input("Pin range (def. 0.1): ") or 0.1)
 	pin_part_filter = int(input("Pin part (def. 2): ") or 2)
