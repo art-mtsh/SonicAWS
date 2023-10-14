@@ -26,7 +26,7 @@ def search(
 		symbol = data[0]
 		tick_size = data[1]
 		frame = "5m"
-		request_limit_length = 50
+		request_limit_length = 100
 		
 		# ==== DATA REQUEST ====
 		futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
