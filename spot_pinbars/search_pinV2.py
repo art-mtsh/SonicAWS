@@ -12,6 +12,7 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 def search(
 		filtered_symbols,
+		frame,
 		gap_filter,
 		density_filter,
 		lengthdiver_filter,
@@ -25,7 +26,7 @@ def search(
 	for data in filtered_symbols:
 		symbol = data[0]
 		tick_size = data[1]
-		frame = "5m"
+		# frame = "5m"
 		request_limit_length = 100
 		
 		# ==== DATA REQUEST ====
@@ -136,18 +137,43 @@ if __name__ == '__main__':
 					)
 	
 	def waiting():
+		
 		while True:
 			now = datetime.now()
-			# last_hour_digit = int(now.strftime('%H'))
+			last_hour_digit = int(now.strftime('%H'))
 			last_minute_digit = now.strftime('%M')
 			last_second_digit = now.strftime('%S')
 			time.sleep(0.1)
 			
-			if (int(last_minute_digit)+1) % 5 == 0:
+			# Перевірка в 04:20 , 09:20 , 14:20 ....
+			if (int(last_minute_digit) + 1) % 5 == 0:
 				if int(last_second_digit) == 20:
-					break
+					return "5m"
+			
+			# Перевірка в 13:40 , 28:40 , 43:40 , 58:40
+			if (int(last_minute_digit) + 2) % 15 == 0:
+				if int(last_second_digit) == 40:
+					return "15m"
+			
+			# Перевірка в 28:00 , 58:00
+			if (int(last_minute_digit) + 2) % 30 == 0:
+				if int(last_second_digit) == 0:
+					return "30m"
+			
+			# Перевірка в 57:20
+			if (int(last_minute_digit) + 3) == 60:
+				if int(last_second_digit) == 20:
+					return "1h"
+			
+			# Перевірка в 16:56:40
+			if int(last_hour_digit) % 2 == 0:
+				if (int(last_minute_digit) + 4) == 60:
+					if int(last_second_digit) == 40:
+						return "2h"
 				
 	while True:
+		
+		frame = waiting()
 		
 		time1 = time.perf_counter()
 		pairs = binance_pairs(chunks=proc, quote_assets=["USDT"], day_range_filter=range_range_filter, day_density_filter=density_filter, tick_size_filter=tick_size_filter)
@@ -156,7 +182,7 @@ if __name__ == '__main__':
 		
 		the_processes = []
 		for proc_number in range(proc):
-			process = Process(target=search, args=(pairs[proc_number], gap_filter, density_filter, lengthdiver_filter, extremum_window_filter, room_filter, range_range_filter, pin_range_filter, pin_part_filter,))
+			process = Process(target=search, args=(pairs[proc_number], frame, gap_filter, density_filter, lengthdiver_filter, extremum_window_filter, room_filter, range_range_filter, pin_range_filter, pin_part_filter,))
 			the_processes.append(process)
 			
 		for pro in the_processes:
@@ -175,4 +201,4 @@ if __name__ == '__main__':
 		print(datetime.now().strftime('%H:%M:%S.%f')[:-3])
 		print("")
 		
-		waiting()
+		
