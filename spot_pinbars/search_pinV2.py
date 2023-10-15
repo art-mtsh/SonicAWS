@@ -102,9 +102,9 @@ def search(
 							(bear_pin and bear_room and lowest_low_room)
 					):
 			
-						bot1.send_message(662482931, f"#{symbol}, density: {int(density)}")
-						screenshoter_send(symbol, open, high, low, close, f"{symbol}, density: {int(density)}")
-						print(f"{symbol}, density: {int(density)}")
+						bot1.send_message(662482931, f"#{symbol} ({frame}), density: {int(density)}")
+						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), density: {int(density)}")
+						print(f"{symbol} ({frame}), density: {int(density)}")
 					
 
 if __name__ == '__main__':
