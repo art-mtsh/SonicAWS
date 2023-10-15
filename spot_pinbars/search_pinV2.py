@@ -178,7 +178,8 @@ if __name__ == '__main__':
 		time1 = time.perf_counter()
 		pairs = binance_pairs(chunks=proc, quote_assets=["USDT"], day_range_filter=range_range_filter, day_density_filter=density_filter, tick_size_filter=tick_size_filter)
 		print(datetime.now().strftime('%H:%M:%S.%f')[:-3])
-		print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs on {frame}...")
+		print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs on {frame}")
+		print(f">>>")
 		
 		the_processes = []
 		for proc_number in range(proc):
@@ -197,6 +198,7 @@ if __name__ == '__main__':
 		time2 = time.perf_counter()
 		time3 = time2 - time1
 		
+		print(f"<<<")
 		print(f"Finished search in {int(time3)} seconds")
 		print(datetime.now().strftime('%H:%M:%S.%f')[:-3])
 		print("")
