@@ -21,14 +21,14 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
         
         if cClose[i] >= cOpen[i]:
             # Up candles
-            plt.bar(x=i, height=body_up, width=0.9, bottom=cOpen[i], color='#008080')
-            plt.bar(x=i, height=cHigh[i] - cClose[i], width=0.09, bottom=cClose[i], color='#008080')
-            plt.bar(x=i, height=cOpen[i] - cLow[i], width=0.09, bottom=cLow[i], color='#008080')
+            plt.bar(x=i, height=body_up, width=0.9, bottom=cOpen[i], color='#528c00')
+            plt.bar(x=i, height=cHigh[i] - cClose[i], width=0.09, bottom=cClose[i], color='#528c00')
+            plt.bar(x=i, height=cOpen[i] - cLow[i], width=0.09, bottom=cLow[i], color='#528c00')
         else:
             # Down candles
-            plt.bar(x=i, height=body_dn, width=0.9, bottom=cClose[i], color='#696969')
-            plt.bar(x=i, height=cHigh[i] - cOpen[i], width=0.09, bottom=cOpen[i], color='#696969')
-            plt.bar(x=i, height=cClose[i] - cLow[i], width=0.09, bottom=cLow[i], color='#696969')
+            plt.bar(x=i, height=body_dn, width=0.9, bottom=cClose[i], color='#842800')
+            plt.bar(x=i, height=cHigh[i] - cOpen[i], width=0.09, bottom=cOpen[i], color='#842800')
+            plt.bar(x=i, height=cClose[i] - cLow[i], width=0.09, bottom=cLow[i], color='#842800')
             
         # grid
         plt.grid(color='grey', linestyle='-', linewidth=0.1)
