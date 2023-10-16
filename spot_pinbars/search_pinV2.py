@@ -74,11 +74,13 @@ def search(
 					bear_room = high[-1] == max(high[-1: -room_filter - 1: -1])
 					
 					highest_high_room = max(high[-1: -extremum_window_filter - 1: -1]) == max(high[-1: - lengthdiver_filter - extremum_window_filter - 1: -1]) and \
-					                    high[-1] != max(high[-1: -extremum_window_filter - 1: -1])
+					                    high[-1] != max(high[-1: -extremum_window_filter - 1: -1]) and \
+					                    low[-1] != min(low[-1: - lengthdiver_filter - extremum_window_filter - 1: -1])
 					
 					lowest_low_room = min(low[-1: -extremum_window_filter - 1: -1]) == min(low[-1: - lengthdiver_filter - extremum_window_filter - 1: -1]) and \
-					                  high[-1] != min(low[-1: -extremum_window_filter - 1: -1])
-					
+					                  low[-1] != min(low[-1: -extremum_window_filter - 1: -1]) and \
+									  high[-1] != max(high[-1: - lengthdiver_filter - extremum_window_filter - 1: -1])
+									
 					volume_scheme: str
 
 					if volume[-1] > volume[-2] > volume[-3]:
