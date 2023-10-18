@@ -66,6 +66,7 @@ def search(
 					# ==== PIN SEARCH ====
 					range_perc_range = (max(high[-1: - lengthdiver_filter - 1: -1]) - min(low[-1: - lengthdiver_filter - 1: -1])) / (max(high[-1: - lengthdiver_filter - 1: -1]) / 100) >= range_range_filter
 					pin_perc_range = (high[-1] - low[-1]) / (high[-1] / 100) >= pin_range_filter
+					less_than_third = (high[-1] - low[-1]) <= (max(high[-1: - lengthdiver_filter - extremum_window_filter - 1: -1]) - min(low[-1: - lengthdiver_filter - extremum_window_filter - 1: -1])) / 3
 					
 					bull_pin = min(close[-1], open[-1]) >= (high[-1] - (high[-1] - low[-1]) / pin_part_filter)
 					bear_pin = max(close[-1], open[-1]) <= (low[-1] + (high[-1] - low[-1]) / pin_part_filter)
@@ -98,7 +99,7 @@ def search(
 						density_scheme = "◻️️◻️"
 					
 					# ===== PIN DEFINITION =====
-					if range_perc_range and pin_perc_range and (
+					if range_perc_range and pin_perc_range and less_than_third and (
 							(bull_pin and bull_room and highest_high_room)
 							or
 							(bear_pin and bear_room and lowest_low_room)
