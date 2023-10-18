@@ -158,11 +158,11 @@ if __name__ == '__main__':
 				if int(last_second_digit) == 40:
 					return "15m"
 			
-			# # Перевірка в 28:00 , 58:00
-			# if (int(last_minute_digit) + 2) % 30 == 0:
-			# 	if int(last_second_digit) == 0:
-			# 		return "30m"
-			#
+			# Перевірка в 28:00 , 58:00
+			if (int(last_minute_digit) + 2) % 30 == 0:
+				if int(last_second_digit) == 0:
+					return "30m"
+
 			# # Перевірка в 57:20
 			# if (int(last_minute_digit) + 3) == 60:
 			# 	if int(last_second_digit) == 20:
