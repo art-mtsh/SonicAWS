@@ -110,8 +110,8 @@ def search(
 						d_range = (max(high[-1: - lengthdiver_filter - 1: -1]) - min(low[-1: - lengthdiver_filter - 1: -1])) / (max(high[-1: - lengthdiver_filter - 1: -1]) / 100)
 						d_range = float('{:.2f}'.format(d_range))
 						
-						bot1.send_message(662482931, f"#{symbol} ({frame}), {p_range}%/{d_range}%, density: {int(density)}")
-						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), {p_range}%/{d_range}%, density: {int(density)}")
+						bot1.send_message(662482931, f"#{symbol} ({frame}), {p_range}% / {d_range}%, density: {int(density)}")
+						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), {p_range}% / {d_range}%, density: {int(density)}")
 						print(f"{symbol} ({frame}), density: {int(density)}")
 					
 
