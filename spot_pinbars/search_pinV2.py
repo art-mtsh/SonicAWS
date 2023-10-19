@@ -122,6 +122,14 @@ if __name__ == '__main__':
 	density_filter = 20
 	tick_size_filter = 0.1
 	
+	timeframes = []
+	
+	while True:
+		value = input("Frames: ")
+		if value.lower() == 's':
+			break
+		timeframes.append(value)
+	
 	lengthdiver_filter = int(input("Donchian length (def. 48): ") or 48)
 	extremum_window_filter = int(input("Extremum window search (def. 12): ") or 12)
 	room_filter = int(input("Pin room t/t left (def. 12): ") or 12)
@@ -134,7 +142,8 @@ if __name__ == '__main__':
 	                  f"Processes = {proc} \n\n"
 	                  f"Gap filter = {gap_filter}% \n"
 	                  f"Density filter = {density_filter} \n"
-	                  f"Tick size filter = {tick_size_filter}% \n\n"
+	                  f"Tick size filter = {tick_size_filter}% \n"
+	                  f"Frames = {timeframes}\n\n"
 	                  f"Donchian length = {lengthdiver_filter} \n"
 	                  f"Extremum window search = {extremum_window_filter} \n"
 	                  f"Pin room t/t left = {room_filter} \n"
@@ -144,7 +153,7 @@ if __name__ == '__main__':
 	                  f"💵💵💵💵💵"
 					)
 	
-	def waiting():
+	def waiting(timeframes):
 		
 		while True:
 			now = datetime.now()
@@ -154,34 +163,34 @@ if __name__ == '__main__':
 			time.sleep(0.1)
 			
 			# Перевірка в 04:20 , 09:20 , 14:20 ....
-			if (int(last_minute_digit) + 1) % 5 == 0:
+			if "5m" in timeframes and (int(last_minute_digit) + 1) % 5 == 0:
 				if int(last_second_digit) == 20:
 					return "5m"
 			
 			# Перевірка в 13:40 , 28:40 , 43:40 , 58:40
-			if (int(last_minute_digit) + 2) % 15 == 0:
+			if "15m" in timeframes and (int(last_minute_digit) + 2) % 15 == 0:
 				if int(last_second_digit) == 40:
 					return "15m"
 			
-			# # Перевірка в 28:00 , 58:00
-			# if (int(last_minute_digit) + 2) % 30 == 0:
-			# 	if int(last_second_digit) == 0:
-			# 		return "30m"
+			# Перевірка в 28:00 , 58:00
+			if "30m" in timeframes and (int(last_minute_digit) + 2) % 30 == 0:
+				if int(last_second_digit) == 0:
+					return "30m"
 
-			# # Перевірка в 57:20
-			# if (int(last_minute_digit) + 3) == 60:
-			# 	if int(last_second_digit) == 20:
-			# 		return "1h"
-			#
-			# # Перевірка в 16:56:40
-			# if int(last_hour_digit) % 2 == 0:
-			# 	if (int(last_minute_digit) + 4) == 60:
-			# 		if int(last_second_digit) == 40:
-			# 			return "2h"
+			# Перевірка в 57:20
+			if "1h" in timeframes and (int(last_minute_digit) + 3) == 60:
+				if int(last_second_digit) == 20:
+					return "1h"
+
+			# Перевірка в 16:56:40
+			if "2h" in timeframes and int(last_hour_digit) % 2 == 0:
+				if (int(last_minute_digit) + 4) == 60:
+					if int(last_second_digit) == 40:
+						return "2h"
 				
 	while True:
 		
-		frame = waiting()
+		frame = waiting(timeframes)
 		
 		time1 = time.perf_counter()
 		pairs = binance_pairs(chunks=proc, quote_assets=["USDT"], day_range_filter=range_range_filter, day_density_filter=density_filter, tick_size_filter=tick_size_filter)
