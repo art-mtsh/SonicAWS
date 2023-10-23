@@ -64,17 +64,28 @@ def search(
 					current_brr = abs(open[-1] - close[-1]) / ((high[-1] - low[-1]) / 100)
 					current_range = high[-1] - low[-1]
 					ranges_list = []
-					
 					for ra in range(0, request_limit_length):
 						ranges_list.append((high[ra] - low[ra]) * range_mp)
 					
-					# ===== PIN DEFINITION =====
 					if current_range >= max(ranges_list) and current_brr >= curr_brr_filter:
 						
 						bot1.send_message(662482931, f"#{symbol} ({frame}), density: {int(density)}")
 						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), density: {int(density)}")
 						print(f"{symbol} ({frame}), density: {int(density)}")
+				
+					# ==== PIN SEARCH ====
+					bull_pin = min(close[-1], open[-1]) >= (high[-1] - (high[-1] - low[-1]) / 4)
+					bear_pin = max(close[-1], open[-1]) <= (low[-1] + (high[-1] - low[-1]) / 4)
 					
+					brr1 = abs(open[-2] - close[-2]) / ((high[-2] - low[-2]) / 100) >= curr_brr_filter
+					brr2 = abs(open[-3] - close[-3]) / ((high[-3] - low[-3]) / 100) >= curr_brr_filter
+					brr3 = abs(open[-4] - close[-4]) / ((high[-4] - low[-4]) / 100) >= curr_brr_filter
+					
+					if brr1 and brr2 and brr3 and (bull_pin or bear_pin):
+						
+						bot1.send_message(662482931, f"#{symbol} ({frame}), density: {int(density)}")
+						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), density: {int(density)}")
+						print(f"{symbol} ({frame}), density: {int(density)}")
 
 if __name__ == '__main__':
 	print("PARAMETERS:")
