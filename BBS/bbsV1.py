@@ -64,8 +64,8 @@ def search(
 					current_brr = abs(open[-1] - close[-1]) / ((high[-1] - low[-1]) / 100)
 					current_range = high[-1] - low[-1]
 					ranges_list = []
-					for ra in range(0, request_limit_length):
-						ranges_list.append((high[ra] - low[ra]) * range_mp)
+					for ra in range(2, request_limit_length):
+						ranges_list.append((high[-ra] - low[-ra]) * range_mp)
 					
 					if current_range >= max(ranges_list) and current_brr >= curr_brr_filter:
 						
