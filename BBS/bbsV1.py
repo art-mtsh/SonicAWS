@@ -104,7 +104,7 @@ if __name__ == '__main__':
 		timeframes.append(value)
 	
 	range_range_filter = float(input("Range range (def. 1.0): ") or 1.0)
-	calculate_length = int(input("Calculate lenght (def. 24): ") or 24)
+	calculate_length = int(input("Calculate lenght (def. 12): ") or 12)
 	range_mp = float(input("Range multiplier (def. 1.2): ") or 1.2)
 	curr_brr_filter = int(input("Current BR-ratio (def. 66): ") or 66)
 	print("")
