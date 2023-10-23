@@ -136,8 +136,8 @@ def calculation(instr, end_date):
 				
 			# print(f"{symbol}: {divers}")
 			if max(divers) - min(divers) >= 1.0 and len(set(divers)) >= 30:
-				# print(f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}')
-				# print(f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame}&limit={request_limit_length}&end={int(end_date)}')
+				# print(f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_length}&endTime={int(end_date)}')
+				# print(f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame}&limit={request_length}&end={int(end_date)}')
 				print(f"{symbol}, minimum divergence: {min(divers)}%, maximum divergence: {max(divers)}%, unique values: {len(set(divers))}/{len(divers)}")
 				print(f"{symbol}", end=", ")
 				for div in divers:

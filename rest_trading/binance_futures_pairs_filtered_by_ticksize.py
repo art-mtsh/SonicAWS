@@ -47,7 +47,7 @@ for symbol in symbols:
 	bin_close = []
 	
 	binance_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}'
-	# binance_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}'
+	# binance_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_length}'
 	binance_klines = get(binance_klines)
 	
 	if binance_klines.status_code == 200:

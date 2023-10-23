@@ -19,7 +19,7 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 def search(filtered_symbols, binance_frame, request_limit_length, body_percent_filter, total_range_filter, pin_close_part, gap_filter, tick_size_filter, room_to_the_left):
 	
 	for symbol in filtered_symbols:
-		# binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}'
+		# binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={binance_frame}&limit={request_length}&endTime={int(end_date)}'
 		binance_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}'
 		binance_klines = requests.get(binance_klines)
 		
@@ -89,7 +89,7 @@ def search(filtered_symbols, binance_frame, request_limit_length, body_percent_f
 								
 								# print(
 								# 	f"{symbol}, "
-								#     f"coordinate {request_limit_length - i} candles back, "
+								#     f"coordinate {request_length - i} candles back, "
 								#     f"[{pin_open}-{pin_high}-{pin_low}-{pin_close}], "
 								#     f"max gap {max_gap}%, "
 								#     f"body_percent {int(body_percent)}%, "

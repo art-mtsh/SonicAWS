@@ -4,11 +4,30 @@ from multiprocessing import Process
 import requests
 import telebot
 from module_get_pairs_binanceV3 import binance_pairs
-from screenshoter import screenshoter_send
+from BBS.screenshoter import screenshoter_send
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
+'''
+Код, що внизу займається пошуком сигналу, робить скрін та відправляє в бота в ТГ.
+
+Стратегія:
+- є екстремум по дончіану 48
+- є відкат в рамках 12 свічок
+- на відкаті є опора на room to the left також на 12 свічок
+- сигнальний бар це пінбар, але так як фільтр це 1\2 тіло то ренджа,
+то не зовсім то й пінбар
+- стоп за хвостом
+- тейк 1 до 1
+
+РЕЗУЛЬТАТИ бектесту в historical check:
+в сухому залишку тейків більше ніж стопів,
+але за рахунок того, що пін має малий рендж - 0.1...0.6%
+комісія як завжди планомірно з'їдає увесь профіт.
+
+СТРАТЕГІЯ ЗБИТКОВА!!!
+'''
 
 def search(
 		filtered_symbols,
@@ -81,22 +100,6 @@ def search(
 					lowest_low_room = min(low[-1: -extremum_window_filter - 1: -1]) == min(low[-1: - lengthdiver_filter - extremum_window_filter - 1: -1]) and \
 					                  low[-1] != min(low[-1: -extremum_window_filter - 1: -1]) and \
 									  high[-1] != max(high[-1: - lengthdiver_filter - extremum_window_filter - 1: -1])
-									
-					volume_scheme: str
-
-					if volume[-1] > volume[-2] > volume[-3]:
-						volume_scheme = "✅✅"
-					elif volume[-1] > volume[-2]:
-						volume_scheme = "✅◻️️"
-					else:
-						volume_scheme = "◻️️◻️"
-
-					if density > 200:
-						density_scheme = "✅✅"
-					elif 200 >= density > 100:
-						density_scheme = "✅◻️️"
-					else:
-						density_scheme = "◻️️◻️"
 					
 					# ===== PIN DEFINITION =====
 					if range_perc_range and pin_perc_range and less_than_third and (

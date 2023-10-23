@@ -61,8 +61,8 @@ def calculation(instr, end_date):
 				# 	print(f"{symbol} {byb_timestamp[-candle]} / {bin_timestamp[-candle]}")
 
 			if max(divers) > 0.7 and (max(divers) - min(divers)) / len(set(divers)) <= 0.02:
-				# print(f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_limit_length}&endTime={int(end_date)}')
-				# print(f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame}&limit={request_limit_length}&end={int(end_date)}')
+				# print(f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={binance_frame}&limit={request_length}&endTime={int(end_date)}')
+				# print(f'https://api.bybit.com/v5/market/kline?category=inverse&symbol={symbol}&interval={bybit_frame}&limit={request_length}&end={int(end_date)}')
 				print(f"{symbol}, {min(divers)}% < {max(divers)}%, {len(set(divers))}/{len(divers)}", end=", ")
 				for div in divers:
 					print(str(div), end=", ")
