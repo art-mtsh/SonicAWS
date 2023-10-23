@@ -70,9 +70,9 @@ def search(
 					
 					if current_range >= max(ranges_list) and current_brr >= curr_brr_filter:
 						
-						bot1.send_message(662482931, f"#{symbol} ({frame}), density: {int(density)}")
-						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), density: {int(density)}")
-						print(f"{symbol} ({frame}), density: {int(density)}")
+						bot1.send_message(662482931, f"#{symbol} ({frame}), BBSh, density: {int(density)}")
+						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), BBSh, density: {int(density)}")
+						print(f"{symbol} ({frame}), BBSh, density: {int(density)}")
 				
 					# ==== PIN SEARCH ====
 					bull_pin = min(close[-1], open[-1]) >= (high[-1] - (high[-1] - low[-1]) / 4)
@@ -84,9 +84,9 @@ def search(
 					
 					if brr1 and brr2 and brr3 and (bull_pin or bear_pin):
 						
-						bot1.send_message(662482931, f"#{symbol} ({frame}), density: {int(density)}")
-						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), density: {int(density)}")
-						print(f"{symbol} ({frame}), density: {int(density)}")
+						bot1.send_message(662482931, f"#{symbol} ({frame}), PIN, density: {int(density)}")
+						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), PIN, density: {int(density)}")
+						print(f"{symbol} ({frame}), PIN, density: {int(density)}")
 
 if __name__ == '__main__':
 	print("PARAMETERS:")
@@ -103,10 +103,11 @@ if __name__ == '__main__':
 			break
 		timeframes.append(value)
 	
-	range_range_filter = float(input("Range range (def. 1.0): ") or 1.0)
+	day_range_filter = float(input("Range range (def. 1.0): ") or 1.0)
+	
 	calculate_length = int(input("Calculate lenght (def. 12): ") or 12)
-	range_mp = float(input("Range multiplier (def. 1.2): ") or 1.2)
-	curr_brr_filter = int(input("Current BR-ratio (def. 66): ") or 66)
+	range_mp = float(input("Range multiplier (def. 2.0): ") or 2.0)
+	curr_brr_filter = int(input("Current BR-ratio (def. 70): ") or 70)
 	print("")
 	
 	bot1.send_message(662482931,
@@ -114,8 +115,8 @@ if __name__ == '__main__':
 	                  f"Gap filter = {gap_filter}% \n"
 	                  f"Density filter = {density_filter} \n"
 	                  f"Tick size filter = {tick_size_filter}% \n"
-	                  f"Frames = {timeframes}\n\n"
-	                  f"Daily range filter = {range_range_filter} \n"
+	                  f"Frames = {timeframes}\n"
+	                  f"Daily range filter = {day_range_filter} \n\n"
 	                  f"Calculate lenght = {calculate_length} \n"
 	                  f"Range multiplier = {range_mp} \n"
 	                  f"Current BR-ratio = {curr_brr_filter} \n\n"
@@ -165,7 +166,7 @@ if __name__ == '__main__':
 		pairs = binance_pairs(
 			chunks=proc,
 			quote_assets=["USDT"],
-			day_range_filter=range_range_filter,
+			day_range_filter=day_range_filter,
 			day_density_filter=density_filter,
 			tick_size_filter=tick_size_filter
 		)
