@@ -14,7 +14,7 @@ def search(
 		frame,
 		gap_filter,
 		density_filter,
-		request_limit_length,
+		calculate_length,
 		range_mp,
 		curr_brr_filter
 		
@@ -24,6 +24,7 @@ def search(
 		symbol = data[0]
 		tick_size = data[1]
 		# frame = "5m"
+		request_limit_length = 100
 
 		
 		# ==== DATA REQUEST ====
@@ -64,7 +65,7 @@ def search(
 					current_brr = abs(open[-1] - close[-1]) / ((high[-1] - low[-1]) / 100)
 					current_range = high[-1] - low[-1]
 					ranges_list = []
-					for ra in range(2, request_limit_length):
+					for ra in range(2, calculate_length):
 						ranges_list.append((high[-ra] - low[-ra]) * range_mp)
 					
 					if current_range >= max(ranges_list) and current_brr >= curr_brr_filter:
@@ -103,7 +104,7 @@ if __name__ == '__main__':
 		timeframes.append(value)
 	
 	range_range_filter = float(input("Range range (def. 1.0): ") or 1.0)
-	request_limit_length = int(input("Request lenght (def. 48): ") or 48)
+	calculate_length = int(input("Calculate lenght (def. 24): ") or 24)
 	range_mp = float(input("Range multiplier (def. 1.2): ") or 1.2)
 	curr_brr_filter = int(input("Current BR-ratio (def. 66): ") or 66)
 	print("")
@@ -115,7 +116,7 @@ if __name__ == '__main__':
 	                  f"Tick size filter = {tick_size_filter}% \n"
 	                  f"Frames = {timeframes}\n\n"
 	                  f"Daily range filter = {range_range_filter} \n"
-	                  f"Request lenght = {request_limit_length} \n"
+	                  f"Calculate lenght = {calculate_length} \n"
 	                  f"Range multiplier = {range_mp} \n"
 	                  f"Current BR-ratio = {curr_brr_filter} \n\n"
 	                  f"💵💵💵💵💵"
@@ -180,7 +181,7 @@ if __name__ == '__main__':
 			                        frame,
 			                        gap_filter,
 			                        density_filter,
-			                        request_limit_length,
+			                        calculate_length,
 			                        range_mp,
 			                        curr_brr_filter
 			                        )
