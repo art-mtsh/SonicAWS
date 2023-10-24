@@ -14,7 +14,9 @@ def search(
 		frame,
 		gap_filter,
 		density_filter,
-		level_window
+		level_window,
+		range_part_search,
+		distance_filter
 		):
 	
 	for data in filtered_symbols:
@@ -57,11 +59,14 @@ def search(
 					max_gap <= gap_filter and \
 					density >= density_filter and \
 					len(high) == len(low) == request_limit_length:
-
-					# highs = {}
-					# lows = {}
 					
-					levels_range = (max(high) - min(low)) / 30
+					dist_to_high = 100
+					dist_to_low = 100
+					
+					higher_high = []
+					lower_low = []
+					
+					levels_range = (max(high) - min(low)) / range_part_search
 					
 					for a in range(5, request_limit_length - 7):
 						
@@ -82,10 +87,16 @@ def search(
 											high[b] + levels_range >= high[c] >= high[b] - levels_range and \
 											max([high[a], high[b], high[c]]) == max(high[a: request_limit_length]):
 											
-											if high[-1] <= max(high[a: c+1]):
-												
-												print(f"{symbol}, {a}:{high[a]}, {b}:{high[b]}, {c}:{high[c]}")
-												break
+											lowest_resistance = min([high[a], high[b], high[c]])
+											distance = abs(high[-1] - lowest_resistance) / (lowest_resistance / 100)
+											distance = float('{:.2f}'.format(distance))
+											
+											if high[-1] <= lowest_resistance and \
+												distance <= distance_filter and \
+												distance < dist_to_high:
+
+												higher_high = [symbol, high[-1], high[a], high[b], high[c], distance]
+												dist_to_high = abs(high[-1] - high[a])
 											
 						if low[a] == min(low[a - 5: a + 1]) and \
 							low[a] == min(low[a: a + 6]):
@@ -104,45 +115,48 @@ def search(
 											low[b] + levels_range >= low[c] >= low[b] - levels_range and \
 											min([low[a], low[b], low[c]]) == min(low[a: request_limit_length]):
 											
-											if low[-1] >= min(low[a: c+1]):
+											highest_support = max([low[a], low[b], low[c]])
+											distance = abs(low[-1] - highest_support) / (highest_support / 100)
+											distance = float('{:.2f}'.format(distance))
+											
+											if low[-1] >= highest_support and \
+												distance <= distance_filter and \
+												distance < dist_to_low:
 												
-												print(f"{symbol}, {a}:{low[a]}, {b}:{low[b]}, {c}:{low[c]}")
-												break
-						
+												lower_low = [symbol, low[-1], low[a], low[b], low[c], distance]
+												dist_to_low = abs(low[-1] - low[a])
+												
+					if len(higher_high) != 0:
+						print(f"{higher_high[0]} {higher_high[2]} | {higher_high[3]} | {higher_high[4]}, dist: {higher_high[5]}%")
+						bot1.send_message(662482931, f"{higher_high[0]} {higher_high[2]} | {higher_high[3]} | {higher_high[4]}, dist: {higher_high[5]}%")
+					
+					if len(lower_low) != 0:
+						print(f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {higher_high[5]}%")
+						bot1.send_message(662482931, f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {higher_high[5]}%")
 
-			# if True:
-					#
-					# 	bot1.send_message(662482931, f"#{symbol} ({frame}), LEVEL, density: {int(density)}")
 					# 	screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), BBSh, density: {int(density)}")
-					# 	print(f"{symbol} ({frame}), BBSh, density: {int(density)}")
-
 
 if __name__ == '__main__':
-	# print("PARAMETERS:")
 	proc = 16
 	gap_filter = 0.8
 	density_filter = 20
 	tick_size_filter = 0.1
 	day_range_filter = 1
-	level_window = 12
+	level_window = int(input("Window between lvls (def. 12): ") or 12)
+	range_part_search = int(input("A part of range for lvls (def. 30): ") or 30)
+	distance_filter = int(input("Distance filter (def. 2%): ") or 2)
 	
-	# calculate_length = int(input("Calculate lenght (def. 12): ") or 12)
-	# range_mp = float(input("Range multiplier (def. 2.0): ") or 2.0)
-	# curr_brr_filter = int(input("Current BR-ratio (def. 70): ") or 70)
-	
-	print("")
-	
-	# bot1.send_message(662482931,
-	#                   f"Processes = {proc} \n\n"
-	#                   f"Gap filter = {gap_filter}% \n"
-	#                   f"Density filter = {density_filter} \n"
-	#                   f"Tick size filter = {tick_size_filter}% \n"
-	#                   f"Daily range filter = {day_range_filter} \n\n"
-	#                   f"Calculate lenght = {calculate_length} \n"
-	#                   f"Range multiplier = {range_mp} \n"
-	#                   f"Current BR-ratio = {curr_brr_filter} \n\n"
-	#                   f"💵💵💵💵💵"
-	# 				)
+	bot1.send_message(662482931,
+	                  f"Processes = {proc} \n\n"
+	                  f"Gap filter = {gap_filter}% \n"
+	                  f"Density filter = {density_filter} \n"
+	                  f"Tick size filter = {tick_size_filter}% \n"
+	                  f"Daily range filter = {day_range_filter} \n\n"
+	                  f"Window between lvls = {level_window} candles \n"
+	                  f"A part of range for lvls = R288/{range_part_search} \n"
+	                  f"Distance filter = {distance_filter}%\n\n"
+	                  f"💵💵💵💵💵"
+					)
 	
 	def waiting():
 		
@@ -153,8 +167,8 @@ if __name__ == '__main__':
 			last_second_digit = now.strftime('%S')
 			time.sleep(0.1)
 			
-			# Перевірка в 04:20 , 09:20 , 14:20 ....
-			if (int(last_minute_digit) + 1) % 5 == 0:
+			# Перевірка в 04:15 , 09:30 , 14:45 ....
+			if (int(last_minute_digit) + 1) % 15 == 0:
 				if int(last_second_digit) == 20:
 					break
 
@@ -183,6 +197,8 @@ if __name__ == '__main__':
 			                        gap_filter,
 			                        density_filter,
 			                        level_window,
+			                        range_part_search,
+			                        distance_filter,
 			                        )
 			                  )
 			the_processes.append(process)
