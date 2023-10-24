@@ -16,7 +16,8 @@ def search(
 		density_filter,
 		level_window,
 		range_part_search,
-		distance_filter
+		distance_filter,
+		atr_per_filter
 		):
 	
 	for data in filtered_symbols:
@@ -51,13 +52,17 @@ def search(
 					s_v = volume[curr_index] - buy_volume[curr_index]
 					sell_volume.append(s_v)
 				max_gap = float('{:.3f}'.format(max_gap))
-				density = (high[-1] - low[-1]) / tick_size
-			
+				density = (max(high[-13: -1]) - min(low[-13: -1])) / tick_size
+				
+				ranges_last48 = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(48)]
+				avg_atr_per = float('{:.4f}'.format(sum(ranges_last48) / len(ranges_last48)))
+				
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
 					low[-1] != 0 and close[-1] != 0 and \
 					max_gap <= gap_filter and \
 					density >= density_filter and \
+					avg_atr_per >= atr_per_filter and \
 					len(high) == len(low) == request_limit_length:
 					
 					dist_to_high = 100
@@ -95,7 +100,7 @@ def search(
 												distance <= distance_filter and \
 												distance < dist_to_high:
 
-												higher_high = [symbol, high[-1], high[a], high[b], high[c], distance]
+												higher_high = [symbol, high[-1], high[a], high[b], high[c], distance, avg_atr_per]
 												dist_to_high = distance
 											
 						if low[a] == min(low[a - 5: a + 1]) and \
@@ -123,35 +128,39 @@ def search(
 												distance <= distance_filter and \
 												distance < dist_to_low:
 												
-												lower_low = [symbol, low[-1], low[a], low[b], low[c], distance]
+												lower_low = [symbol, low[-1], low[a], low[b], low[c], distance, avg_atr_per]
 												dist_to_low = distance
 												
-					if len(higher_high) == 6:
+					if len(higher_high) == 7:
+
 						print(f"{higher_high[0]} {higher_high[2]} | {higher_high[3]} | {higher_high[4]}, dist: {higher_high[5]}%")
 						bot1.send_message(662482931, f"{higher_high[0]} {higher_high[2]} | {higher_high[3]} | {higher_high[4]}, dist: {higher_high[5]}%")
 					
-					if len(lower_low) == 6:
-						print(f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {higher_high[5]}%")
-						bot1.send_message(662482931, f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {higher_high[5]}%")
+					if len(lower_low) == 7:
+
+						print(f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {lower_low[5]}%")
+						bot1.send_message(662482931, f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {lower_low[5]}%")
 
 					# 	screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), BBSh, density: {int(density)}")
 
 if __name__ == '__main__':
 	proc = 16
-	gap_filter = 0.8
-	density_filter = 20
-	tick_size_filter = 0.1
-	day_range_filter = 1
+	gap_filter = 0.5
+	density_filter = 50
+	tick_size_filter = 0.05
+	atr_per_filter = 0.5
 	level_window = int(input("Window between lvls (def. 12): ") or 12)
 	range_part_search = int(input("A part of range for lvls (def. 30): ") or 30)
-	distance_filter = int(input("Distance filter (def. 2%): ") or 2)
+	distance_filter = int(input("Distance filter (def. 1%): ") or 1)
+
 	
 	bot1.send_message(662482931,
 	                  f"Processes = {proc} \n\n"
 	                  f"Gap filter = {gap_filter}% \n"
 	                  f"Density filter = {density_filter} \n"
 	                  f"Tick size filter = {tick_size_filter}% \n"
-	                  f"Daily range filter = {day_range_filter} \n\n"
+	                  f"ATR% filter = {atr_per_filter}\n\n"
+	                  
 	                  f"Window between lvls = {level_window} candles \n"
 	                  f"A part of range for lvls = R288/{range_part_search} \n"
 	                  f"Distance filter = {distance_filter}%\n\n"
@@ -180,7 +189,7 @@ if __name__ == '__main__':
 		pairs = binance_pairs(
 			chunks=proc,
 			quote_assets=["USDT"],
-			day_range_filter=day_range_filter,
+			day_range_filter=2,
 			day_density_filter=density_filter,
 			tick_size_filter=tick_size_filter
 		)
@@ -199,6 +208,7 @@ if __name__ == '__main__':
 			                        level_window,
 			                        range_part_search,
 			                        distance_filter,
+			                        atr_per_filter,
 			                        )
 			                  )
 			the_processes.append(process)
