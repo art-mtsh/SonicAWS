@@ -126,11 +126,11 @@ def search(
 												lower_low = [symbol, low[-1], low[a], low[b], low[c], distance]
 												dist_to_low = distance
 												
-					if len(higher_high) != 0:
+					if len(higher_high) == 6:
 						print(f"{higher_high[0]} {higher_high[2]} | {higher_high[3]} | {higher_high[4]}, dist: {higher_high[5]}%")
 						bot1.send_message(662482931, f"{higher_high[0]} {higher_high[2]} | {higher_high[3]} | {higher_high[4]}, dist: {higher_high[5]}%")
 					
-					if len(lower_low) != 0:
+					if len(lower_low) == 6:
 						print(f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {higher_high[5]}%")
 						bot1.send_message(662482931, f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {higher_high[5]}%")
 
