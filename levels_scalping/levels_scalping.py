@@ -96,7 +96,7 @@ def search(
 												distance < dist_to_high:
 
 												higher_high = [symbol, high[-1], high[a], high[b], high[c], distance]
-												dist_to_high = abs(high[-1] - high[a])
+												dist_to_high = distance
 											
 						if low[a] == min(low[a - 5: a + 1]) and \
 							low[a] == min(low[a: a + 6]):
@@ -124,7 +124,7 @@ def search(
 												distance < dist_to_low:
 												
 												lower_low = [symbol, low[-1], low[a], low[b], low[c], distance]
-												dist_to_low = abs(low[-1] - low[a])
+												dist_to_low = distance
 												
 					if len(higher_high) != 0:
 						print(f"{higher_high[0]} {higher_high[2]} | {higher_high[3]} | {higher_high[4]}, dist: {higher_high[5]}%")
