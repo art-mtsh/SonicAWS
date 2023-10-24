@@ -61,22 +61,22 @@ def search(
 					low[-1] != 0 and close[-1] != 0 and \
 					max_gap <= gap_filter and density >= density_filter and len(high) == len(low) == request_limit_length:
 					
-					# ==== BBS SEARCH ====
-					current_brr = abs(open[-1] - close[-1]) / ((high[-1] - low[-1]) / 100)
-					current_range = high[-1] - low[-1]
-					ranges_list = []
-					for ra in range(2, calculate_length):
-						ranges_list.append((high[-ra] - low[-ra]) * range_mp)
-					
-					if current_range >= max(ranges_list) and current_brr >= curr_brr_filter:
-						
-						bot1.send_message(662482931, f"#{symbol} ({frame}), BBSh, density: {int(density)}")
-						screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), BBSh, density: {int(density)}")
-						print(f"{symbol} ({frame}), BBSh, density: {int(density)}")
+					# # ==== BBS SEARCH ====
+					# current_brr = abs(open[-1] - close[-1]) / ((high[-1] - low[-1]) / 100)
+					# current_range = high[-1] - low[-1]
+					# ranges_list = []
+					# for ra in range(2, calculate_length):
+					# 	ranges_list.append((high[-ra] - low[-ra]) * range_mp)
+					#
+					# if current_range >= max(ranges_list) and current_brr >= curr_brr_filter:
+					#
+					# 	bot1.send_message(662482931, f"#{symbol} ({frame}), BBSh, density: {int(density)}")
+					# 	screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), BBSh, density: {int(density)}")
+					# 	print(f"{symbol} ({frame}), BBSh, density: {int(density)}")
 				
 					# ==== PIN SEARCH ====
-					bull_pin = min(close[-1], open[-1]) >= (high[-1] - (high[-1] - low[-1]) / 4)
-					bear_pin = max(close[-1], open[-1]) <= (low[-1] + (high[-1] - low[-1]) / 4)
+					bull_pin = min(close[-1], open[-1]) >= (high[-1] - (high[-1] - low[-1]) / 3)
+					bear_pin = max(close[-1], open[-1]) <= (low[-1] + (high[-1] - low[-1]) / 3)
 					
 					brr1 = abs(open[-2] - close[-2]) / ((high[-2] - low[-2]) / 100) >= curr_brr_filter
 					brr2 = abs(open[-3] - close[-3]) / ((high[-3] - low[-3]) / 100) >= curr_brr_filter
