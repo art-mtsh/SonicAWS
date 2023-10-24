@@ -144,11 +144,12 @@ def search(
 					# 	screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), BBSh, density: {int(density)}")
 
 if __name__ == '__main__':
+	
 	proc = 16
-	gap_filter = 0.5
-	density_filter = 50
-	tick_size_filter = 0.05
-	atr_per_filter = 0.5
+	gap_filter = float(input("Max gap filter (def. 0.2%): ") or 0.2)
+	density_filter = int(input("Density filter (def. 30): ") or 30)
+	tick_size_filter = float(input("Ticksize filter (def. 0.05%): ") or 0.05)
+	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	level_window = int(input("Window between lvls (def. 12): ") or 12)
 	range_part_search = int(input("A part of range for lvls (def. 30): ") or 30)
 	distance_filter = int(input("Distance filter (def. 1%): ") or 1)
