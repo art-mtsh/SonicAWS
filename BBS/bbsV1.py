@@ -3,7 +3,7 @@ from datetime import datetime
 from multiprocessing import Process
 import requests
 import telebot
-from module_get_pairs_binanceV3 import binance_pairs
+from BBS.module_get_pairs_binanceV3 import binance_pairs
 from screenshoter import screenshoter_send
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'

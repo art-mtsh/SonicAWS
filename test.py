@@ -1,11 +1,8 @@
-# Initialize an empty list
-my_list = []
 
-while True:
-    value = input("Enter a value (or 's' to stop and create the list): ")
-    if value.lower() == 's':
-        break
-    my_list.append(value)
 
-# Print the resulting list
-print("Your list:", my_list)
+# highs = [2.3223, 2.3323, 2.3113, 2.3023, 2.3103]
+#
+# print(sorted())
+
+d = {1: 23.4, 2: 322.2}
+print(d[1])
