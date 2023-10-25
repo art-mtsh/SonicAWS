@@ -93,7 +93,7 @@ def printer(s_queue):
 	
 	
 	for i in screener:
-		if i[0] != "BTCUSDT" and i[1] >= trades_filter:
+		if i[0] != "BTCUSDT" and i[1] >= 1:
 			message += f"\n{i[0]}🔅{i[1]}M🔅{i[2]}%🔅+{i[3]}%"
 			
 	print(message)
