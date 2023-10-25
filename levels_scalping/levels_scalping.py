@@ -101,7 +101,7 @@ def search(
 												distance <= distance_filter and \
 												distance < dist_to_high:
 
-												higher_high = f"{symbol}, res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}"
+												higher_high = f"{symbol}, res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}%"
 												dist_to_high = distance
 											
 						if low[a] == min(low[a - 5: a + 1]) and \
