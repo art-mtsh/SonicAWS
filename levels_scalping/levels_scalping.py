@@ -105,20 +105,18 @@ def search(
 											# ============= ВИЗНАЧЕННЯ ПАТТЕРНУ
 											if high[-1] <= lowest_resistance and \
 												distance <= distance_filter and \
-												distance < dist_to_high and \
-												(
-													high[a] >= high[b] >= high[c]
-													or
-													(
-														(abs(high[a] - high[b]) <= avg_atr / 2)
-														and
-														(abs(high[b] - high[c]) <= avg_atr / 2)
-													)
+												distance < dist_to_high:
+												
+												# ============= КОНКРЕТИЗАЦІЯ КАСКАД АБО КОНЦЕНТРОВАНИЙ РІВЕНЬ
+												if (abs(high[a] - high[b]) <= avg_atr / 2) and (abs(high[b] - high[c]) <= avg_atr / 2):
 													
-												):
-
-												higher_high = f"{symbol}, res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}%"
-												dist_to_high = distance
+													higher_high = f"{symbol}, level res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}%"
+													dist_to_high = distance
+													
+												elif high[a] >= high[b] >= high[c]:
+													
+													higher_high = f"{symbol}, cascade res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}%"
+													dist_to_high = distance
 						
 						# ============= ПЕРША ТОЧКА
 						if low[a] == min(low[a - 5: a + 1]) and \
@@ -148,20 +146,18 @@ def search(
 											# ============= ВИЗНАЧЕННЯ ПАТТЕРНУ
 											if low[-1] >= highest_support and \
 												distance <= distance_filter and \
-												distance < dist_to_low and \
-												(
-													low[a] <= low[b] <= low[c]
-													or
-													(
-														(abs(low[a] - low[b]) <= avg_atr / 2)
-														and
-														(abs(low[b] - low[c]) <= avg_atr / 2)
-													)
-													
-												):
+												distance < dist_to_low:
 												
-												lower_low = f"{symbol}, sup: {low[a]}❕{low[b]}❕{low[c]}, dist: {distance}%"
-												dist_to_low = distance
+												# ============= КОНКРЕТИЗАЦІЯ КАСКАД АБО КОНЦЕНТРОВАНИЙ РІВЕНЬ
+												if(abs(low[a] - low[b]) <= avg_atr / 2) and (abs(low[b] - low[c]) <= avg_atr / 2):
+													
+													lower_low = f"{symbol}, level sup: {low[a]}❕{low[b]}❕{low[c]}, dist: {distance}%"
+													dist_to_low = distance
+												
+												elif low[a] <= low[b] <= low[c]:
+													
+													lower_low = f"{symbol}, cascade sup: {low[a]}❕{low[b]}❕{low[c]}, dist: {distance}%"
+													dist_to_low = distance
 												
 					if higher_high:
 
@@ -194,7 +190,7 @@ if __name__ == '__main__':
 	tick_size_filter = float(input("Ticksize filter (def. 0.05%): ") or 0.05)
 	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	level_window = int(input("Window between lvls (def. 12): ") or 12)
-	distance_filter = float(input("Distance filter (def. 2%): ") or 2)
+	distance_filter = float(input("Distance filter (def. 1%): ") or 1)
 
 	
 	bot1.send_message(662482931,
