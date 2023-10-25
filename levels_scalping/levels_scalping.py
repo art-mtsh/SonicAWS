@@ -55,7 +55,7 @@ def search(
 				density = (max(high[-13: -1]) - min(low[-13: -1])) / tick_size
 				
 				avg_atr = [high[-c] - low[-c] for c in range(48)]
-				avg_atr = float('{:.4f}'.format(sum(avg_atr) / len(avg_atr))) / 2
+				avg_atr = float('{:.4f}'.format(sum(avg_atr) / len(avg_atr)))
 				
 				avg_atr_per = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(48)]
 				avg_atr_per = float('{:.4f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
@@ -91,7 +91,7 @@ def search(
 										if high[c] == max(high[c - 5: c + 1]) and \
 											high[c] == max(high[c: c + 6]) and \
 											high[b] + avg_atr >= high[c] >= high[b] - avg_atr and \
-											max([high[a], high[b], high[c]]) == max(high[a: request_limit_length]):
+											max([high[b], high[c]]) == max(high[b: request_limit_length]):
 											
 											lowest_resistance = min([high[a], high[b], high[c]])
 											distance = abs(high[-1] - lowest_resistance) / (lowest_resistance / 100)
@@ -119,7 +119,7 @@ def search(
 										if low[c] == min(low[c - 5: c + 1]) and \
 											low[c] == min(low[c: c + 6]) and \
 											low[b] + avg_atr >= low[c] >= low[b] - avg_atr and \
-											min([low[a], low[b], low[c]]) == min(low[a: request_limit_length]):
+											min([low[b], low[c]]) == min(low[b: request_limit_length]):
 											
 											highest_support = max([low[a], low[b], low[c]])
 											distance = abs(low[-1] - highest_support) / (highest_support / 100)
