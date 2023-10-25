@@ -51,6 +51,7 @@ def search(
 
 					s_v = volume[curr_index] - buy_volume[curr_index]
 					sell_volume.append(s_v)
+					
 				max_gap = float('{:.3f}'.format(max_gap))
 				density = (max(high[-13: -1]) - min(low[-13: -1])) / tick_size
 				
@@ -60,10 +61,14 @@ def search(
 				avg_atr_per = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(48)]
 				avg_atr_per = float('{:.4f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
 				
-				first_period_volume = sum(volume[-144:-1])
-				second_period_volume = sum(volume[-288:-144])
-				
-				volume_dynamic = first_period_volume / (second_period_volume / 100)
+				if len(volume) == request_limit_length:
+					first_period_volume = sum(volume[-144:-1])
+					second_period_volume = sum(volume[-288:-144])
+					
+					if first_period_volume > 0 and second_period_volume > 0:
+						volume_dynamic = first_period_volume / (second_period_volume / 100)
+					else:
+						volume_dynamic = "n/a"
 				
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
@@ -72,6 +77,7 @@ def search(
 					density >= density_filter and \
 					avg_atr_per >= atr_per_filter and \
 					len(high) == len(low) == request_limit_length:
+					
 					
 					dist_to_high = 100
 					dist_to_low = 100
