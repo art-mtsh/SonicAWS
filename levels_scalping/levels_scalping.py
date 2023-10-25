@@ -15,7 +15,6 @@ def search(
 		gap_filter,
 		density_filter,
 		level_window,
-		range_part_search,
 		distance_filter,
 		atr_per_filter,
 		s_queue
@@ -55,8 +54,11 @@ def search(
 				max_gap = float('{:.3f}'.format(max_gap))
 				density = (max(high[-13: -1]) - min(low[-13: -1])) / tick_size
 				
-				ranges_last48 = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(48)]
-				avg_atr_per = float('{:.4f}'.format(sum(ranges_last48) / len(ranges_last48)))
+				avg_atr = [high[-c] - low[-c] for c in range(48)]
+				avg_atr = float('{:.4f}'.format(sum(avg_atr) / len(avg_atr)))
+				
+				avg_atr_per = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(48)]
+				avg_atr_per = float('{:.4f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
 				
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
@@ -72,8 +74,6 @@ def search(
 					higher_high = ""
 					lower_low = ""
 					
-					levels_range = (max(high) - min(low)) / range_part_search
-					
 					for a in range(5, request_limit_length - 7):
 						
 						if high[a] == max(high[a - 5: a + 1]) and \
@@ -83,14 +83,14 @@ def search(
 								
 								if high[b] == max(high[b - 5: b + 1]) and \
 									high[b] == max(high[b: b + 6]) and \
-									high[a] + levels_range >= high[b] >= high[a] - levels_range and \
+									high[a] + avg_atr >= high[b] >= high[a] - avg_atr and \
 									max([high[a], high[b]]) == max(high[a: b+1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
 										
 										if high[c] == max(high[c - 5: c + 1]) and \
 											high[c] == max(high[c: c + 6]) and \
-											high[b] + levels_range >= high[c] >= high[b] - levels_range and \
+											high[b] + avg_atr >= high[c] >= high[b] - avg_atr and \
 											max([high[a], high[b], high[c]]) == max(high[a: request_limit_length]):
 											
 											lowest_resistance = min([high[a], high[b], high[c]])
@@ -111,14 +111,14 @@ def search(
 								
 								if low[b] == min(low[b - 5: b + 1]) and \
 									low[b] == min(low[b: b + 6]) and \
-									low[a] + levels_range >= low[b] >= low[a] - levels_range and \
+									low[a] + avg_atr >= low[b] >= low[a] - avg_atr and \
 									min([low[a], low[b]]) == min(low[a: b + 1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
 										
 										if low[c] == min(low[c - 5: c + 1]) and \
 											low[c] == min(low[c: c + 6]) and \
-											low[b] + levels_range >= low[c] >= low[b] - levels_range and \
+											low[b] + avg_atr >= low[c] >= low[b] - avg_atr and \
 											min([low[a], low[b], low[c]]) == min(low[a: request_limit_length]):
 											
 											highest_support = max([low[a], low[b], low[c]])
@@ -163,7 +163,6 @@ if __name__ == '__main__':
 	tick_size_filter = float(input("Ticksize filter (def. 0.05%): ") or 0.05)
 	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	level_window = int(input("Window between lvls (def. 24): ") or 24)
-	range_part_search = int(input("A part of range for lvls (def. 50): ") or 50)
 	distance_filter = float(input("Distance filter (def. 1%): ") or 1)
 
 	
@@ -175,7 +174,6 @@ if __name__ == '__main__':
 	                  f"ATR% filter = {atr_per_filter}\n\n"
 
 	                  f"Window between lvls = {level_window} candles \n"
-	                  f"A part of range for lvls = R288/{range_part_search} \n"
 	                  f"Distance filter = {distance_filter}%\n\n"
 	                  f"💵💵💵💵💵"
 					)
@@ -223,7 +221,6 @@ if __name__ == '__main__':
 			                      gap_filter,
 			                      density_filter,
 			                      level_window,
-			                      range_part_search,
 			                      distance_filter,
 			                      atr_per_filter,
 			                      shared_queue,
