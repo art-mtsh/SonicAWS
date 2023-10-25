@@ -1,6 +1,6 @@
 import time
 from datetime import datetime
-from multiprocessing import Process, Queue, Manager
+from multiprocessing import Process, Manager
 import requests
 import telebot
 from module_get_pairs_binanceV3 import binance_pairs
@@ -61,12 +61,14 @@ def search(
 				avg_atr_per = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(48)]
 				avg_atr_per = float('{:.4f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
 				
+				volume_dynamic = None
+				
 				if len(volume) == request_limit_length:
 					first_period_volume = sum(volume[-144:-1])
 					second_period_volume = sum(volume[-288:-144])
 					
 					if first_period_volume > 0 and second_period_volume > 0:
-						volume_dynamic = first_period_volume / (second_period_volume / 100)
+						volume_dynamic = int(first_period_volume / (second_period_volume / 100))
 					else:
 						volume_dynamic = "n/a"
 				
@@ -125,7 +127,7 @@ def search(
 														f"{symbol}, \n"
 													    f"level res: {high[a]}❕{high[b]}❕{high[c]}, \n"
 													    f"dist: {distance}% \n"
-														f"volume dynamic: {volume_dynamic} \n\n"
+														f"volume dynamic: {volume_dynamic}% \n"
 													)
 
 													dist_to_high = distance
@@ -136,7 +138,7 @@ def search(
 														f"{symbol}, \n"
 														f"cascade res: {high[a]}❕{high[b]}❕{high[c]}, \n"
 														f"dist: {distance}% \n"
-														f"volume dynamic: {volume_dynamic} \n\n"
+														f"volume dynamic: {volume_dynamic}% \n"
 													)
 
 													dist_to_high = distance
@@ -178,7 +180,7 @@ def search(
 														f"{symbol}, \n"
 														f"level sup: {low[a]}❕{low[b]}❕{low[c]}, \n"
 														f"dist: {distance}% \n"
-														f"volume dynamic: {volume_dynamic} \n\n"
+														f"volume dynamic: {volume_dynamic}% \n"
 													)
 													
 													dist_to_low = distance
@@ -189,7 +191,7 @@ def search(
 														f"{symbol}, \n"
 														f"cascade sup: {low[a]}❕{low[b]}❕{low[c]}, \n"
 														f"dist: {distance}% \n"
-														f"volume dynamic: {volume_dynamic} \n\n"
+														f"volume dynamic: {volume_dynamic}% \n"
 													)
 													
 													dist_to_low = distance
