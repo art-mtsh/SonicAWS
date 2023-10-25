@@ -55,7 +55,7 @@ def search(
 				density = (max(high[-13: -1]) - min(low[-13: -1])) / tick_size
 				
 				avg_atr = [high[-c] - low[-c] for c in range(48)]
-				avg_atr = float('{:.4f}'.format(sum(avg_atr) / len(avg_atr)))
+				avg_atr = float('{:.4f}'.format(sum(avg_atr) / len(avg_atr))) / 2
 				
 				avg_atr_per = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(48)]
 				avg_atr_per = float('{:.4f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
