@@ -23,7 +23,7 @@ def search(
 	for data in filtered_symbols:
 		symbol = data[0]
 		tick_size = data[1]
-		request_limit_length = 576
+		request_limit_length = 600
 		
 		# ==== DATA REQUEST ====
 		futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
@@ -60,6 +60,11 @@ def search(
 				avg_atr_per = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(48)]
 				avg_atr_per = float('{:.4f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
 				
+				first_period_volume = sum(volume[-144:-1])
+				second_period_volume = sum(volume[-288:-144])
+				
+				volume_dynamic = first_period_volume / (second_period_volume / 100)
+				
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
 					low[-1] != 0 and close[-1] != 0 and \
@@ -94,7 +99,7 @@ def search(
 										# ============= ТРЕТЯ ТОЧКА
 										if high[c] == max(high[c - 5: c + 1]) and \
 											high[c] == max(high[c: c + 6]) and \
-											high[b] + avg_atr * 2 >= high[c] >= high[b] - avg_atr * 2 and \
+											high[b] + avg_atr >= high[c] >= high[b] - avg_atr and \
 											max([high[b], high[c]]) == max(high[b: request_limit_length]):
 											
 											# ============= РОЗРАХУНОК ДИСТАНЦІЙ
@@ -110,12 +115,24 @@ def search(
 												# ============= КОНКРЕТИЗАЦІЯ КАСКАД АБО КОНЦЕНТРОВАНИЙ РІВЕНЬ
 												if (abs(high[a] - high[b]) <= avg_atr / 2) and (abs(high[b] - high[c]) <= avg_atr / 2):
 													
-													higher_high = f"{symbol}, level res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}%"
+													higher_high = (
+														f"{symbol}, \n"
+													    f"level res: {high[a]}❕{high[b]}❕{high[c]}, \n"
+													    f"dist: {distance}% \n"
+														f"volume dynamic: {volume_dynamic} \n\n"
+													)
+
 													dist_to_high = distance
 													
 												elif high[a] >= high[b] >= high[c]:
 													
-													higher_high = f"{symbol}, cascade res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}%"
+													higher_high = (
+														f"{symbol}, \n"
+														f"cascade res: {high[a]}❕{high[b]}❕{high[c]}, \n"
+														f"dist: {distance}% \n"
+														f"volume dynamic: {volume_dynamic} \n\n"
+													)
+
 													dist_to_high = distance
 						
 						# ============= ПЕРША ТОЧКА
@@ -127,7 +144,7 @@ def search(
 								# ============= ДРУГА ТОЧКА
 								if low[b] == min(low[b - 5: b + 1]) and \
 									low[b] == min(low[b: b + 6]) and \
-									low[a] + avg_atr * 2 >= low[b] >= low[a] - avg_atr * 2 and \
+									low[a] + avg_atr >= low[b] >= low[a] - avg_atr and \
 									min([low[a], low[b]]) == min(low[a: b + 1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
@@ -151,14 +168,26 @@ def search(
 												# ============= КОНКРЕТИЗАЦІЯ КАСКАД АБО КОНЦЕНТРОВАНИЙ РІВЕНЬ
 												if(abs(low[a] - low[b]) <= avg_atr / 2) and (abs(low[b] - low[c]) <= avg_atr / 2):
 													
-													lower_low = f"{symbol}, level sup: {low[a]}❕{low[b]}❕{low[c]}, dist: {distance}%"
+													lower_low = (
+														f"{symbol}, \n"
+														f"level sup: {low[a]}❕{low[b]}❕{low[c]}, \n"
+														f"dist: {distance}% \n"
+														f"volume dynamic: {volume_dynamic} \n\n"
+													)
+													
 													dist_to_low = distance
 												
 												elif low[a] <= low[b] <= low[c]:
 													
-													lower_low = f"{symbol}, cascade sup: {low[a]}❕{low[b]}❕{low[c]}, dist: {distance}%"
+													lower_low = (
+														f"{symbol}, \n"
+														f"cascade sup: {low[a]}❕{low[b]}❕{low[c]}, \n"
+														f"dist: {distance}% \n"
+														f"volume dynamic: {volume_dynamic} \n\n"
+													)
+													
 													dist_to_low = distance
-												
+
 					if higher_high:
 
 						print(higher_high)
