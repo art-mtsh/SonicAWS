@@ -88,13 +88,13 @@ def printer(s_queue):
 	for i in screener:
 		if i[0] == "BTCUSDT":
 			trades_filter += i[1] / 10
-			message = f"{i[0]}, trades: {i[1]}M, 4H: {i[2]}%, v.change: +{i[3]}%\n"
+			message = f"{i[0]}🔅{i[1]}M🔅{i[2]}%🔅+{i[3]}%\n"
 			break
 	
 	
 	for i in screener:
 		if i[0] != "BTCUSDT" and i[1] >= trades_filter:
-			message += f"\n{i[0]}, trades: {i[1]}M, 4H: {i[2]}%, v.change: +{i[3]}%"
+			message += f"\n{i[0]}🔅{i[1]}M🔅{i[2]}%🔅+{i[3]}%"
 			
 	print(message)
 	if message:
