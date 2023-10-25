@@ -99,7 +99,8 @@ def search(
 											
 											if high[-1] <= lowest_resistance and \
 												distance <= distance_filter and \
-												distance < dist_to_high:
+												distance < dist_to_high and \
+												high[a] >= high[b] >= high[c]:
 
 												higher_high = f"{symbol}, res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}%"
 												dist_to_high = distance
@@ -127,7 +128,8 @@ def search(
 											
 											if low[-1] >= highest_support and \
 												distance <= distance_filter and \
-												distance < dist_to_low:
+												distance < dist_to_low and \
+												low[a] <= low[b] <= low[c]:
 												
 												lower_low = f"{symbol}, sup: {low[a]}❕{low[b]}❕{low[c]}, dist: {distance}%"
 												dist_to_low = distance
