@@ -100,7 +100,16 @@ def search(
 											if high[-1] <= lowest_resistance and \
 												distance <= distance_filter and \
 												distance < dist_to_high and \
-												high[a] >= high[b] >= high[c]:
+												(
+													high[a] >= high[b] >= high[c]
+													or
+													(
+														(abs(high[a] - high[b]) <= avg_atr / 2)
+														and
+														(abs(high[b] - high[c]) <= avg_atr / 2)
+													)
+													
+												):
 
 												higher_high = f"{symbol}, res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}%"
 												dist_to_high = distance
@@ -129,7 +138,16 @@ def search(
 											if low[-1] >= highest_support and \
 												distance <= distance_filter and \
 												distance < dist_to_low and \
-												low[a] <= low[b] <= low[c]:
+												(
+													low[a] <= low[b] <= low[c]
+													or
+													(
+														(abs(low[a] - low[b]) <= avg_atr / 2)
+														and
+														(abs(low[b] - low[c]) <= avg_atr / 2)
+													)
+													
+												):
 												
 												lower_low = f"{symbol}, sup: {low[a]}❕{low[b]}❕{low[c]}, dist: {distance}%"
 												dist_to_low = distance
