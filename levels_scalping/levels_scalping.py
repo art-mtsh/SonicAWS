@@ -1,6 +1,6 @@
 import time
 from datetime import datetime
-from multiprocessing import Process
+from multiprocessing import Process, Queue, Manager
 import requests
 import telebot
 from module_get_pairs_binanceV3 import binance_pairs
@@ -17,7 +17,8 @@ def search(
 		level_window,
 		range_part_search,
 		distance_filter,
-		atr_per_filter
+		atr_per_filter,
+		s_queue
 		):
 	
 	for data in filtered_symbols:
@@ -68,8 +69,8 @@ def search(
 					dist_to_high = 100
 					dist_to_low = 100
 					
-					higher_high = []
-					lower_low = []
+					higher_high = ""
+					lower_low = ""
 					
 					levels_range = (max(high) - min(low)) / range_part_search
 					
@@ -100,7 +101,7 @@ def search(
 												distance <= distance_filter and \
 												distance < dist_to_high:
 
-												higher_high = [symbol, high[-1], high[a], high[b], high[c], distance, avg_atr_per]
+												higher_high = f"{symbol}, resistance: {lowest_resistance}, distance: {distance}"
 												dist_to_high = distance
 											
 						if low[a] == min(low[a - 5: a + 1]) and \
@@ -128,31 +129,42 @@ def search(
 												distance <= distance_filter and \
 												distance < dist_to_low:
 												
-												lower_low = [symbol, low[-1], low[a], low[b], low[c], distance, avg_atr_per]
+												lower_low = f"{symbol}, support: {highest_support}, distance: {distance}%"
 												dist_to_low = distance
 												
-					if len(higher_high) == 7:
+					if higher_high:
 
-						print(f"{higher_high[0]} {higher_high[2]} | {higher_high[3]} | {higher_high[4]}, dist: {higher_high[5]}%")
-						bot1.send_message(662482931, f"{higher_high[0]} {higher_high[2]} | {higher_high[3]} | {higher_high[4]}, dist: {higher_high[5]}%")
+						print(higher_high)
+						s_queue.put(lower_low)
 					
-					if len(lower_low) == 7:
+					if lower_low:
 
-						print(f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {lower_low[5]}%")
-						bot1.send_message(662482931, f"{lower_low[0]} {lower_low[2]} | {lower_low[3]} | {lower_low[4]}, dist: {lower_low[5]}%")
+						print(lower_low)
+						s_queue.put(lower_low)
 
 					# 	screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), BBSh, density: {int(density)}")
 
+def printer(s_queue):
+	
+	message = ""
+	
+	while not s_queue.empty():
+		data = s_queue.get()
+		message += str(data) + "\n"
+	
+	if message:
+		bot1.send_message(662482931, message)
+
 if __name__ == '__main__':
 	
-	proc = 16
+	proc = 15
 	gap_filter = float(input("Max gap filter (def. 0.2%): ") or 0.2)
 	density_filter = int(input("Density filter (def. 30): ") or 30)
 	tick_size_filter = float(input("Ticksize filter (def. 0.05%): ") or 0.05)
 	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	level_window = int(input("Window between lvls (def. 12): ") or 12)
 	range_part_search = int(input("A part of range for lvls (def. 30): ") or 30)
-	distance_filter = int(input("Distance filter (def. 1%): ") or 1)
+	distance_filter = float(input("Distance filter (def. 1%): ") or 1)
 
 	
 	bot1.send_message(662482931,
@@ -161,7 +173,7 @@ if __name__ == '__main__':
 	                  f"Density filter = {density_filter} \n"
 	                  f"Tick size filter = {tick_size_filter}% \n"
 	                  f"ATR% filter = {atr_per_filter}\n\n"
-	                  
+
 	                  f"Window between lvls = {level_window} candles \n"
 	                  f"A part of range for lvls = R288/{range_part_search} \n"
 	                  f"Distance filter = {distance_filter}%\n\n"
@@ -184,6 +196,9 @@ if __name__ == '__main__':
 
 	while True:
 		
+		manager = Manager()
+		shared_queue = manager.Queue()
+		
 		frame = "5m"
 		time1 = time.perf_counter()
 		
@@ -202,17 +217,21 @@ if __name__ == '__main__':
 		the_processes = []
 		for proc_number in range(proc):
 			process = Process(target=search,
-			                  args=(pairs[proc_number],
-			                        frame,
-			                        gap_filter,
-			                        density_filter,
-			                        level_window,
-			                        range_part_search,
-			                        distance_filter,
-			                        atr_per_filter,
-			                        )
-			                  )
+			                  args=(
+				                  pairs[proc_number],
+			                      frame,
+			                      gap_filter,
+			                      density_filter,
+			                      level_window,
+			                      range_part_search,
+			                      distance_filter,
+			                      atr_per_filter,
+			                      shared_queue,
+			                      ))
 			the_processes.append(process)
+		
+		print_process = Process(target=printer, args=(shared_queue, ))
+		the_processes.append(print_process)
 			
 		for pro in the_processes:
 			pro.start()
@@ -222,6 +241,8 @@ if __name__ == '__main__':
 			
 		for pro in the_processes:
 			pro.close()
+			
+		printer(shared_queue)
 			
 		time2 = time.perf_counter()
 		time3 = time2 - time1
