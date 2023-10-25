@@ -24,7 +24,7 @@ def search(
 	for data in filtered_symbols:
 		symbol = data[0]
 		tick_size = data[1]
-		request_limit_length = 288
+		request_limit_length = 576
 		
 		# ==== DATA REQUEST ====
 		futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
@@ -162,8 +162,8 @@ if __name__ == '__main__':
 	density_filter = int(input("Density filter (def. 30): ") or 30)
 	tick_size_filter = float(input("Ticksize filter (def. 0.05%): ") or 0.05)
 	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
-	level_window = int(input("Window between lvls (def. 12): ") or 12)
-	range_part_search = int(input("A part of range for lvls (def. 30): ") or 30)
+	level_window = int(input("Window between lvls (def. 24): ") or 24)
+	range_part_search = int(input("A part of range for lvls (def. 50): ") or 50)
 	distance_filter = float(input("Distance filter (def. 1%): ") or 1)
 
 	
