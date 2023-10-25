@@ -74,29 +74,35 @@ def search(
 					higher_high = ""
 					lower_low = ""
 					
+					
 					for a in range(5, request_limit_length - 7):
 						
+						# ============= ПЕРША ТОЧКА
 						if high[a] == max(high[a - 5: a + 1]) and \
 							high[a] == max(high[a: a + 6]):
 							
 							for b in range(a + level_window, request_limit_length - 7):
 								
+								# ============= ДРУГА ТОЧКА
 								if high[b] == max(high[b - 5: b + 1]) and \
 									high[b] == max(high[b: b + 6]) and \
-									high[a] + avg_atr >= high[b] >= high[a] - avg_atr and \
+									high[a] + avg_atr * 2 >= high[b] >= high[a] - avg_atr * 2 and \
 									max([high[a], high[b]]) == max(high[a: b+1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
 										
+										# ============= ТРЕТЯ ТОЧКА
 										if high[c] == max(high[c - 5: c + 1]) and \
 											high[c] == max(high[c: c + 6]) and \
-											high[b] + avg_atr >= high[c] >= high[b] - avg_atr and \
+											high[b] + avg_atr * 2 >= high[c] >= high[b] - avg_atr * 2 and \
 											max([high[b], high[c]]) == max(high[b: request_limit_length]):
 											
+											# ============= РОЗРАХУНОК ДИСТАНЦІЙ
 											lowest_resistance = min([high[a], high[b], high[c]])
 											distance = abs(high[-1] - lowest_resistance) / (lowest_resistance / 100)
 											distance = float('{:.2f}'.format(distance))
 											
+											# ============= ВИЗНАЧЕННЯ ПАТТЕРНУ
 											if high[-1] <= lowest_resistance and \
 												distance <= distance_filter and \
 												distance < dist_to_high and \
@@ -113,28 +119,33 @@ def search(
 
 												higher_high = f"{symbol}, res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}%"
 												dist_to_high = distance
-											
+						
+						# ============= ПЕРША ТОЧКА
 						if low[a] == min(low[a - 5: a + 1]) and \
 							low[a] == min(low[a: a + 6]):
 							
 							for b in range(a + level_window, request_limit_length - 7):
 								
+								# ============= ДРУГА ТОЧКА
 								if low[b] == min(low[b - 5: b + 1]) and \
 									low[b] == min(low[b: b + 6]) and \
-									low[a] + avg_atr >= low[b] >= low[a] - avg_atr and \
+									low[a] + avg_atr * 2 >= low[b] >= low[a] - avg_atr * 2 and \
 									min([low[a], low[b]]) == min(low[a: b + 1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
 										
+										# ============= ТРЕТЯ ТОЧКА
 										if low[c] == min(low[c - 5: c + 1]) and \
 											low[c] == min(low[c: c + 6]) and \
-											low[b] + avg_atr >= low[c] >= low[b] - avg_atr and \
+											low[b] + avg_atr * 2 >= low[c] >= low[b] - avg_atr * 2 and \
 											min([low[b], low[c]]) == min(low[b: request_limit_length]):
 											
+											# ============= РОЗРАХУНОК ДИСТАНЦІЙ
 											highest_support = max([low[a], low[b], low[c]])
 											distance = abs(low[-1] - highest_support) / (highest_support / 100)
 											distance = float('{:.2f}'.format(distance))
 											
+											# ============= ВИЗНАЧЕННЯ ПАТТЕРНУ
 											if low[-1] >= highest_support and \
 												distance <= distance_filter and \
 												distance < dist_to_low and \
@@ -178,12 +189,12 @@ def printer(s_queue):
 if __name__ == '__main__':
 	
 	proc = 15
-	gap_filter = float(input("Max gap filter (def. 0.2%): ") or 0.2)
+	gap_filter = float(input("Max gap filter (def. 0.1%): ") or 0.1)
 	density_filter = int(input("Density filter (def. 30): ") or 30)
 	tick_size_filter = float(input("Ticksize filter (def. 0.05%): ") or 0.05)
 	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
-	level_window = int(input("Window between lvls (def. 24): ") or 24)
-	distance_filter = float(input("Distance filter (def. 1%): ") or 1)
+	level_window = int(input("Window between lvls (def. 12): ") or 12)
+	distance_filter = float(input("Distance filter (def. 2%): ") or 2)
 
 	
 	bot1.send_message(662482931,
