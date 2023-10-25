@@ -101,7 +101,7 @@ def search(
 												distance <= distance_filter and \
 												distance < dist_to_high:
 
-												higher_high = f"{symbol}, resistance: {lowest_resistance}, distance: {distance}"
+												higher_high = f"{symbol}, res: {high[a]}❕{high[b]}❕{high[c]}, dist: {distance}"
 												dist_to_high = distance
 											
 						if low[a] == min(low[a - 5: a + 1]) and \
@@ -129,13 +129,13 @@ def search(
 												distance <= distance_filter and \
 												distance < dist_to_low:
 												
-												lower_low = f"{symbol}, support: {highest_support}, distance: {distance}%"
+												lower_low = f"{symbol}, sup: {low[a]}❕{low[b]}❕{low[c]}, dist: {distance}%"
 												dist_to_low = distance
 												
 					if higher_high:
 
 						print(higher_high)
-						s_queue.put(lower_low)
+						s_queue.put(higher_high)
 					
 					if lower_low:
 
