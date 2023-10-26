@@ -99,7 +99,7 @@ def search(
 								# ============= ДРУГА ТОЧКА
 								if high[b] == max(high[b - 5: b + 1]) and \
 									high[b] == max(high[b: b + 6]) and \
-									high[a] + avg_atr * 2 >= high[b] >= high[a] - avg_atr * 2 and \
+									high[a] + avg_atr >= high[b] >= high[a] - avg_atr and \
 									max([high[a], high[b]]) == max(high[a: b+1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
@@ -160,7 +160,7 @@ def search(
 										# ============= ТРЕТЯ ТОЧКА
 										if low[c] == min(low[c - 5: c + 1]) and \
 											low[c] == min(low[c: c + 6]) and \
-											low[b] + avg_atr * 2 >= low[c] >= low[b] - avg_atr * 2 and \
+											low[b] + avg_atr >= low[c] >= low[b] - avg_atr and \
 											min([low[b], low[c]]) == min(low[b: request_limit_length]):
 											
 											# ============= РОЗРАХУНОК ДИСТАНЦІЙ
