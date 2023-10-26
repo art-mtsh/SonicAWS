@@ -222,9 +222,9 @@ def printer(s_queue):
 if __name__ == '__main__':
 	
 	proc = 15
-	gap_filter = float(input("Max gap filter (def. 0.1%): ") or 0.1)
-	density_filter = int(input("Density filter (def. 30): ") or 30)
-	tick_size_filter = float(input("Ticksize filter (def. 0.05%): ") or 0.05)
+	gap_filter = 0.1 # float(input("Max gap filter (def. 0.1%): ") or 0.1)
+	density_filter = 30 # int(input("Density filter (def. 30): ") or 30)
+	tick_size_filter = 0.05 # float(input("Ticksize filter (def. 0.05%): ") or 0.05)
 	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	level_window = int(input("Window between lvls (def. 12): ") or 12)
 	distance_filter = float(input("Distance filter (def. 1%): ") or 1)
@@ -267,9 +267,9 @@ if __name__ == '__main__':
 		pairs = binance_pairs(
 			chunks=proc,
 			quote_assets=["USDT"],
-			day_range_filter=2,
-			day_density_filter=density_filter,
-			tick_size_filter=tick_size_filter
+			day_range_filter=1,
+			day_density_filter=20,
+			tick_size_filter=0.1
 		)
 		
 		print(datetime.now().strftime('%H:%M:%S.%f')[:-3])
