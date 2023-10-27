@@ -131,17 +131,17 @@ def search(
 													)
 
 													dist_to_high = distance
-													
-												elif high[a] >= high[b] >= high[c]:
-													
-													higher_high = (
-														f"{symbol}, \n"
-														f"cascade res: {high[a]}❕{high[b]}❕{high[c]}, \n"
-														f"dist: {distance}% \n"
-														f"volume dynamic: {volume_dynamic}% \n"
-													)
 
-													dist_to_high = distance
+												# elif high[a] >= high[b] >= high[c]:
+												#
+												# 	higher_high = (
+												# 		f"{symbol}, \n"
+												# 		f"cascade res: {high[a]}❕{high[b]}❕{high[c]}, \n"
+												# 		f"dist: {distance}% \n"
+												# 		f"volume dynamic: {volume_dynamic}% \n"
+												# 	)
+												#
+												# 	dist_to_high = distance
 						
 						# ============= ПЕРША ТОЧКА
 						if low[a] == min(low[a - 5: a + 1]) and \
@@ -184,17 +184,17 @@ def search(
 													)
 													
 													dist_to_low = distance
-												
-												elif low[a] <= low[b] <= low[c]:
-													
-													lower_low = (
-														f"{symbol}, \n"
-														f"cascade sup: {low[a]}❕{low[b]}❕{low[c]}, \n"
-														f"dist: {distance}% \n"
-														f"volume dynamic: {volume_dynamic}% \n"
-													)
-													
-													dist_to_low = distance
+
+												# elif low[a] <= low[b] <= low[c]:
+												#
+												# 	lower_low = (
+												# 		f"{symbol}, \n"
+												# 		f"cascade sup: {low[a]}❕{low[b]}❕{low[c]}, \n"
+												# 		f"dist: {distance}% \n"
+												# 		f"volume dynamic: {volume_dynamic}% \n"
+												# 	)
+												#
+												# 	dist_to_low = distance
 
 					if higher_high:
 
