@@ -79,13 +79,10 @@ def search(
 					higher_high = ""
 					lower_low = ""
 					
-					for s in range(10, 62, 10):
+					for s in range(10, 60):
 						
 						highs = high[-3: -s: -1]
 						highs = sorted(highs, reverse=False)
-						
-						lows = low[-3: -s: -1]
-						lows = sorted(lows, reverse=True)
 						
 						if highs[-1] - highs[-3] <= tick_size * 3 and max([high[-1], high[-2]]) <= highs[-1]:
 							distance = abs(close[-1] - highs[-1]) / (close[-1] / 100)
@@ -98,7 +95,13 @@ def search(
 									f"dist: {distance}% \n"
 									f"volume dynamic: {volume_dynamic}% \n"
 								)
+								break
 						
+					for s in range(10, 60):
+						
+						lows = low[-3: -s: -1]
+						lows = sorted(lows, reverse=True)
+					
 						if lows[-3] - lows[-1] <= tick_size * 3 and min([low[-1], low[-2]]) >= lows[-1]:
 							distance = abs(close[-1] - lows[-1]) / (close[-1] / 100)
 							distance = float('{:.2f}'.format(distance))
@@ -110,6 +113,7 @@ def search(
 									f"dist: {distance}% \n"
 									f"volume dynamic: {volume_dynamic}% \n"
 								)
+								break
 
 					if higher_high:
 						print(higher_high)
