@@ -55,8 +55,8 @@ def search(
 				max_gap = float('{:.3f}'.format(max_gap))
 				density = (max(high[-13: -1]) - min(low[-13: -1])) / tick_size
 				
-				avg_atr = [high[-c] - low[-c] for c in range(48)]
-				avg_atr = float('{:.4f}'.format(sum(avg_atr) / len(avg_atr)))
+				# avg_atr = [high[-c] - low[-c] for c in range(48)]
+				# avg_atr = float('{:.4f}'.format(sum(avg_atr) / len(avg_atr)))
 				
 				avg_atr_per = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(48)]
 				avg_atr_per = float('{:.4f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
@@ -99,7 +99,7 @@ def search(
 								# ============= ДРУГА ТОЧКА
 								if high[b] == max(high[b - 5: b + 1]) and \
 									high[b] == max(high[b: b + 6]) and \
-									high[a] + avg_atr >= high[b] >= high[a] - avg_atr and \
+									high[a] + tick_size * 3 >= high[b] >= high[a] - tick_size * 3 and \
 									max([high[a], high[b]]) == max(high[a: b+1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
@@ -107,7 +107,7 @@ def search(
 										# ============= ТРЕТЯ ТОЧКА
 										if high[c] == max(high[c - 5: c + 1]) and \
 											high[c] == max(high[c: c + 6]) and \
-											high[b] + avg_atr >= high[c] >= high[b] - avg_atr and \
+											high[b] + tick_size * 3 >= high[c] >= high[b] - tick_size * 3 and \
 											max([high[b], high[c]]) == max(high[b: request_limit_length]):
 											
 											# ============= РОЗРАХУНОК ДИСТАНЦІЙ
@@ -120,17 +120,14 @@ def search(
 												distance <= distance_filter and \
 												distance < dist_to_high:
 												
-												# ============= КОНКРЕТИЗАЦІЯ КАСКАД АБО КОНЦЕНТРОВАНИЙ РІВЕНЬ
-												if (abs(high[a] - high[b]) <= avg_atr / 2) and (abs(high[b] - high[c]) <= avg_atr / 2):
-													
-													higher_high = (
-														f"{symbol}, \n"
-													    f"level res: {high[a]}❕{high[b]}❕{high[c]}, \n"
-													    f"dist: {distance}% \n"
-														f"volume dynamic: {volume_dynamic}% \n"
-													)
+												higher_high = (
+													f"{symbol}, \n"
+												    f"level res: {high[a]}❕{high[b]}❕{high[c]}, \n"
+												    f"dist: {distance}% \n"
+													f"volume dynamic: {volume_dynamic}% \n"
+												)
 
-													dist_to_high = distance
+												dist_to_high = distance
 
 												# elif high[a] >= high[b] >= high[c]:
 												#
@@ -152,7 +149,7 @@ def search(
 								# ============= ДРУГА ТОЧКА
 								if low[b] == min(low[b - 5: b + 1]) and \
 									low[b] == min(low[b: b + 6]) and \
-									low[a] + avg_atr >= low[b] >= low[a] - avg_atr and \
+									low[a] + tick_size * 3 >= low[b] >= low[a] - tick_size * 3 and \
 									min([low[a], low[b]]) == min(low[a: b + 1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
@@ -160,7 +157,7 @@ def search(
 										# ============= ТРЕТЯ ТОЧКА
 										if low[c] == min(low[c - 5: c + 1]) and \
 											low[c] == min(low[c: c + 6]) and \
-											low[b] + avg_atr >= low[c] >= low[b] - avg_atr and \
+											low[b] + tick_size * 3 >= low[c] >= low[b] - tick_size * 3 and \
 											min([low[b], low[c]]) == min(low[b: request_limit_length]):
 											
 											# ============= РОЗРАХУНОК ДИСТАНЦІЙ
@@ -172,18 +169,15 @@ def search(
 											if low[-1] >= highest_support and \
 												distance <= distance_filter and \
 												distance < dist_to_low:
+
+												lower_low = (
+													f"{symbol}, \n"
+													f"level sup: {low[a]}❕{low[b]}❕{low[c]}, \n"
+													f"dist: {distance}% \n"
+													f"volume dynamic: {volume_dynamic}% \n"
+												)
 												
-												# ============= КОНКРЕТИЗАЦІЯ КАСКАД АБО КОНЦЕНТРОВАНИЙ РІВЕНЬ
-												if(abs(low[a] - low[b]) <= avg_atr / 2) and (abs(low[b] - low[c]) <= avg_atr / 2):
-													
-													lower_low = (
-														f"{symbol}, \n"
-														f"level sup: {low[a]}❕{low[b]}❕{low[c]}, \n"
-														f"dist: {distance}% \n"
-														f"volume dynamic: {volume_dynamic}% \n"
-													)
-													
-													dist_to_low = distance
+												dist_to_low = distance
 
 												# elif low[a] <= low[b] <= low[c]:
 												#
@@ -269,7 +263,7 @@ if __name__ == '__main__':
 			quote_assets=["USDT"],
 			day_range_filter=1,
 			day_density_filter=20,
-			tick_size_filter=0.1
+			tick_size_filter=0.02
 		)
 		
 		print(datetime.now().strftime('%H:%M:%S.%f')[:-3])
