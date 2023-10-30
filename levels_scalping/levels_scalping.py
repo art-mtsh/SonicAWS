@@ -220,8 +220,8 @@ if __name__ == '__main__':
 	density_filter = 30 # int(input("Density filter (def. 30): ") or 30)
 	tick_size_filter = 0.05 # float(input("Ticksize filter (def. 0.05%): ") or 0.05)
 	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
-	level_window = int(input("Window between lvls (def. 12): ") or 12)
-	distance_filter = float(input("Distance filter (def. 1%): ") or 1)
+	level_window = int(input("Window between lvls (def. 6): ") or 6)
+	distance_filter = float(input("Distance filter (def. 2%): ") or 2)
 
 	
 	bot1.send_message(662482931,
