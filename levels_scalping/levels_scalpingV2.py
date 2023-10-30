@@ -91,7 +91,7 @@ def search(
 							if distance <= 1:
 								higher_high = (
 									f"{symbol}, \n"
-									f"resist: {highs[-1]} on 1-{s}, \n"
+									f"resist: {highs[-1]} (1-{s}), \n"
 									f"dist: {distance}% \n"
 									f"volume dynamic: {volume_dynamic}% \n"
 								)
@@ -109,7 +109,7 @@ def search(
 							if distance <= 1:
 								lower_low = (
 									f"{symbol}, \n"
-									f"support: {lows[-1]} on 1-{s}, \n"
+									f"support: {lows[-1]} (1-{s}), \n"
 									f"dist: {distance}% \n"
 									f"volume dynamic: {volume_dynamic}% \n"
 								)
