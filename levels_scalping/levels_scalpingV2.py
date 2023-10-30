@@ -21,7 +21,7 @@ def search(
 	for data in filtered_symbols:
 		symbol = data[0]
 		tick_size = data[1]
-		request_limit_length = 600
+		request_limit_length = 200
 		
 		# ==== DATA REQUEST ====
 		futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
@@ -79,7 +79,7 @@ def search(
 					higher_high = ""
 					lower_low = ""
 					
-					for s in range(10, 60):
+					for s in range(10, 62, 10):
 						
 						highs = high[-3: -s: -1]
 						highs = sorted(highs, reverse=True)
@@ -87,39 +87,36 @@ def search(
 						lows = low[-3: -s: -1]
 						lows = sorted(lows, reverse=True)
 						
-						if highs[-1] - highs[-3] <= tick_size * 3 and high[-1] <= highs[-1] and high[-2] <= highs[-1]:
+						if highs[-1] - highs[-3] <= tick_size * 3 and max([high[-1], high[-2]]) <= highs[-1]:
 							distance = abs(close[-1] - highs[-1]) / (close[-1] / 100)
 							distance = float('{:.2f}'.format(distance))
 							
 							higher_high = (
 								f"{symbol}, \n"
-								f"level sup: {highs[-1]}, \n"
+								f"resist: {highs[-1]}, \n"
 								f"dist: {distance}% \n"
-								f"volume dynamic: {volume_dynamic}% \n"
+								f"volume dynamic: {volume_dynamic}%"
 							)
 						
-						if lows[-3] - lows[-1] <= tick_size * 3 and low[-1] >= lows[-1] and low[-2] >= lows[-1]:
+						if lows[-3] - lows[-1] <= tick_size * 3 and min([low[-1], low[-2]]) >= lows[-1]:
 							distance = abs(close[-1] - lows[-1]) / (close[-1] / 100)
 							distance = float('{:.2f}'.format(distance))
 							
 							lower_low = (
 								f"{symbol}, \n"
-								f"level sup: {lows[-1]}, \n"
+								f"support: {lows[-1]}, \n"
 								f"dist: {distance}% \n"
-								f"volume dynamic: {volume_dynamic}% \n"
+								f"volume dynamic: {volume_dynamic}%"
 							)
 
 					if higher_high:
-
 						print(higher_high)
 						s_queue.put(higher_high)
 					
 					if lower_low:
-
 						print(lower_low)
 						s_queue.put(lower_low)
 
-					# 	screenshoter_send(symbol, open, high, low, close, f"{symbol} ({frame}), BBSh, density: {int(density)}")
 
 def printer(s_queue):
 	
@@ -135,9 +132,9 @@ def printer(s_queue):
 if __name__ == '__main__':
 	
 	proc = 15
-	gap_filter = 0.1 # float(input("Max gap filter (def. 0.1%): ") or 0.1)
-	density_filter = 30 # int(input("Density filter (def. 30): ") or 30)
-	tick_size_filter = 0.05 # float(input("Ticksize filter (def. 0.05%): ") or 0.05)
+	gap_filter = float(input("Max gap filter (def. 0.2%): ") or 0.2)
+	density_filter = int(input("Density filter (def. 30): ") or 30)
+	tick_size_filter = float(input("Ticksize filter (def. 0.02%): ") or 0.02)
 	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	
 	bot1.send_message(662482931,
@@ -174,8 +171,8 @@ if __name__ == '__main__':
 			chunks=proc,
 			quote_assets=["USDT"],
 			day_range_filter=1,
-			day_density_filter=20,
-			tick_size_filter=0.02
+			day_density_filter=density_filter,
+			tick_size_filter=tick_size_filter
 		)
 		
 		print(datetime.now().strftime('%H:%M:%S.%f')[:-3])
