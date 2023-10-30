@@ -98,8 +98,6 @@ def search(
 									f"dist: {distance}% \n"
 									f"volume dynamic: {volume_dynamic}% \n"
 								)
-								print(highs)
-								print("")
 						
 						if lows[-3] - lows[-1] <= tick_size * 3 and min([low[-1], low[-2]]) >= lows[-1]:
 							distance = abs(close[-1] - lows[-1]) / (close[-1] / 100)
@@ -112,8 +110,6 @@ def search(
 									f"dist: {distance}% \n"
 									f"volume dynamic: {volume_dynamic}% \n"
 								)
-								print(lows)
-								print("")
 
 					if higher_high:
 						print(higher_high)
