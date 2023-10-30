@@ -99,7 +99,7 @@ def search(
 								# ============= ДРУГА ТОЧКА
 								if high[b] == max(high[b - 5: b + 1]) and \
 									high[b] == max(high[b: b + 6]) and \
-									high[a] + tick_size * 3 >= high[b] >= high[a] - tick_size * 3 and \
+									high[a] + tick_size * 5 >= high[b] >= high[a] - tick_size * 5 and \
 									max([high[a], high[b]]) == max(high[a: b+1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
@@ -107,7 +107,7 @@ def search(
 										# ============= ТРЕТЯ ТОЧКА
 										if high[c] == max(high[c - 5: c + 1]) and \
 											high[c] == max(high[c: c + 6]) and \
-											high[b] + tick_size * 3 >= high[c] >= high[b] - tick_size * 3 and \
+											high[b] + tick_size * 5 >= high[c] >= high[b] - tick_size * 5 and \
 											max([high[b], high[c]]) == max(high[b: request_limit_length]):
 											
 											# ============= РОЗРАХУНОК ДИСТАНЦІЙ
@@ -149,7 +149,7 @@ def search(
 								# ============= ДРУГА ТОЧКА
 								if low[b] == min(low[b - 5: b + 1]) and \
 									low[b] == min(low[b: b + 6]) and \
-									low[a] + tick_size * 3 >= low[b] >= low[a] - tick_size * 3 and \
+									low[a] + tick_size * 5 >= low[b] >= low[a] - tick_size * 5 and \
 									min([low[a], low[b]]) == min(low[a: b + 1]):
 									
 									for c in range(b + level_window, request_limit_length - 7):
@@ -157,7 +157,7 @@ def search(
 										# ============= ТРЕТЯ ТОЧКА
 										if low[c] == min(low[c - 5: c + 1]) and \
 											low[c] == min(low[c: c + 6]) and \
-											low[b] + tick_size * 3 >= low[c] >= low[b] - tick_size * 3 and \
+											low[b] + tick_size * 5 >= low[c] >= low[b] - tick_size * 5 and \
 											min([low[b], low[c]]) == min(low[b: request_limit_length]):
 											
 											# ============= РОЗРАХУНОК ДИСТАНЦІЙ
