@@ -105,7 +105,7 @@ def search(
 								distance = abs(close[-1] - max(high[-a], high[-b])) / (max(high[-a], high[-b]) / 100)
 								distance = float('{:.2f}'.format(distance))
 								
-								if high[-a] + high[-a] * 0.0005 >= high[-b] >= high[-a] - high[-a] * 0.0005 and \
+								if high[-a] + high[-a] * 0.0002 >= high[-b] >= high[-a] - high[-a] * 0.0002 and \
 									max(high[-a], high[-b]) == max(high[-1: -b - 2: -1]) and \
 									distance <= 0.6 and distance < to_res:
 									
@@ -120,7 +120,7 @@ def search(
 								distance = abs(close[-1] - min(low[-a], low[-b])) / (close[-1] / 100)
 								distance = float('{:.2f}'.format(distance))
 							
-								if low[-a] + low[-a] * 0.0005 >= low[-b] >= low[-a] - low[-a] * 0.0005 and \
+								if low[-a] + low[-a] * 0.0002 >= low[-b] >= low[-a] - low[-a] * 0.0002 and \
 									min(low[-a], low[-b]) == min(low[-1: -b - 2: -1]) and \
 									distance <= 0.6 and distance < to_sup:
 									
