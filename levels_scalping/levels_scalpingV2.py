@@ -111,8 +111,6 @@ def search(
 									
 									to_res = distance
 									higher_high = f"{symbol}, res {max(high[-a], high[-b])}, dist {distance}%"
-									print(higher_high)
-
 					
 					for a in range(3, 120):
 						if low[-a] == min(low[-1: -a - 6: -1]):
@@ -128,7 +126,6 @@ def search(
 									
 									to_sup = distance
 									lower_low = f"{symbol}, sup {min(low[-a], low[-b])}, dist {distance}%"
-									print(lower_low)
 
 					if higher_high:
 						print(higher_high)
@@ -148,7 +145,7 @@ def printer(s_queue):
 		message += str(data) + "\n"
 	
 	if message:
-	# 	print(message)
+		print(message)
 		bot1.send_message(662482931, message)
 
 if __name__ == '__main__':
