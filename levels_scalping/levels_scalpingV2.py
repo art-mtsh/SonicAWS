@@ -110,7 +110,13 @@ def search(
 									distance <= 0.6 and distance < to_res:
 									
 									to_res = distance
-									higher_high = f"{symbol}, res {max(high[-a], high[-b])}, {int(density)}x{ts_percent}%, {trades_k}K trades"
+									higher_high = (
+										f"{symbol} resistance, \n"
+										f"{max(high[-a], high[-b])} level, \n"
+										f"{int(density)} x {ts_percent}%, \n"
+										f"{avg_atr_per}% hour ATR, \n"
+										f"{trades_k}K trades"
+									)
 					
 					for a in range(3, 120):
 						if low[-a] == min(low[-1: -a - 4: -1]):
@@ -125,7 +131,13 @@ def search(
 									distance <= 0.6 and distance < to_sup:
 									
 									to_sup = distance
-									lower_low = f"{symbol}, sup {min(low[-a], low[-b])}, {int(density)}x{ts_percent}%, {trades_k}K trades"
+									lower_low = (
+										f"{symbol} resistance, \n"
+										f"{min(low[-a], low[-b])} level, \n"
+										f"{int(density)} x {ts_percent}%, \n"
+										f"{avg_atr_per}% hour ATR, \n"
+										f"{trades_k}K trades"
+									)
 
 					if higher_high:
 						s_queue.put(higher_high)
