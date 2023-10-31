@@ -140,7 +140,7 @@ def printer(s_queue):
 	
 	while not s_queue.empty():
 		data = s_queue.get()
-		message += str(data) + "\n"
+		message += str(data) + "\n\n"
 	
 	if message:
 		print("")
