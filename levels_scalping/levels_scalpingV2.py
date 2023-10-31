@@ -98,31 +98,31 @@ def search(
 					lower_low = ""
 					
 					for a in range(3, 120):
-						if high[-a] == max(high[-1: -a -6: -1]):
+						if high[-a] == max(high[-1: -a - 4: -1]):
 							
-							for b in range(a+6, 120):
+							for b in range(a + 4, 120):
 								
 								distance = abs(close[-1] - max(high[-a], high[-b])) / (max(high[-a], high[-b]) / 100)
 								distance = float('{:.2f}'.format(distance))
 								
 								if high[-a] + tick_size >= high[-b] >= high[-a] - tick_size and \
 									max(high[-a], high[-b]) == max(high[-1: -b - 2: -1]) and \
-									distance <= 1 and distance < to_res:
+									distance <= 0.6 and distance < to_res:
 									
 									to_res = distance
 									higher_high = f"{symbol}, res {max(high[-a], high[-b])}, dist {distance}%"
 					
 					for a in range(3, 120):
-						if low[-a] == min(low[-1: -a - 6: -1]):
+						if low[-a] == min(low[-1: -a - 4: -1]):
 							
-							for b in range(a + 6, 120):
+							for b in range(a + 4, 120):
 								
 								distance = abs(close[-1] - min(low[-a], low[-b])) / (close[-1] / 100)
 								distance = float('{:.2f}'.format(distance))
 							
 								if low[-a] + tick_size >= low[-b] >= low[-a] - tick_size and \
 									min(low[-a], low[-b]) == min(low[-1: -b - 2: -1]) and \
-									distance <= 1 and distance < to_sup:
+									distance <= 0.6 and distance < to_sup:
 									
 									to_sup = distance
 									lower_low = f"{symbol}, sup {min(low[-a], low[-b])}, dist {distance}%"
