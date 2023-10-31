@@ -140,7 +140,7 @@ if __name__ == '__main__':
 	proc = 15
 	gap_filter = float(input("Max gap filter (def. 0.2%): ") or 0.2)
 	density_filter = int(input("Density filter (def. 30): ") or 30)
-	tick_size_filter = float(input("Ticksize filter (def. 0.02%): ") or 0.02)
+	tick_size_filter = float(input("Ticksize filter (def. 0.03%): ") or 0.03)
 	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	
 	bot1.send_message(662482931,
