@@ -84,7 +84,7 @@ def search(
 						highs = high[-3: -s: -1]
 						highs = sorted(highs, reverse=False)
 						
-						if highs[-1] - highs[-3] <= tick_size * 3 and max([high[-1], high[-2]]) <= highs[-1]:
+						if highs[-1] - highs[-4] <= tick_size * 3 and max([high[-1], high[-2]]) <= highs[-1]:
 							distance = abs(close[-1] - highs[-1]) / (close[-1] / 100)
 							distance = float('{:.2f}'.format(distance))
 							
@@ -102,7 +102,7 @@ def search(
 						lows = low[-3: -s: -1]
 						lows = sorted(lows, reverse=True)
 					
-						if lows[-3] - lows[-1] <= tick_size * 3 and min([low[-1], low[-2]]) >= lows[-1]:
+						if lows[-4] - lows[-1] <= tick_size * 3 and min([low[-1], low[-2]]) >= lows[-1]:
 							distance = abs(close[-1] - lows[-1]) / (close[-1] / 100)
 							distance = float('{:.2f}'.format(distance))
 							
