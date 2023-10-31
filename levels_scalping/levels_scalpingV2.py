@@ -78,7 +78,7 @@ def search(
 				
 				# ==== TICKSIZE % ====
 				ts_percent = tick_size / (close[-1] / 100)
-				ts_percent = float('{:.4f}'.format(ts_percent))
+				ts_percent = float('{:.3f}'.format(ts_percent))
 				
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
@@ -110,7 +110,7 @@ def search(
 									distance <= 0.6 and distance < to_res:
 									
 									to_res = distance
-									higher_high = f"{symbol}, res {max(high[-a], high[-b])}, dist {distance}%"
+									higher_high = f"{symbol}, res {max(high[-a], high[-b])}, {int(density)}x{ts_percent}%, {trades}K trades"
 					
 					for a in range(3, 120):
 						if low[-a] == min(low[-1: -a - 4: -1]):
@@ -125,7 +125,7 @@ def search(
 									distance <= 0.6 and distance < to_sup:
 									
 									to_sup = distance
-									lower_low = f"{symbol}, sup {min(low[-a], low[-b])}, dist {distance}%"
+									lower_low = f"{symbol}, sup {min(low[-a], low[-b])}, {int(density)}x{ts_percent}%, {trades}K trades"
 
 					if higher_high:
 						print(higher_high)
