@@ -128,11 +128,9 @@ def search(
 									lower_low = f"{symbol}, sup {min(low[-a], low[-b])}, {int(density)}x{ts_percent}%, {trades_k}K trades"
 
 					if higher_high:
-						print(higher_high)
 						s_queue.put(higher_high)
 					
 					if lower_low:
-						print(lower_low)
 						s_queue.put(lower_low)
 
 
