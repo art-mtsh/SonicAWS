@@ -143,6 +143,7 @@ def printer(s_queue):
 		message += str(data) + "\n"
 	
 	if message:
+		print("")
 		print(message)
 		bot1.send_message(662482931, message)
 
