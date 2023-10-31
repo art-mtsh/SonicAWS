@@ -15,6 +15,7 @@ def search(
 		gap_filter,
 		density_filter,
 		atr_per_filter,
+		trades_k_filter,
 		s_queue
 		):
 	
@@ -27,20 +28,24 @@ def search(
 		futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
 		spot_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
 		klines = requests.get(futures_klines)
+		
 		if klines.status_code == 200:
 			response_length = len(klines.json()) if klines.json() != None else 0
+			
 			if response_length == request_limit_length:
+				
 				binance_candle_data = klines.json()
 				open = list(float(i[1]) for i in binance_candle_data)
 				high = list(float(i[2]) for i in binance_candle_data)
 				low = list(float(i[3]) for i in binance_candle_data)
 				close = list(float(i[4]) for i in binance_candle_data)
 				volume = list(float(i[5]) for i in binance_candle_data)
+				trades = list(int(i[8]) for i in binance_candle_data)
 				buy_volume = list(float(i[9]) for i in binance_candle_data)
 				sell_volume = [volume[0] - buy_volume[0]]
 				max_gap = 0
 				
-				# ==== GAP AND SELL VOLUME ====
+				# ==== GAP, SELL.V, 1H DENSITY ====
 				for curr_index in range(1, len(close)):
 					gap = abs(open[curr_index] - close[curr_index - 1])
 					gap_p = 0
@@ -54,8 +59,8 @@ def search(
 				density = (max(high[-60: -1]) - min(low[-60: -1])) / tick_size
 				
 				# ==== AVERAGE ATR % ====
-				avg_atr_per = [(high[-c] - low[-c]) / (high[-c] / 100) for c in range(60)]
-				avg_atr_per = float('{:.4f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
+				avg_atr_per = [(high[-c] - low[-c]) / (close[-c] / 100) for c in range(60)]
+				avg_atr_per = float('{:.2f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
 				
 				# ==== VOLUME DYNAMIC ====
 				volume_dynamic = None
@@ -68,52 +73,62 @@ def search(
 					else:
 						volume_dynamic = "n/a"
 				
+				# ==== THOUSANDS TRADES ====
+				trades_k = int(sum(trades) / 1000)
+				
+				# ==== TICKSIZE % ====
+				ts_percent = tick_size / (close[-1] / 100)
+				ts_percent = float('{:.4f}'.format(ts_percent))
+				
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
 					low[-1] != 0 and close[-1] != 0 and \
 					max_gap <= gap_filter and \
 					density >= density_filter and \
 					avg_atr_per >= atr_per_filter and \
+					trades_k >= trades_k_filter and \
 					len(high) == len(low) == request_limit_length:
 					
+					print(f"{symbol}, gap {max_gap}%, dens {int(density)}, atr {avg_atr_per}%, tick {ts_percent}%, trades {int(sum(trades) / 1000)}K, vol {volume_dynamic}%")
+					
+					to_res = 100
 					higher_high = ""
+					
+					to_sup = 100
 					lower_low = ""
 					
-					for s in range(10, 60):
-						
-						highs = high[-3: -s: -1]
-						highs = sorted(highs, reverse=False)
-						
-						if highs[-1] - highs[-4] <= tick_size * 3 and max([high[-1], high[-2]]) <= highs[-1]:
-							distance = abs(close[-1] - highs[-1]) / (close[-1] / 100)
-							distance = float('{:.2f}'.format(distance))
+					for a in range(3, 120):
+						if high[-a] == max(high[-1: -a -6: -1]):
 							
-							if distance <= 1:
-								higher_high = (
-									f"{symbol}, \n"
-									f"resist: {highs[-1]} (1-{s}), \n"
-									f"dist: {distance}% \n"
-									f"volume dynamic: {volume_dynamic}% \n"
-								)
-								break
-						
-					for s in range(10, 60):
-						
-						lows = low[-3: -s: -1]
-						lows = sorted(lows, reverse=True)
+							for b in range(a+6, 120):
+								
+								distance = abs(close[-1] - max(high[-a], high[-b])) / (max(high[-a], high[-b]) / 100)
+								distance = float('{:.2f}'.format(distance))
+								
+								if high[-a] + tick_size >= high[-b] >= high[-a] - tick_size and \
+									max(high[-a], high[-b]) == max(high[-1: -b - 2: -1]) and \
+									distance <= 1 and distance < to_res:
+									
+									to_res = distance
+									higher_high = f"{symbol}, res {max(high[-a], high[-b])}, dist {distance}%"
+									print(higher_high)
+
 					
-						if lows[-4] - lows[-1] <= tick_size * 3 and min([low[-1], low[-2]]) >= lows[-1]:
-							distance = abs(close[-1] - lows[-1]) / (close[-1] / 100)
-							distance = float('{:.2f}'.format(distance))
+					for a in range(3, 120):
+						if low[-a] == min(low[-1: -a - 6: -1]):
 							
-							if distance <= 1:
-								lower_low = (
-									f"{symbol}, \n"
-									f"support: {lows[-1]} (1-{s}), \n"
-									f"dist: {distance}% \n"
-									f"volume dynamic: {volume_dynamic}% \n"
-								)
-								break
+							for b in range(a + 6, 120):
+								
+								distance = abs(close[-1] - min(low[-a], low[-b])) / (close[-1] / 100)
+								distance = float('{:.2f}'.format(distance))
+							
+								if low[-a] + tick_size >= low[-b] >= low[-a] - tick_size and \
+									min(low[-a], low[-b]) == min(low[-1: -b - 2: -1]) and \
+									distance <= 1 and distance < to_sup:
+									
+									to_sup = distance
+									lower_low = f"{symbol}, sup {min(low[-a], low[-b])}, dist {distance}%"
+									print(lower_low)
 
 					if higher_high:
 						print(higher_high)
@@ -133,22 +148,25 @@ def printer(s_queue):
 		message += str(data) + "\n"
 	
 	if message:
+	# 	print(message)
 		bot1.send_message(662482931, message)
 
 if __name__ == '__main__':
 	
-	proc = 15
-	gap_filter = float(input("Max gap filter (def. 0.2%): ") or 0.2)
-	density_filter = int(input("Density filter (def. 30): ") or 30)
-	tick_size_filter = float(input("Ticksize filter (def. 0.03%): ") or 0.03)
-	atr_per_filter = float(input("ATR% filter (def. 0.3%): ") or 0.3)
+	proc = 13
+	gap_filter = 0.5 # float(input("Max gap filter (def. 0.2%): ") or 0.2)
+	density_filter = 30 # int(input("Density filter (def. 30): ") or 30)
+	tick_size_filter = 0.05 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
+	atr_per_filter = 0.20 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
+	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
 	
 	bot1.send_message(662482931,
 	                  f"Processes = {proc} \n\n"
 	                  f"Gap filter = {gap_filter}% \n"
 	                  f"Density filter = {density_filter} \n"
 	                  f"Tick size filter = {tick_size_filter}% \n"
-	                  f"ATR% filter = {atr_per_filter}\n\n"
+	                  f"ATR% filter = {atr_per_filter}% \n"
+	                  f"Trades = {trades_k_filter}K \n\n"
 	                  f"💵💵💵💵💵"
 					)
 	
@@ -173,13 +191,7 @@ if __name__ == '__main__':
 		frame = "1m"
 		time1 = time.perf_counter()
 		
-		pairs = binance_pairs(
-			chunks=proc,
-			quote_assets=["USDT"],
-			day_range_filter=1,
-			day_density_filter=density_filter,
-			tick_size_filter=tick_size_filter
-		)
+		pairs = binance_pairs(proc - 1, ["USDT"], 1, density_filter, tick_size_filter)
 		
 		print(datetime.now().strftime('%H:%M:%S.%f')[:-3])
 		print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs on {frame}")
@@ -194,6 +206,7 @@ if __name__ == '__main__':
 			                      gap_filter,
 			                      density_filter,
 			                      atr_per_filter,
+				                  trades_k_filter,
 			                      shared_queue,
 			                      ))
 			the_processes.append(process)

@@ -55,7 +55,9 @@ def binance_pairs(chunks, quote_assets, day_range_filter, day_density_filter, ti
 
     return chunked_symbols
 
-#
-# pairs = binance_pairs(16, ["USDT"], 5, 100, 0.02, 1)
+
+# pairs = binance_pairs(15, ["USDT"], 0, 0, 100)
 # for i in pairs:
 #     print(i)
+#
+# print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs")
