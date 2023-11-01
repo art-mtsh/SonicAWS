@@ -189,7 +189,7 @@ if __name__ == '__main__':
 			last_hour_digit = int(now.strftime('%H'))
 			last_minute_digit = now.strftime('%M')
 			last_second_digit = now.strftime('%S')
-			time.sleep(0.1)
+			# time.sleep(0.1)
 			
 			# Перевірка в 04:15 , 09:30 , 14:45 ....
 			if int(last_second_digit) == 0:
