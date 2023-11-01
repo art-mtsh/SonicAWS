@@ -136,7 +136,7 @@ def search(
 									
 									to_sup = distance
 									lower_low = (
-										f"{symbol} resistance, \n"
+										f"{symbol} support, \n"
 										f"{min(low[-a], low[-b])} level, \n"
 										f"{int(density)} x {ts_percent}%, \n"
 										f"{avg_atr_per}% hour ATR, \n"
