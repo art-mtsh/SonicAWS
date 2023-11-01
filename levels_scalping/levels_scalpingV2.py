@@ -166,7 +166,7 @@ if __name__ == '__main__':
 	
 	proc = 13
 	gap_filter = 0.5 # float(input("Max gap filter (def. 0.2%): ") or 0.2)
-	density_filter = 50 # int(input("Density filter (def. 30): ") or 30)
+	density_filter = 40 # int(input("Density filter (def. 30): ") or 30)
 	tick_size_filter = 0.05 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
 	atr_per_filter = 0.20 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
