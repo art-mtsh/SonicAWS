@@ -83,8 +83,11 @@ def search(
 				ts_percent = float('{:.3f}'.format(ts_percent))
 				
 				if symbol == "BTCUSDT":
-					print(f"{symbol}: {trades_k}K on {request_limit_length} candles")
-				
+					
+					message = (f"{symbol}: {trades_k}K on {request_limit_length} candles")
+					# print(message)
+					bot1.send_message(662482931, message)
+					
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
 					low[-1] != 0 and close[-1] != 0 and \
@@ -154,14 +157,15 @@ def search(
 
 def printer(s_queue):
 	
-	message = ""
+	# message = ""
 	
 	while not s_queue.empty():
 		data = s_queue.get()
-		message += "\n" + str(data) + "\n"
+		# message += "\n" + str(data) + "\n"
+		bot1.send_message(662482931, str(data))
 	
-	if message:
-		print(message)
+	# if message:
+	# 	print(message)
 		# bot1.send_message(662482931, message)
 
 if __name__ == '__main__':
@@ -173,14 +177,24 @@ if __name__ == '__main__':
 	atr_per_filter = 0.20 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
 	
-	print(f"\n"
-	      f"Processes = {proc} \n"
-          f"Gap filter = {gap_filter}% \n"
-          f"Density filter = {density_filter} \n"
-          f"Tick size filter = {tick_size_filter}% \n"
-          f"ATR% filter = {atr_per_filter}% \n"
-          f"Trades = {trades_k_filter}K \n"
-		)
+	# print(f"\n"
+	#       f"Processes = {proc} \n"
+    #       f"Gap filter = {gap_filter}% \n"
+    #       f"Density filter = {density_filter} \n"
+    #       f"Tick size filter = {tick_size_filter}% \n"
+    #       f"ATR% filter = {atr_per_filter}% \n"
+    #       f"Trades = {trades_k_filter}K \n"
+	# 	)
+	
+	bot1.send_message(662482931,
+	                  f"Processes = {proc} \n\n"
+	                  f"Gap filter = {gap_filter}% \n"
+	                  f"Density filter = {density_filter} \n"
+	                  f"Tick size filter = {tick_size_filter}% \n"
+	                  f"ATR% filter = {atr_per_filter}% \n"
+	                  f"Trades = {trades_k_filter}K \n\n"
+	                  f"💵💵💵💵💵"
+					)
 	
 	def waiting():
 		
