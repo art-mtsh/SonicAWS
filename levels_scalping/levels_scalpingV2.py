@@ -157,7 +157,7 @@ def printer(s_queue):
 	if message:
 		print("")
 		print(message)
-		bot1.send_message(662482931, message)
+		# bot1.send_message(662482931, message)
 
 if __name__ == '__main__':
 	
@@ -168,15 +168,15 @@ if __name__ == '__main__':
 	atr_per_filter = 0.20 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
 	
-	bot1.send_message(662482931,
-	                  f"Processes = {proc} \n\n"
-	                  f"Gap filter = {gap_filter}% \n"
-	                  f"Density filter = {density_filter} \n"
-	                  f"Tick size filter = {tick_size_filter}% \n"
-	                  f"ATR% filter = {atr_per_filter}% \n"
-	                  f"Trades = {trades_k_filter}K \n\n"
-	                  f"💵💵💵💵💵"
-					)
+	# bot1.send_message(662482931,
+	#                   f"Processes = {proc} \n\n"
+	#                   f"Gap filter = {gap_filter}% \n"
+	#                   f"Density filter = {density_filter} \n"
+	#                   f"Tick size filter = {tick_size_filter}% \n"
+	#                   f"ATR% filter = {atr_per_filter}% \n"
+	#                   f"Trades = {trades_k_filter}K \n\n"
+	#                   f"💵💵💵💵💵"
+	# 				)
 	
 	def waiting():
 		
