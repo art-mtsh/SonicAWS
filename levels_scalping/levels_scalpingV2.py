@@ -14,6 +14,7 @@ def search(
 		frame,
 		gap_filter,
 		density_filter,
+		tick_size_filter,
 		atr_per_filter,
 		trades_k_filter,
 		s_queue
@@ -84,9 +85,10 @@ def search(
 				
 				if symbol == "BTCUSDT":
 					
-					message = (f"{symbol}: {trades_k}K on {request_limit_length} candles")
+					s_queue.put(f"{symbol}: {trades_k}K on {request_limit_length} candles")
+					# message = (f"{symbol}: {trades_k}K on {request_limit_length} candles")
 					# print(message)
-					bot1.send_message(662482931, message)
+					# bot1.send_message(662482931, message)
 					
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
@@ -114,17 +116,19 @@ def search(
 								distance = abs(close[-1] - max(high[-a], high[-b])) / (max(high[-a], high[-b]) / 100)
 								distance = float('{:.2f}'.format(distance))
 								
-								if high[-a] + high[-a] * 0.0002 >= high[-b] >= high[-a] - high[-a] * 0.0002 and \
-									max(high[-a], high[-b]) == max(high[-1: -b - 2: -1]) and \
-									distance <= 0.8 and distance < to_res:
+								if high[-a] + high[-a] * (tick_size_filter / 100) >= high[-b] >= high[-a] - high[-a] * (tick_size_filter / 100) and \
+									max(high[-a], high[-b]) == max(high[-1: -b - 11: -1]) and \
+									distance <= 5 and distance < to_res:
 									
 									to_res = distance
 									higher_high = (
-										f"{symbol} resistance, \n"
+										f"{symbol} resistance in {distance}%, \n"
 										f"{max(high[-a], high[-b])} level, \n"
 										f"{int(density)} x {ts_percent}%, \n"
 										f"{avg_atr_per}% hour ATR, \n"
-										f"{trades_k}K trades"
+										f"{trades_k}K trades, \n"
+										f"{int(density)} density, \n"
+										f"{volume_dynamic}% vol dynamic"
 									)
 					
 					for a in range(3, 120):
@@ -135,17 +139,19 @@ def search(
 								distance = abs(close[-1] - min(low[-a], low[-b])) / (close[-1] / 100)
 								distance = float('{:.2f}'.format(distance))
 							
-								if low[-a] + low[-a] * 0.0002 >= low[-b] >= low[-a] - low[-a] * 0.0002 and \
-									min(low[-a], low[-b]) == min(low[-1: -b - 2: -1]) and \
-									distance <= 0.8 and distance < to_sup:
+								if low[-a] + low[-a] * (tick_size_filter / 100) >= low[-b] >= low[-a] - low[-a] * (tick_size_filter / 100) and \
+									min(low[-a], low[-b]) == min(low[-1: -b - 11: -1]) and \
+									distance <= 5 and distance < to_sup:
 									
 									to_sup = distance
 									lower_low = (
-										f"{symbol} support, \n"
+										f"{symbol} support in {distance}%, \n"
 										f"{min(low[-a], low[-b])} level, \n"
 										f"{int(density)} x {ts_percent}%, \n"
 										f"{avg_atr_per}% hour ATR, \n"
-										f"{trades_k}K trades"
+										f"{trades_k}K trades, \n"
+										f"{int(density)} density, \n"
+										f"{volume_dynamic}% vol dynamic"
 									)
 
 					if higher_high:
@@ -170,11 +176,11 @@ def printer(s_queue):
 
 if __name__ == '__main__':
 	
-	proc = int(input("Processes (def. 14): ") or 14)
+	proc = 15
 	gap_filter = 0.5 # float(input("Max gap filter (def. 0.2%): ") or 0.2)
-	density_filter = 50 # int(input("Density filter (def. 30): ") or 30)
-	tick_size_filter = 0.03 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
-	atr_per_filter = 0.20 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
+	density_filter = 75 # int(input("Density filter (def. 30): ") or 30)
+	tick_size_filter = 0.04 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
+	atr_per_filter = 0.30 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
 	
 	# print(f"\n"
@@ -186,15 +192,15 @@ if __name__ == '__main__':
     #       f"Trades = {trades_k_filter}K \n"
 	# 	)
 	
-	bot1.send_message(662482931,
-	                  f"Processes = {proc} \n\n"
-	                  f"Gap filter = {gap_filter}% \n"
-	                  f"Density filter = {density_filter} \n"
-	                  f"Tick size filter = {tick_size_filter}% \n"
-	                  f"ATR% filter = {atr_per_filter}% \n"
-	                  f"Trades = {trades_k_filter}K \n\n"
-	                  f"💵💵💵💵💵"
-					)
+	# bot1.send_message(662482931,
+	#                   f"Processes = {proc} \n\n"
+	#                   f"Gap filter = {gap_filter}% \n"
+	#                   f"Density filter = {density_filter} \n"
+	#                   f"Tick size filter = {tick_size_filter}% \n"
+	#                   f"ATR% filter = {atr_per_filter}% \n"
+	#                   f"Trades = {trades_k_filter}K \n\n"
+	#                   f"💵💵💵💵💵"
+	# 				)
 	
 	def waiting():
 		
@@ -203,13 +209,13 @@ if __name__ == '__main__':
 			last_hour_digit = int(now.strftime('%H'))
 			last_minute_digit = now.strftime('%M')
 			last_second_digit = now.strftime('%S')
-			# time.sleep(0.1)
+			time.sleep(1)
 			
 			# Перевірка в 04:15 , 09:30 , 14:45 ....
 			if int(last_second_digit) == 0:
 				break
 
-	if True:
+	while True:
 		
 		manager = Manager()
 		shared_queue = manager.Queue()
@@ -217,10 +223,7 @@ if __name__ == '__main__':
 		frame = "1m"
 		time1 = time.perf_counter()
 		
-		pairs = binance_pairs(proc - 1, ["USDT"], 1, density_filter, tick_size_filter)
-		
-		# for i in pairs:
-		# 	print(i)
+		pairs = binance_pairs(proc - 1, ["USDT"], 2, density_filter, tick_size_filter)
 		
 		print(f">>> {datetime.now().strftime('%H:%M:%S')} / {sum(len(inner_list) for inner_list in pairs)} pairs")
 		
@@ -232,18 +235,13 @@ if __name__ == '__main__':
 			                      frame,
 			                      gap_filter,
 			                      density_filter,
+				                  tick_size_filter,
 			                      atr_per_filter,
 				                  trades_k_filter,
 			                      shared_queue,
 			                      ))
 			the_processes.append(process)
-			
-			# sender_process = Process(target=printer,
-			#                          args=(
-			# 	                         shared_queue,
-			#                          ))
-			# the_processes.append(sender_process)
-			
+
 		for pro in the_processes:
 			pro.start()
 		
@@ -261,5 +259,5 @@ if __name__ == '__main__':
 		print(f"<<< {datetime.now().strftime('%H:%M:%S')} / {int(time3)} seconds")
 		print("")
 		
-		# waiting()
+		waiting()
 		
