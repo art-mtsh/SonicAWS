@@ -180,7 +180,6 @@ if __name__ == '__main__':
           f"Tick size filter = {tick_size_filter}% \n"
           f"ATR% filter = {atr_per_filter}% \n"
           f"Trades = {trades_k_filter}K \n"
-          f"\n"
 		)
 	
 	def waiting():
