@@ -204,8 +204,7 @@ if __name__ == '__main__':
 		
 		pairs = binance_pairs(proc - 1, ["USDT"], 1, density_filter, tick_size_filter)
 
-		print(f"{datetime.now().strftime('%H:%M:%S')}, {sum(len(inner_list) for inner_list in pairs)} pairs")
-		print(f">>>")
+		print(f">>> [{datetime.now().strftime('%H:%M:%S')}] {sum(len(inner_list) for inner_list in pairs)} pairs")
 		
 		the_processes = []
 		for proc_number in range(proc):
@@ -234,9 +233,8 @@ if __name__ == '__main__':
 			
 		time2 = time.perf_counter()
 		time3 = time2 - time1
-		
-		print(f"<<<")
-		print(f"{datetime.now().strftime('%H:%M:%S')}, done in {int(time3)} s.")
+
+		print(f"<<< [{datetime.now().strftime('%H:%M:%S')}] {int(time3)} seconds")
 		print("")
 		
 		waiting()
