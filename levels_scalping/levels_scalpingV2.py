@@ -203,9 +203,8 @@ if __name__ == '__main__':
 		time1 = time.perf_counter()
 		
 		pairs = binance_pairs(proc - 1, ["USDT"], 1, density_filter, tick_size_filter)
-		
-		print(datetime.now().strftime('%H:%M:%S.%f')[:-3])
-		print(f"Start search for {sum(len(inner_list) for inner_list in pairs)} pairs on {frame}")
+
+		print(f"{datetime.now().strftime('%H:%M:%S')}, {sum(len(inner_list) for inner_list in pairs)} pairs")
 		print(f">>>")
 		
 		the_processes = []
@@ -237,8 +236,7 @@ if __name__ == '__main__':
 		time3 = time2 - time1
 		
 		print(f"<<<")
-		print(f"Finished search in {int(time3)} seconds")
-		print(datetime.now().strftime('%H:%M:%S.%f')[:-3])
+		print(f"{datetime.now().strftime('%H:%M:%S')}, done in {int(time3)} s.")
 		print("")
 		
 		waiting()
