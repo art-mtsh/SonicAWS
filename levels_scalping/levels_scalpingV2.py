@@ -159,7 +159,6 @@ def printer(s_queue):
 		message += str(data) + "\n\n"
 	
 	if message:
-		print("")
 		print(message)
 		# bot1.send_message(662482931, message)
 
@@ -222,9 +221,6 @@ if __name__ == '__main__':
 			                      shared_queue,
 			                      ))
 			the_processes.append(process)
-		
-		# print_process = Process(target=printer, args=(shared_queue, ))
-		# the_processes.append(print_process)
 			
 		for pro in the_processes:
 			pro.start()
