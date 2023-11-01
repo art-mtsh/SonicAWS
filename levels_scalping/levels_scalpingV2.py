@@ -248,5 +248,5 @@ if __name__ == '__main__':
 		print(f"<<< {datetime.now().strftime('%H:%M:%S')} / {int(time3)} seconds")
 		print("")
 		
-		waiting()
+		# waiting()
 		
