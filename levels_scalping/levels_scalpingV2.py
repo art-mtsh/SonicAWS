@@ -109,7 +109,7 @@ def search(
 								distance = abs(close[-1] - max(high[-a], high[-b])) / (max(high[-a], high[-b]) / 100)
 								distance = float('{:.2f}'.format(distance))
 								
-								if high[-a] + high[-a] * 0.0003 >= high[-b] >= high[-a] - high[-a] * 0.0003 and \
+								if high[-a] + high[-a] * 0.0002 >= high[-b] >= high[-a] - high[-a] * 0.0002 and \
 									max(high[-a], high[-b]) == max(high[-1: -b - 2: -1]) and \
 									distance <= 0.8 and distance < to_res:
 									
@@ -130,7 +130,7 @@ def search(
 								distance = abs(close[-1] - min(low[-a], low[-b])) / (close[-1] / 100)
 								distance = float('{:.2f}'.format(distance))
 							
-								if low[-a] + low[-a] * 0.0003 >= low[-b] >= low[-a] - low[-a] * 0.0003 and \
+								if low[-a] + low[-a] * 0.0002 >= low[-b] >= low[-a] - low[-a] * 0.0002 and \
 									min(low[-a], low[-b]) == min(low[-1: -b - 2: -1]) and \
 									distance <= 0.8 and distance < to_sup:
 									
@@ -166,8 +166,8 @@ if __name__ == '__main__':
 	
 	proc = 13
 	gap_filter = 0.5 # float(input("Max gap filter (def. 0.2%): ") or 0.2)
-	density_filter = 40 # int(input("Density filter (def. 30): ") or 30)
-	tick_size_filter = 0.05 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
+	density_filter = 50 # int(input("Density filter (def. 30): ") or 30)
+	tick_size_filter = 0.03 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
 	atr_per_filter = 0.20 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
 	
@@ -219,6 +219,12 @@ if __name__ == '__main__':
 			                      shared_queue,
 			                      ))
 			the_processes.append(process)
+			
+			# sender_process = Process(target=printer,
+			#                          args=(
+			# 	                         shared_queue,
+			#                          ))
+			# the_processes.append(sender_process)
 			
 		for pro in the_processes:
 			pro.start()
