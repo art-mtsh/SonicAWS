@@ -81,7 +81,7 @@ def search(
 				ts_percent = float('{:.3f}'.format(ts_percent))
 				
 				if symbol == "BTCUSDT":
-					print(f"{symbol} had {trades_k}K trades for last {request_limit_length} candles")
+					print(f"{symbol}: {trades_k}K on {request_limit_length} candles")
 				
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
@@ -109,9 +109,9 @@ def search(
 								distance = abs(close[-1] - max(high[-a], high[-b])) / (max(high[-a], high[-b]) / 100)
 								distance = float('{:.2f}'.format(distance))
 								
-								if high[-a] + high[-a] * 0.0002 >= high[-b] >= high[-a] - high[-a] * 0.0002 and \
+								if high[-a] + high[-a] * 0.0003 >= high[-b] >= high[-a] - high[-a] * 0.0003 and \
 									max(high[-a], high[-b]) == max(high[-1: -b - 2: -1]) and \
-									distance <= 0.6 and distance < to_res:
+									distance <= 0.8 and distance < to_res:
 									
 									to_res = distance
 									higher_high = (
@@ -130,9 +130,9 @@ def search(
 								distance = abs(close[-1] - min(low[-a], low[-b])) / (close[-1] / 100)
 								distance = float('{:.2f}'.format(distance))
 							
-								if low[-a] + low[-a] * 0.0002 >= low[-b] >= low[-a] - low[-a] * 0.0002 and \
+								if low[-a] + low[-a] * 0.0003 >= low[-b] >= low[-a] - low[-a] * 0.0003 and \
 									min(low[-a], low[-b]) == min(low[-1: -b - 2: -1]) and \
-									distance <= 0.6 and distance < to_sup:
+									distance <= 0.8 and distance < to_sup:
 									
 									to_sup = distance
 									lower_low = (
@@ -204,7 +204,7 @@ if __name__ == '__main__':
 		
 		pairs = binance_pairs(proc - 1, ["USDT"], 1, density_filter, tick_size_filter)
 
-		print(f">>> [{datetime.now().strftime('%H:%M:%S')}] {sum(len(inner_list) for inner_list in pairs)} pairs")
+		print(f">>> {datetime.now().strftime('%H:%M:%S')} / {sum(len(inner_list) for inner_list in pairs)} pairs")
 		
 		the_processes = []
 		for proc_number in range(proc):
@@ -234,7 +234,7 @@ if __name__ == '__main__':
 		time2 = time.perf_counter()
 		time3 = time2 - time1
 
-		print(f"<<< [{datetime.now().strftime('%H:%M:%S')}] {int(time3)} seconds")
+		print(f"<<< {datetime.now().strftime('%H:%M:%S')} / {int(time3)} seconds")
 		print("")
 		
 		waiting()
