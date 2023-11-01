@@ -81,7 +81,13 @@ def search(
 				ts_percent = float('{:.3f}'.format(ts_percent))
 				
 				if symbol == "BTCUSDT":
-					print(f"{symbol}, gap {max_gap}%, dens {int(density)}, atr {avg_atr_per}%, tick {ts_percent}%, trades {trades_k}K, vol {volume_dynamic}%")
+					print(f"{symbol}, \n"
+					      f"gap {max_gap}%, \n"
+					      f"dens {int(density)}, \n"
+					      f"atr {avg_atr_per}%, \n"
+					      f"tick {ts_percent}%, \n"
+					      f"TRADES {trades_k}K, \n"
+					      f"vol {volume_dynamic}%")
 				
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
@@ -93,7 +99,7 @@ def search(
 					len(high) == len(low) == request_limit_length:
 					
 					# print(f"{symbol}, gap {max_gap}%, dens {int(density)}, atr {avg_atr_per}%, tick {ts_percent}%, trades {trades_k}K, vol {volume_dynamic}%")
-					print(f"{symbol}", end="")
+					# print(f"{symbol}, trades {trades_k}K")
 					
 					to_res = 100
 					higher_high = ""
