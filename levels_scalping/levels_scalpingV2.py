@@ -19,6 +19,8 @@ def search(
 		s_queue
 		):
 	
+	# print(filtered_symbols)
+	
 	for data in filtered_symbols:
 		symbol = data[0]
 		tick_size = data[1]
@@ -164,7 +166,7 @@ def printer(s_queue):
 
 if __name__ == '__main__':
 	
-	proc = 13
+	proc = int(input("Processes (def. 14): ") or 14)
 	gap_filter = 0.5 # float(input("Max gap filter (def. 0.2%): ") or 0.2)
 	density_filter = 50 # int(input("Density filter (def. 30): ") or 30)
 	tick_size_filter = 0.03 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
@@ -203,7 +205,10 @@ if __name__ == '__main__':
 		time1 = time.perf_counter()
 		
 		pairs = binance_pairs(proc - 1, ["USDT"], 1, density_filter, tick_size_filter)
-
+		
+		# for i in pairs:
+		# 	print(i)
+		
 		print(f">>> {datetime.now().strftime('%H:%M:%S')} / {sum(len(inner_list) for inner_list in pairs)} pairs")
 		
 		the_processes = []
