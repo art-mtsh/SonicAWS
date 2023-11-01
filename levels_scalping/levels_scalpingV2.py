@@ -223,8 +223,8 @@ if __name__ == '__main__':
 			                      ))
 			the_processes.append(process)
 		
-		print_process = Process(target=printer, args=(shared_queue, ))
-		the_processes.append(print_process)
+		# print_process = Process(target=printer, args=(shared_queue, ))
+		# the_processes.append(print_process)
 			
 		for pro in the_processes:
 			pro.start()
