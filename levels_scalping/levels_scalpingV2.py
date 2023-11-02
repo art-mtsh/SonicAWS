@@ -18,7 +18,8 @@ def search(
 		atr_per_filter,
 		trades_k_filter,
 		s_queue,
-		search_distance
+		search_distance,
+		levels_scatter
 		):
 	
 	for data in filtered_symbols:
@@ -58,7 +59,8 @@ def search(
 					sell_volume.append(s_v)
 					
 				max_gap = float('{:.3f}'.format(max_gap))
-				density = (max(high[-60: -1]) - min(low[-60: -1])) / tick_size
+				density = [(x - y) / tick_size for x, y in zip(high, low)]
+				density = sum(density) / len(density)
 				
 				# ==== AVERAGE ATR % ====
 				avg_atr_per = [(high[-c] - low[-c]) / (close[-c] / 100) for c in range(60)]
@@ -69,11 +71,14 @@ def search(
 				if len(volume) == request_limit_length:
 					first_period_volume = sum(volume[-60:-1])
 					second_period_volume = sum(volume[-120:-60])
+					third_period_volume = sum(volume[-180:-120])
 					
-					if first_period_volume > 0 and second_period_volume > 0:
-						volume_dynamic = int(first_period_volume / (second_period_volume / 100))
+					if first_period_volume >= second_period_volume >= third_period_volume > 0:
+						volume_dynamic = "Rising"
+					elif 0 < first_period_volume <= second_period_volume <= third_period_volume:
+						volume_dynamic = "Falling"
 					else:
-						volume_dynamic = "n/a"
+						volume_dynamic = "Neutral"
 				
 				# ==== THOUSANDS TRADES ====
 				trades_k = int(sum(trades) / 1000)
@@ -82,7 +87,7 @@ def search(
 				ts_percent = tick_size / (close[-1] / 100)
 				ts_percent = float('{:.3f}'.format(ts_percent))
 				
-				if symbol == "BTCUSDT":
+				if int(datetime.now().strftime('%M')) == 0 and symbol == "BTCUSDT":
 					s_queue.put(f"{symbol}: {trades_k}K on {request_limit_length} candles")
 					
 				# ==== CHECK DATA ====
@@ -107,7 +112,7 @@ def search(
 					               f"{int(density)} density, \n"
 					               f"{trades_k}K trades, \n"
 					               f"{avg_atr_per}% hour ATR, \n"
-					               f"{volume_dynamic}% vol dynamic")
+					               f"{volume_dynamic} volume")
 					
 					# =============== RESISTANCE на ДВОХ точках
 					for a in range(3, 120):
@@ -118,7 +123,7 @@ def search(
 								distance = abs(close[-1] - max(high[-a], high[-b])) / (max(high[-a], high[-b]) / 100)
 								distance = float('{:.2f}'.format(distance))
 								
-								if abs(high[-a] - high[-b]) <= close[-1] * (tick_size_filter / 100) and \
+								if abs(high[-a] - high[-b]) <= close[-1] * levels_scatter and \
 									max(high[-a], high[-b]) == max(high[-1: -b - 11: -1]) and \
 									distance <= search_distance and distance < to_res:
 									
@@ -138,7 +143,7 @@ def search(
 								distance = abs(close[-1] - min(low[-a], low[-b])) / (close[-1] / 100)
 								distance = float('{:.2f}'.format(distance))
 							
-								if abs(low[-a] - low[-b]) <= close[-1] * (tick_size_filter / 100) and \
+								if abs(low[-a] - low[-b]) <= close[-1] * levels_scatter and \
 									min(low[-a], low[-b]) == min(low[-1: -b - 11: -1]) and \
 									distance <= search_distance and distance < to_sup:
 									
@@ -156,7 +161,7 @@ def search(
 						highs = high[-1: -h: -1]
 						highs = sorted(highs, reverse=True)
 						
-						if (max(highs[0: 5]) - min(highs[0:5])) <= close[-1] * (tick_size_filter / 100) and min(highs[0:5]) > high[-1]:
+						if (max(highs[0: 5]) - min(highs[0:5])) <= close[-1] * levels_scatter and min(highs[0:5]) > high[-1]:
 							distance = (min(highs[0:5]) - high[-1]) / (close[-1] / 100)
 							distance = float('{:.2f}'.format(distance))
 							
@@ -171,7 +176,7 @@ def search(
 						lows = low[-1: -h: -1]
 						lows = sorted(lows, reverse=False)
 						
-						if (max(lows[0: 5]) - min(lows[0:5])) <= close[-1] * (tick_size_filter / 100) and max(lows[0:5]) < low[-1]:
+						if (max(lows[0: 5]) - min(lows[0:5])) <= close[-1] * levels_scatter and max(lows[0:5]) < low[-1]:
 							distance = (low[-1] - max(lows[0:5])) / (close[-1] / 100)
 							distance = float('{:.2f}'.format(distance))
 							
@@ -228,13 +233,15 @@ def printer(s_queue):
 
 if __name__ == '__main__':
 	
-	proc = 15
+	
+	proc = 14
 	gap_filter = 0.5 # float(input("Max gap filter (def. 0.2%): ") or 0.2)
-	density_filter = 75 # int(input("Density filter (def. 30): ") or 30)
-	tick_size_filter = 0.04 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
+	density_filter = 20 # int(input("Density filter (def. 30): ") or 30)
+	tick_size_filter = 0.1 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
 	atr_per_filter = 0.30 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
 	search_distance = 1
+	levels_scatter = 0.03 / 100
 	
 	# print(f"\n"
 	#       f"Processes = {proc} \n"
@@ -293,6 +300,7 @@ if __name__ == '__main__':
 				                  trades_k_filter,
 			                      shared_queue,
 				                  search_distance,
+				                  levels_scatter,
 			                      ))
 			the_processes.append(process)
 
