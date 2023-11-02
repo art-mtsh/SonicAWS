@@ -17,10 +17,9 @@ def search(
 		tick_size_filter,
 		atr_per_filter,
 		trades_k_filter,
-		s_queue
+		s_queue,
+		search_distance
 		):
-	
-	# print(filtered_symbols)
 	
 	for data in filtered_symbols:
 		symbol = data[0]
@@ -84,11 +83,7 @@ def search(
 				ts_percent = float('{:.3f}'.format(ts_percent))
 				
 				if symbol == "BTCUSDT":
-					
 					s_queue.put(f"{symbol}: {trades_k}K on {request_limit_length} candles")
-					# message = (f"{symbol}: {trades_k}K on {request_limit_length} candles")
-					# print(message)
-					# bot1.send_message(662482931, message)
 					
 				# ==== CHECK DATA ====
 				if open[-1] != 0 and high[-1] != 0 and \
@@ -108,6 +103,13 @@ def search(
 					to_sup = 100
 					lower_low = ""
 					
+					information = (f"{ts_percent}% ticksize, \n"
+					               f"{int(density)} density, \n"
+					               f"{trades_k}K trades, \n"
+					               f"{avg_atr_per}% hour ATR, \n"
+					               f"{volume_dynamic}% vol dynamic")
+					
+					# =============== RESISTANCE на ДВОХ точках
 					for a in range(3, 120):
 						if high[-a] == max(high[-1: -a - 4: -1]):
 							
@@ -116,21 +118,18 @@ def search(
 								distance = abs(close[-1] - max(high[-a], high[-b])) / (max(high[-a], high[-b]) / 100)
 								distance = float('{:.2f}'.format(distance))
 								
-								if high[-a] + high[-a] * (tick_size_filter / 100) >= high[-b] >= high[-a] - high[-a] * (tick_size_filter / 100) and \
+								if abs(high[-a] - high[-b]) <= close[-1] * (tick_size_filter / 100) and \
 									max(high[-a], high[-b]) == max(high[-1: -b - 11: -1]) and \
-									distance <= 5 and distance < to_res:
+									distance <= search_distance and distance < to_res:
 									
 									to_res = distance
 									higher_high = (
-										f"{symbol} resistance in {distance}%, \n"
-										f"{max(high[-a], high[-b])} level, \n"
-										f"{int(density)} x {ts_percent}%, \n"
-										f"{avg_atr_per}% hour ATR, \n"
-										f"{trades_k}K trades, \n"
-										f"{int(density)} density, \n"
-										f"{volume_dynamic}% vol dynamic"
+										f"{symbol}: ‼️ resistance in {distance}%, \n"
+										f"{max(high[-a], high[-b])} level, \n" +
+										information
 									)
 					
+					# =============== SUPPORT на ДВОХ точках
 					for a in range(3, 120):
 						if low[-a] == min(low[-1: -a - 4: -1]):
 							
@@ -139,21 +138,74 @@ def search(
 								distance = abs(close[-1] - min(low[-a], low[-b])) / (close[-1] / 100)
 								distance = float('{:.2f}'.format(distance))
 							
-								if low[-a] + low[-a] * (tick_size_filter / 100) >= low[-b] >= low[-a] - low[-a] * (tick_size_filter / 100) and \
+								if abs(low[-a] - low[-b]) <= close[-1] * (tick_size_filter / 100) and \
 									min(low[-a], low[-b]) == min(low[-1: -b - 11: -1]) and \
-									distance <= 5 and distance < to_sup:
+									distance <= search_distance and distance < to_sup:
 									
 									to_sup = distance
 									lower_low = (
-										f"{symbol} support in {distance}%, \n"
-										f"{min(low[-a], low[-b])} level, \n"
-										f"{int(density)} x {ts_percent}%, \n"
-										f"{avg_atr_per}% hour ATR, \n"
-										f"{trades_k}K trades, \n"
-										f"{int(density)} density, \n"
-										f"{volume_dynamic}% vol dynamic"
+										f"{symbol}: ‼️ support in {distance}%, \n"
+										f"{min(low[-a], low[-b])} level, \n" +
+										information
 									)
-
+					
+					
+					for h in range(10, 122, 10):
+						
+						# =============== RESISTANCE на КАНАЛІ
+						highs = high[-1: -h: -1]
+						highs = sorted(highs, reverse=True)
+						
+						if (max(highs[0: 5]) - min(highs[0:5])) <= close[-1] * (tick_size_filter / 100) and min(highs[0:5]) > high[-1]:
+							distance = (min(highs[0:5]) - high[-1]) / (close[-1] / 100)
+							distance = float('{:.2f}'.format(distance))
+							
+							if distance <= search_distance and distance < to_res:
+								higher_high = (
+									f"{symbol}: 〽️ resistance in {distance}%, \n"
+									f"{max(highs[0: 5])} level, \n" +
+									information
+								)
+						
+						# =============== SUPPORT на КАНАЛІ
+						lows = low[-1: -h: -1]
+						lows = sorted(lows, reverse=False)
+						
+						if (max(lows[0: 5]) - min(lows[0:5])) <= close[-1] * (tick_size_filter / 100) and max(lows[0:5]) < low[-1]:
+							distance = (low[-1] - max(lows[0:5])) / (close[-1] / 100)
+							distance = float('{:.2f}'.format(distance))
+							
+							if distance <= search_distance and distance < to_res:
+								lower_low = (
+									f"{symbol}: 〽️ support in {distance}%, \n"
+									f"{min(lows[0:5])} level, \n" +
+									information
+								)
+					
+					# =============== RESISTANCE від ЕКСТРЕМУМА
+					if max(high[-1: -10: -1]) == max(high) and max(high[-1: -10: -1]) > high[-1]:
+						distance = abs(max(high[-1: -10: -1]) - high[-1]) / (close[-1] / 100)
+						distance = float('{:.2f}'.format(distance))
+						
+						if distance <= search_distance and distance < to_res:
+							higher_high = (
+								f"{symbol}: 🔥 resistance in {distance}%, \n"
+								f"{max(high[-1: -10: -1])} level, \n" +
+								information
+							)
+					
+					# # =============== SUPPORT на ЕКСТРЕМУМІ
+					# if min(low[-1: -10: -1]) == min(low) and min(low[-1: -10: -1]) < low[-1]:
+					# 	distance = abs(min(low[-1: -10: -1]) - low[-1]) / (close[-1] / 100)
+					# 	distance = float('{:.2f}'.format(distance))
+					#
+					# 	if distance <= search_distance and distance < to_res:
+					# 		lower_low = (
+					# 			f"{symbol}: 🔥 support in {distance}%, \n"
+					# 			f"{min(low[-1: -10: -1])} level, \n" +
+					#			information
+					# 		)
+							
 					if higher_high:
 						s_queue.put(higher_high)
 					
@@ -182,6 +234,7 @@ if __name__ == '__main__':
 	tick_size_filter = 0.04 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
 	atr_per_filter = 0.30 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
+	search_distance = 1
 	
 	# print(f"\n"
 	#       f"Processes = {proc} \n"
@@ -239,6 +292,7 @@ if __name__ == '__main__':
 			                      atr_per_filter,
 				                  trades_k_filter,
 			                      shared_queue,
+				                  search_distance,
 			                      ))
 			the_processes.append(process)
 
