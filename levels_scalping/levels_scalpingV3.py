@@ -61,7 +61,7 @@ def search(
 			
 			# print(f"{symbol}: {distance_1}, {distance_2}, {distance_3}")
 			
-			search_distance = 1
+			search_distance = 1.0
 			max_minimum_candle = 4
 			multiplier = 2
 			
@@ -72,34 +72,41 @@ def search(
 				if distance_1 == minimum_dist and \
 					combined_list[-1][1] >= combined_list[-max_minimum_candle][1] * multiplier:
 					
-					decimal_x = len(str(combined_list[-1][1]).split('.')[-1].rstrip('0'))
+					decimal_x = len(str(combined_list[-1][0]).split('.')[-1].rstrip('0'))
 					
-					msg = f"\n{symbol}: {combined_list[-1][0]} {decimal_x}/{max_decimal} {int(combined_list[-1][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_1}%"
-					print(msg)
-					bot1.send_message(662482931, msg)
+					if max_decimal - decimal_x > 1:
+					
+						msg = f"\n{symbol}: {combined_list[-1][0]} {decimal_x}/{max_decimal} {int(combined_list[-1][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_1}%"
+						print(msg)
+						bot1.send_message(662482931, msg)
 	
 				elif distance_2 == minimum_dist and \
 					combined_list[-2][1] >= combined_list[-max_minimum_candle][1] * multiplier:
 					
-					decimal_x = len(str(combined_list[-2][1]).split('.')[-1].rstrip('0'))
+					decimal_x = len(str(combined_list[-2][0]).split('.')[-1].rstrip('0'))
 					
-					msg = f"\n{symbol}: {combined_list[-2][0]} {decimal_x}/{max_decimal} {int(combined_list[-2][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_2}%"
-					print(msg)
-					bot1.send_message(662482931, msg)
+					if max_decimal - decimal_x > 1:
+					
+						msg = f"\n{symbol}: {combined_list[-2][0]} {decimal_x}/{max_decimal} {int(combined_list[-2][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_2}%"
+						print(msg)
+						bot1.send_message(662482931, msg)
 					
 				elif distance_3 == minimum_dist and \
 					combined_list[-3][1] >= combined_list[-max_minimum_candle][1] * multiplier:
 					
-					decimal_x = len(str(combined_list[-3][1]).split('.')[-1].rstrip('0'))
+					decimal_x = len(str(combined_list[-3][0]).split('.')[-1].rstrip('0'))
 					
-					msg = f"\n{symbol}: {combined_list[-3][0]} {decimal_x}/{max_decimal} {int(combined_list[-3][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_3}%"
-					print(msg)
-					bot1.send_message(662482931, msg)
+					if max_decimal - decimal_x > 1:
+						
+						msg = f"\n{symbol}: {combined_list[-3][0]} {decimal_x}/{max_decimal} {int(combined_list[-3][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_3}%"
+						print(msg)
+						bot1.send_message(662482931, msg)
 					
-				# else:
-				# 	print(f"\n{symbol}: {combined_list[-1][1]} >= {combined_list[-max_minimum_candle][1]} in {distance_1}%\n")
-
-		print(".", end="")
+				else:
+					print(".", end="")
+			else:
+				print(".", end="")
+				
 		time.sleep(2)
 		
 if __name__ == '__main__':
