@@ -18,7 +18,7 @@ def search(
 	
 	while True:
 		
-		request_limit_length = 500
+		request_limit_length = 100
 		
 		# ==== DATA REQUEST ====
 		order_book = f"https://fapi.binance.com/fapi/v1/depth?symbol={symbol}&limit={request_limit_length}"
@@ -43,21 +43,22 @@ def search(
 			decimal_1 = len(str(combined_list[12][0]).split('.')[-1].rstrip('0'))
 			decimal_2 = len(str(combined_list[34][0]).split('.')[-1].rstrip('0'))
 			decimal_3 = len(str(combined_list[23][0]).split('.')[-1].rstrip('0'))
-			
 			max_decimal = max([decimal_1, decimal_2, decimal_3])
 		
 			distance_1 = abs(close - combined_list[-1][0]) / (close / 100) if combined_list[-1][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
 			distance_2 = abs(close - combined_list[-2][0]) / (close / 100) if combined_list[-2][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
 			distance_3 = abs(close - combined_list[-3][0]) / (close / 100) if combined_list[-3][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
+			distance_4 = abs(close - combined_list[-4][0]) / (close / 100) if combined_list[-4][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
 			
 			distance_1 = float('{:.2f}'.format(distance_1))
 			distance_2 = float('{:.2f}'.format(distance_2))
 			distance_3 = float('{:.2f}'.format(distance_3))
+			distance_4 = float('{:.2f}'.format(distance_4))
 
 			
-			if min([distance_1, distance_2, distance_3]) <= search_distance:
+			if min([distance_1, distance_2, distance_3, distance_4]) <= search_distance:
 				
-				minimum_dist = min([distance_1, distance_2, distance_3])
+				minimum_dist = min([distance_1, distance_2, distance_3, distance_4])
 				
 				if minimum_dist <= search_distance / 4:
 					dist_marker = "🟩"
@@ -91,6 +92,14 @@ def search(
 					msg = f"\n{dist_marker} {symbol}: {combined_list[-3][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-3][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K in {distance_3}%"
 					print(msg)
 					bot1.send_message(662482931, msg)
+				
+				elif distance_4 == minimum_dist:
+					
+					decimal_x = len(str(combined_list[-4][0]).split('.')[-1].rstrip('0'))
+					
+					msg = f"\n{dist_marker} {symbol}: {combined_list[-4][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-4][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K in {distance_4}%"
+					print(msg)
+					bot1.send_message(662482931, msg)
 					
 				else:
 					print(".")
@@ -101,7 +110,7 @@ def search(
 if __name__ == '__main__':
 
 	search_distance = 1.0
-	max_minimum_candle = 4
+	max_minimum_candle = 5
 	multiplier = 2
 
 	if True:
