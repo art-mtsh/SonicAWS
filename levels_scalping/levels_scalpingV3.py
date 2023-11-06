@@ -108,8 +108,8 @@ if __name__ == '__main__':
 	
 	request_limit_length = int(input("Request length (def. 100): ") or 100)
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	max_minimum_candle = int(input("Start avg candle (def. 4%): ") or 4)
-	multiplier = int(input("Multiplier (def. 3%): ") or 3)
+	max_minimum_candle = int(input("Start avg candle (def. 4): ") or 4)
+	multiplier = int(input("Multiplier (def. x3): ") or 3)
 
 	if True:
 		
