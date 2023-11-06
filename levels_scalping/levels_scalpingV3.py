@@ -3,22 +3,19 @@ from datetime import datetime
 from multiprocessing import Process, Manager
 import requests
 import telebot
-# from module_get_pairs_binanceV3 import binance_pairs
-# from screenshoter import screenshoter_send
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 def search(
 		symbol,
+		request_limit_length,
 		search_distance,
 		max_minimum_candle,
 		multiplier,
 ):
 	
 	while True:
-		
-		request_limit_length = 100
 		
 		# ==== DATA REQUEST ====
 		order_book = f"https://fapi.binance.com/fapi/v1/depth?symbol={symbol}&limit={request_limit_length}"
@@ -108,10 +105,11 @@ def search(
 		time.sleep(1)
 		
 if __name__ == '__main__':
-
-	search_distance = 2.0
-	max_minimum_candle = 4
-	multiplier = 3
+	
+	request_limit_length = int(input("Request length (def. 100): ") or 100)
+	search_distance = float(input("Max gap filter (def. 1.0%): ") or 1.0)
+	max_minimum_candle = int(input("Start avg candle (def. 4%): ") or 4)
+	multiplier = int(input("Multiplier (def. 3%): ") or 3)
 
 	if True:
 		
@@ -128,6 +126,7 @@ if __name__ == '__main__':
 			process = Process(target=search,
 			                  args=(
 				                  pair,
+				                  request_limit_length,
 				                  search_distance,
 				                  max_minimum_candle,
 				                  multiplier,
