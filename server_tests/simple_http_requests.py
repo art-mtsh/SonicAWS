@@ -9,6 +9,7 @@ url4 = "https://api.binance.com/api/v3/exchangeInfo"
 binance_spot = "https://api.binance.com/api/v3/ticker/bookTicker"
 url10 = "https://api.binance.com/api/v3/klines?symbol=TOMOUSDT&interval=2h&limit=5"
 url11 = "https://api.binance.com/api/v3/ticker/24hr"
+url12 = "https://fapi.binance.com/fapi/v1/depth?symbol=TOMOUSDT&limit=20"
 
 url6 = "https://api.bybit.com/derivatives/v3/public/instruments-info"
 url7 = "https://api.bybit.com/spot/v3/public/symbols"
@@ -21,31 +22,28 @@ price_filter = 0.0000001
 
 while True:
     try:
-        response = requests.get(url11)
+        response = requests.get(url12)
         response.raise_for_status()
 
         if response.status_code == 200:
             response_data = response.json()
-            # print(response_data)
-            # response_data = response_data.get("symbols")
-            # print(response_data)
-            for data in response_data:
-                if "USDT" in data['symbol']:
-                    print(data['symbol'] + ' ' + str(data['count']))
-                
-                
-                # quoteAsset = data['quoteAsset']
-                # print(quoteAsset)
-                # symbol = data['symbol']
-                # high = data['highPrice']
-                # low = data['lowPrice']
-                # last_price = data['lastPrice']
-                # print(f"{symbol}, {high}, {low}, {last_price}")
-            #     filters = data.get('filters')
-            #     tick_size = filters[0].get('tickSize')
-            #
-            #     print(f'{symbol}, {tick_size}')
+            bids = response_data.get('bids')
+            asks = response_data.get('asks')
+            # print(bids)
+            # print(asks)
+            for i in asks[::-1]:
+                price = float(i[0])
+                value = float(i[1])
+                print(f"{value} ... {price}")
+
+            print("| = = = = = = |")
+            for i in bids:
+                price = float(i[0])
+                value = float(i[1])
+                print(f"{value} ... {price}")
+
             
+
         else:
             print(f"Received status code: {response.status_code}")
 
@@ -54,4 +52,4 @@ while True:
         print(f"An error occurred: {e}")
         
     print("")
-    time.sleep(10000)
+    time.sleep(1)

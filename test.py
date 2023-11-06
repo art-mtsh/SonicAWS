@@ -1,3 +1,14 @@
-li = [3, 4, 6, 2, 5]
-print(li.sort(reverse=True))
-print(sorted(li, reverse=True))
+
+n = 100000002.010
+
+decimal_places = len(str(n).split('.')[-1].rstrip('0'))
+
+mpl = 10 ** decimal_places
+
+nn = n * mpl
+
+print(n)
+print(decimal_places)
+print(mpl)
+print(nn)
+print(nn % 10 == 0)

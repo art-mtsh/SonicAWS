@@ -24,7 +24,7 @@ def search(
 	for data in filtered_symbols:
 		symbol = data[0]
 		tick_size = data[1]
-		request_limit_length = 750
+		request_limit_length = 900
 		
 		# ==== DATA REQUEST ====
 		futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
@@ -117,9 +117,9 @@ def search(
 					for a in range(3, 720):
 						if high[-a] == max(high[-1: -a - 11: -1]):
 							
-							for b in range(a + 11, 120):
+							for b in range(a + 11, request_limit_length - 20):
 								
-								distance = abs(close[-1] - max(high[-a], high[-b])) / (max(high[-a], high[-b]) / 100)
+								distance = abs(close[-1] - max(high[-a], high[-b])) / (close[-1] / 100)
 								distance = float('{:.2f}'.format(distance))
 								
 								if abs(high[-a] - high[-b]) <= close[-1] * levels_scatter and \
@@ -137,7 +137,7 @@ def search(
 					for a in range(3, 720):
 						if low[-a] == min(low[-1: -a - 11: -1]):
 							
-							for b in range(a + 11, 120):
+							for b in range(a + 11, request_limit_length - 20):
 								
 								distance = abs(close[-1] - min(low[-a], low[-b])) / (close[-1] / 100)
 								distance = float('{:.2f}'.format(distance))
@@ -154,23 +154,24 @@ def search(
 									)
 					
 					
-					for h in range(10, 722, 10):
+					for h in range(20, 722, 10):
 						
 						# =============== RESISTANCE на КАНАЛІ
 						highs = high[-1: -h: -1]
 						highs = sorted(highs, reverse=True)
 						
-						if (max(highs[0: 5]) - min(highs[0:5])) <= close[-1] * levels_scatter and \
-							highs[0] == max(high[-1: -11: -1]) and \
-							max(highs[0:5]) > high[-1]:
+						if (max(highs[0: 7]) - min(highs[0:7])) <= close[-1] * levels_scatter and \
+							max(highs[0:7]) > high[-1]:
+							# highs[0] == max(high[-1: -11: -1]) and \
 							
-							distance = (min(highs[0:5]) - high[-1]) / (close[-1] / 100)
+							
+							distance = (min(highs[0:7]) - high[-1]) / (close[-1] / 100)
 							distance = float('{:.2f}'.format(distance))
 							
 							if distance <= search_distance and distance < to_res:
 								higher_high = (
 									f"{symbol}: 〽️ resistance in {distance}%, \n"
-									f"{max(highs[0: 5])} level, \n" +
+									f"{max(highs[0: 7])} level, \n" +
 									information
 								)
 						
@@ -178,47 +179,48 @@ def search(
 						lows = low[-1: -h: -1]
 						lows = sorted(lows, reverse=False)
 						
-						if (max(lows[0: 5]) - min(lows[0:5])) <= close[-1] * levels_scatter and \
-							lows[0] == min(low[-1: -11: -1]) and \
-							min(lows[0:5]) < low[-1]:
+						if (max(lows[0: 7]) - min(lows[0:7])) <= close[-1] * levels_scatter and \
+							min(lows[0:7]) < low[-1]:
+							# lows[0] == min(low[-1: -11: -1]) and \
 							
-							distance = (low[-1] - max(lows[0:5])) / (close[-1] / 100)
+							
+							distance = (low[-1] - max(lows[0:7])) / (close[-1] / 100)
 							distance = float('{:.2f}'.format(distance))
 							
 							if distance <= search_distance and distance < to_res:
 								lower_low = (
 									f"{symbol}: 〽️ support in {distance}%, \n"
-									f"{min(lows[0:5])} level, \n" +
+									f"{min(lows[0:7])} level, \n" +
 									information
 								)
 					
 					# =============== RESISTANCE від ЕКСТРЕМУМА
-					if max(high[-1: -6: -1]) == max(high[-1: -121: -1]) and \
-						max(high[-1: -6: -1]) > high[-1]:
-						
-						distance = abs(max(high[-1: -6: -1]) - high[-1]) / (close[-1] / 100)
-						distance = float('{:.2f}'.format(distance))
-						
-						if distance <= search_distance and distance < to_res:
-							higher_high = (
-								f"{symbol}: 🔥 resistance in {distance}%, \n"
-								f"{max(high[-1: -6: -1])} level, \n" +
-								information
-							)
+					# if max(high[-1: -6: -1]) == max(high[-1: -121: -1]) and \
+					# 	max(high[-1: -6: -1]) > high[-1]:
+					#
+					# 	distance = abs(max(high[-1: -6: -1]) - high[-1]) / (close[-1] / 100)
+					# 	distance = float('{:.2f}'.format(distance))
+					#
+					# 	if distance <= search_distance and distance < to_res:
+					# 		higher_high = (
+					# 			f"{symbol}: 🔥 resistance in {distance}%, \n"
+					# 			f"{max(high[-1: -6: -1])} level, \n" +
+					# 			information
+					# 		)
 					
 					# # =============== SUPPORT на ЕКСТРЕМУМІ
-					if min(low[-1: -6: -1]) == min(low[-1: -121: -1]) and \
-						min(low[-1: -6: -1]) < low[-1]:
-						
-						distance = abs(min(low[-1: -6: -1]) - low[-1]) / (close[-1] / 100)
-						distance = float('{:.2f}'.format(distance))
-
-						if distance <= search_distance and distance < to_res:
-							lower_low = (
-								f"{symbol}: 🔥 support in {distance}%, \n"
-								f"{min(low[-1: -6: -1])} level, \n" +
-								information
-							)
+					# if min(low[-1: -6: -1]) == min(low[-1: -121: -1]) and \
+					# 	min(low[-1: -6: -1]) < low[-1]:
+					#
+					# 	distance = abs(min(low[-1: -6: -1]) - low[-1]) / (close[-1] / 100)
+					# 	distance = float('{:.2f}'.format(distance))
+					#
+					# 	if distance <= search_distance and distance < to_res:
+					# 		lower_low = (
+					# 			f"{symbol}: 🔥 support in {distance}%, \n"
+					# 			f"{min(low[-1: -6: -1])} level, \n" +
+					# 			information
+					# 		)
 							
 					if higher_high:
 						s_queue.put(higher_high)
@@ -248,12 +250,12 @@ if __name__ == '__main__':
 	
 	proc = 14
 	gap_filter = 0.5 # float(input("Max gap filter (def. 0.2%): ") or 0.2)
-	density_filter = 20 # int(input("Density filter (def. 30): ") or 30)
+	density_filter = 25 # int(input("Density filter (def. 30): ") or 30)
 	tick_size_filter = 0.1 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
-	atr_per_filter = 0.30 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
+	atr_per_filter = 0.20 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
 	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
-	search_distance = 1.5
-	levels_scatter = 0.04 / 100
+	search_distance = 1.0
+	levels_scatter = 0.03 / 100
 	
 	# print(f"\n"
 	#       f"Processes = {proc} \n"
