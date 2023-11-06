@@ -66,32 +66,33 @@ def search(
 			max_minimum_candle = 4
 			multiplier = 2
 			
-			if distance_1 <= search_distance and \
-				distance_1 == min([distance_1, distance_2, distance_3]) and \
-				combined_list[-1][1] >= combined_list[-max_minimum_candle][1] * multiplier:
+			if min([distance_1, distance_2, distance_3]) <= search_distance:
 				
-				msg = f"\n{symbol}: {combined_list[-1][0]} ({combined_list[-20][0]}) {int(combined_list[-1][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_1}%"
-				print(msg)
-				bot1.send_message(662482931, msg)
-
-			elif distance_2 <= search_distance and \
-				distance_2 == min([distance_1, distance_2, distance_3]) and \
-				combined_list[-2][1] >= combined_list[-max_minimum_candle][1] * multiplier:
+				minimum_dist = min([distance_1, distance_2, distance_3])
 				
-				msg = f"\n{symbol}: {combined_list[-2][0]} ({combined_list[-20][0]}) {int(combined_list[-2][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_2}%"
-				print(msg)
-				bot1.send_message(662482931, msg)
-				
-			elif distance_3 <= search_distance and \
-				distance_3 == min([distance_1, distance_2, distance_3]) and \
-				combined_list[-3][1] >= combined_list[-max_minimum_candle][1] * multiplier:
-				
-				msg = f"\n{symbol}: {combined_list[-3][0]} ({combined_list[-20][0]}) {int(combined_list[-3][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_3}%"
-				print(msg)
-				bot1.send_message(662482931, msg)
-				
-			# else:
-			# 	print(f"\n{symbol}: {combined_list[-1][1]} >= {combined_list[-max_minimum_candle][1]} in {distance_1}%\n")
+				if distance_1 == minimum_dist and \
+					combined_list[-1][1] >= combined_list[-max_minimum_candle][1] * multiplier:
+					
+					msg = f"\n{symbol}: {combined_list[-1][0]} ({combined_list[-20][0]}) {int(combined_list[-1][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_1}%"
+					print(msg)
+					bot1.send_message(662482931, msg)
+	
+				elif distance_2 == minimum_dist and \
+					combined_list[-2][1] >= combined_list[-max_minimum_candle][1] * multiplier:
+					
+					msg = f"\n{symbol}: {combined_list[-2][0]} ({combined_list[-20][0]}) {int(combined_list[-2][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_2}%"
+					print(msg)
+					bot1.send_message(662482931, msg)
+					
+				elif distance_3 == minimum_dist and \
+					combined_list[-3][1] >= combined_list[-max_minimum_candle][1] * multiplier:
+					
+					msg = f"\n{symbol}: {combined_list[-3][0]} ({combined_list[-20][0]}) {int(combined_list[-3][1])} >= {int(combined_list[-max_minimum_candle][1])} in {distance_3}%"
+					print(msg)
+					bot1.send_message(662482931, msg)
+					
+				# else:
+				# 	print(f"\n{symbol}: {combined_list[-1][1]} >= {combined_list[-max_minimum_candle][1]} in {distance_1}%\n")
 
 		print(".", end="")
 		time.sleep(2)
