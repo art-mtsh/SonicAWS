@@ -9,6 +9,7 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 def search(
 		symbol,
+		display_on_tg,
 		request_limit_length,
 		search_distance,
 		max_minimum_candle,
@@ -70,25 +71,25 @@ def search(
 					
 					decimal_x = len(str(combined_list[-1][0]).split('.')[-1].rstrip('0'))
 
-					msg = f"\n{dist_marker} {symbol}: {combined_list[-1][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-1][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K in {distance_1}%"
+					msg = f"\n{distance_1}% {dist_marker} {symbol}: {combined_list[-1][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-1][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
 					print(msg)
-					bot1.send_message(662482931, msg)
+					if display_on_tg == 1: bot1.send_message(662482931, msg)
 	
 				elif distance_2 == minimum_dist:
 					
 					decimal_x = len(str(combined_list[-2][0]).split('.')[-1].rstrip('0'))
 				
-					msg = f"\n{dist_marker} {symbol}: {combined_list[-2][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-2][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K in {distance_2}%"
+					msg = f"\n{distance_2}% {dist_marker} {symbol}: {combined_list[-2][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-2][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
 					print(msg)
-					bot1.send_message(662482931, msg)
+					if display_on_tg == 1: bot1.send_message(662482931, msg)
 				
 				elif distance_3 == minimum_dist:
 					
 					decimal_x = len(str(combined_list[-3][0]).split('.')[-1].rstrip('0'))
 					
-					msg = f"\n{dist_marker} {symbol}: {combined_list[-3][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-3][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K in {distance_3}%"
+					msg = f"\n{distance_3}% {dist_marker} {symbol}: {combined_list[-3][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-3][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
 					print(msg)
-					bot1.send_message(662482931, msg)
+					if display_on_tg == 1: bot1.send_message(662482931, msg)
 				
 				# elif distance_4 == minimum_dist:
 				#
@@ -97,16 +98,17 @@ def search(
 				# 	msg = f"\n{dist_marker} {symbol}: {combined_list[-4][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-4][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K in {distance_4}%"
 				# 	print(msg)
 				# 	bot1.send_message(662482931, msg)
-					
-				else:
-					print(".")
-			else:
-				print(".")
+				
+			# 	else:
+			# 		print(".")
+			# else:
+			# 	print(".")
 		time.sleep(1)
 		
 if __name__ == '__main__':
 	
 	pairs = (input('Pairs: ')).split(',')
+	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	request_limit_length = int(input("Request length (def. 100): ") or 100)
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	max_minimum_candle = int(input("Start avg candle (def. 4): ") or 4)
@@ -121,12 +123,13 @@ if __name__ == '__main__':
 		# pairs = ['GASUSDT', 'BLURUSDT', 'API3USDT', 'XVSUSDT', 'UNFIUSDT', 'BTCUSDT']
 		
 		print(f">>> {datetime.now().strftime('%H:%M:%S')}")
-		
+		print(type(display_on_tg))
 		the_processes = []
 		for pair in pairs:
 			process = Process(target=search,
 			                  args=(
 				                  pair,
+				                  display_on_tg,
 				                  request_limit_length,
 				                  search_distance,
 				                  max_minimum_candle,
