@@ -117,7 +117,7 @@ if __name__ == '__main__':
 		shared_queue = manager.Queue()
 
 		time1 = time.perf_counter()
-		pairs = ['API3USDT', 'RIFUSDT', 'BLURUSDT', 'UNFIUSDT', 'FRONTUSDT', "BTCUSDT"]
+		pairs = ['GASUSDT', 'BLURUSDT', 'API3USDT', 'XVSUSDT', 'UNFIUSDT', 'BTCUSDT']
 		
 		print(f">>> {datetime.now().strftime('%H:%M:%S')}")
 		
