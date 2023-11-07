@@ -106,6 +106,7 @@ def search(
 		
 if __name__ == '__main__':
 	
+	pairs = (input('Pairs: ')).split(',')
 	request_limit_length = int(input("Request length (def. 100): ") or 100)
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	max_minimum_candle = int(input("Start avg candle (def. 4): ") or 4)
@@ -117,7 +118,7 @@ if __name__ == '__main__':
 		shared_queue = manager.Queue()
 
 		time1 = time.perf_counter()
-		pairs = ['GASUSDT', 'BLURUSDT', 'API3USDT', 'XVSUSDT', 'UNFIUSDT', 'BTCUSDT']
+		# pairs = ['GASUSDT', 'BLURUSDT', 'API3USDT', 'XVSUSDT', 'UNFIUSDT', 'BTCUSDT']
 		
 		print(f">>> {datetime.now().strftime('%H:%M:%S')}")
 		

@@ -1,14 +1,8 @@
+def comma_separated_to_list(input_string):
+    values = input_string.split(',')
+    return values
 
-n = 100000002.010
+# Example usage:
 
-decimal_places = len(str(n).split('.')[-1].rstrip('0'))
-
-mpl = 10 ** decimal_places
-
-nn = n * mpl
-
-print(n)
-print(decimal_places)
-print(mpl)
-print(nn)
-print(nn % 10 == 0)
+pairs = (input('Pairs: ')).split(',')
+print(pairs)
