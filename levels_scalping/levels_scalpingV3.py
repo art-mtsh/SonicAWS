@@ -123,7 +123,7 @@ if __name__ == '__main__':
 		# pairs = ['GASUSDT', 'BLURUSDT', 'API3USDT', 'XVSUSDT', 'UNFIUSDT', 'BTCUSDT']
 		
 		print(f">>> {datetime.now().strftime('%H:%M:%S')}")
-		print(type(display_on_tg))
+
 		the_processes = []
 		for pair in pairs:
 			process = Process(target=search,
