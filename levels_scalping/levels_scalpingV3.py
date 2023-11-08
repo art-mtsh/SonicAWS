@@ -9,6 +9,7 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 def search(
 		symbol,
+		reload_time,
 		display_on_tg,
 		request_limit_length,
 		search_distance,
@@ -119,11 +120,12 @@ def search(
 			# 		print(".")
 			# else:
 			# 	print(".")
-		time.sleep(1)
+		time.sleep(reload_time)
 		
 if __name__ == '__main__':
 	
 	pairs = (input('Pairs: ')).split(',')
+	reload_time = int(input("Reload seconds (def. 1): ") or 1)
 	display_on_tg = int(input("Telegram alert? (def. 0): ") or 0)
 	request_limit_length = int(input("Request length (def. 100): ") or 100)
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
@@ -145,6 +147,7 @@ if __name__ == '__main__':
 			process = Process(target=search,
 			                  args=(
 				                  pair,
+				                  reload_time,
 				                  display_on_tg,
 				                  request_limit_length,
 				                  search_distance,
