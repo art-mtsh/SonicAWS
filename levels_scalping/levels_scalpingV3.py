@@ -77,8 +77,8 @@ def search(
 					zero_addition = (max_decimal-decimal_x)*'0'
 					last_size_in_thousands = int(combined_list[-max_minimum_candle][1] / 1000)
 					
-					msg = f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands} = ${size_in_dollars} \n" \
-					      f"{size_in_thousands} > {last_size_in_thousands}"
+					msg = f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n" \
+					      f"{size_in_thousands}K > {last_size_in_thousands}K"
 					
 					print(msg)
 					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
@@ -93,8 +93,8 @@ def search(
 					zero_addition = (max_decimal - decimal_x) * '0'
 					last_size_in_thousands = int(combined_list[-max_minimum_candle][1] / 1000)
 					
-					msg = f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands} = ${size_in_dollars} \n" \
-					      f"{size_in_thousands} > {last_size_in_thousands}"
+					msg = f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n" \
+					      f"{size_in_thousands}K > {last_size_in_thousands}K"
 					
 					print(msg)
 					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
@@ -109,8 +109,8 @@ def search(
 					zero_addition = (max_decimal - decimal_x) * '0'
 					last_size_in_thousands = int(combined_list[-max_minimum_candle][1] / 1000)
 					
-					msg = f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands} = ${size_in_dollars} \n" \
-					      f"{size_in_thousands} > {last_size_in_thousands}"
+					msg = f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n" \
+					      f"{size_in_thousands}K > {last_size_in_thousands}K"
 					
 					print(msg)
 					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
