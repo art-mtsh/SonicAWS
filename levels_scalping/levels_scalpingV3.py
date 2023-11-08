@@ -71,7 +71,7 @@ def search(
 					
 					decimal_x = len(str(combined_list[-1][0]).split('.')[-1].rstrip('0'))
 
-					msg = f"\n{distance_1}% {symbol}: {combined_list[-1][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-1][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
+					msg = f"\n{distance_1}% {symbol}: {combined_list[-1][0]}{(max_decimal-decimal_x)*'0'} ({decimal_x}/{max_decimal}), {int(combined_list[-1][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
 					print(msg)
 					print(f"$ {int((combined_list[-1][0] * combined_list[-1][1]) / 1000)}K")
 					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
@@ -80,7 +80,7 @@ def search(
 					
 					decimal_x = len(str(combined_list[-2][0]).split('.')[-1].rstrip('0'))
 				
-					msg = f"\n{distance_2}% {symbol}: {combined_list[-2][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-2][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
+					msg = f"\n{distance_2}% {symbol}: {combined_list[-2][0]}{(max_decimal-decimal_x)*'0'} ({decimal_x}/{max_decimal}), {int(combined_list[-2][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
 					print(msg)
 					print(f"$ {int((combined_list[-2][0] * combined_list[-2][1]) / 1000)}K")
 					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
@@ -89,7 +89,7 @@ def search(
 					
 					decimal_x = len(str(combined_list[-3][0]).split('.')[-1].rstrip('0'))
 					
-					msg = f"\n{distance_3}% {symbol}: {combined_list[-3][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-3][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
+					msg = f"\n{distance_3}% {symbol}: {combined_list[-3][0]}{(max_decimal-decimal_x)*'0'} ({decimal_x}/{max_decimal}), {int(combined_list[-3][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
 					print(msg)
 					print(f"$ {int((combined_list[-3][0] * combined_list[-3][1]) / 1000)}K")
 					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
