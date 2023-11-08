@@ -59,37 +59,37 @@ def search(
 				minimum_dist = min([distance_1, distance_2, distance_3])
 				
 				if minimum_dist <= search_distance / 4:
-					dist_marker = "🟩"
+					dist_marker = "🟩 "
 				elif minimum_dist <= search_distance / 4 * 2:
-					dist_marker = "🟨"
+					dist_marker = "🟨 "
 				elif minimum_dist <= search_distance / 4 * 3:
-					dist_marker = "🟧"
+					dist_marker = "🟧 "
 				else:
-					dist_marker = "🟥"
+					dist_marker = "🟥 "
 					
 				if distance_1 == minimum_dist:
 					
 					decimal_x = len(str(combined_list[-1][0]).split('.')[-1].rstrip('0'))
 
-					msg = f"\n{distance_1}% {dist_marker} {symbol}: {combined_list[-1][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-1][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
+					msg = f"\n{distance_1}% {symbol}: {combined_list[-1][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-1][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
 					print(msg)
-					if display_on_tg == 1: bot1.send_message(662482931, msg)
+					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
 	
 				elif distance_2 == minimum_dist:
 					
 					decimal_x = len(str(combined_list[-2][0]).split('.')[-1].rstrip('0'))
 				
-					msg = f"\n{distance_2}% {dist_marker} {symbol}: {combined_list[-2][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-2][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
+					msg = f"\n{distance_2}% {symbol}: {combined_list[-2][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-2][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
 					print(msg)
-					if display_on_tg == 1: bot1.send_message(662482931, msg)
+					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
 				
 				elif distance_3 == minimum_dist:
 					
 					decimal_x = len(str(combined_list[-3][0]).split('.')[-1].rstrip('0'))
 					
-					msg = f"\n{distance_3}% {dist_marker} {symbol}: {combined_list[-3][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-3][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
+					msg = f"\n{distance_3}% {symbol}: {combined_list[-3][0]} ({decimal_x}/{max_decimal}), {int(combined_list[-3][1] / 1000)}K > {int(combined_list[-max_minimum_candle][1] / 1000)}K"
 					print(msg)
-					if display_on_tg == 1: bot1.send_message(662482931, msg)
+					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
 				
 				# elif distance_4 == minimum_dist:
 				#
