@@ -109,6 +109,9 @@ def search(
 					if size_price >= max_of_range or min_of_range >= size_price:
 						print(msg)
 						if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
+					else:
+						print(msg+" INSIDE OF RANGE!")
+						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg + " INSIDE OF RANGE!")
 						
 				elif distance_2 == minimum_dist:
 					
@@ -129,6 +132,9 @@ def search(
 					if size_price >= max_of_range or min_of_range >= size_price:
 						print(msg)
 						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
+					else:
+						print(msg+" INSIDE OF RANGE!")
+						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg + " INSIDE OF RANGE!")
 						
 				elif distance_3 == minimum_dist:
 					
@@ -149,6 +155,9 @@ def search(
 					if size_price >= max_of_range or min_of_range >= size_price:
 						print(msg)
 						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
+					else:
+						print(msg+" INSIDE OF RANGE!")
+						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg + " INSIDE OF RANGE!")
 			# 	else:
 			# 		print(".", end='')
 			# else:
