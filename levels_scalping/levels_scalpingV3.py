@@ -117,7 +117,7 @@ def search(
 					      f"{size_in_thousands}K > {last_size_in_thousands}K, {max_of_range}-{min_of_range}")
 					
 					print(msg)
-					if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
+					if display_on_tg == 1 and (max_decimal - decimal_x) >= 2: bot1.send_message(662482931, dist_marker + msg)
 						
 				elif distance_2 == minimum_dist:
 					
@@ -132,7 +132,7 @@ def search(
 					      f"{size_in_thousands}K > {last_size_in_thousands}K, {max_of_range}-{min_of_range}")
 					
 					print(msg)
-					if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
+					if display_on_tg == 1 and (max_decimal - decimal_x) >= 2: bot1.send_message(662482931, dist_marker + msg)
 						
 				elif distance_3 == minimum_dist:
 					
@@ -147,7 +147,7 @@ def search(
 					      f"{size_in_thousands}K > {last_size_in_thousands}K, {max_of_range}-{min_of_range}")
 					
 					print(msg)
-					if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
+					if display_on_tg == 1 and (max_decimal - decimal_x) >= 2: bot1.send_message(662482931, dist_marker + msg)
 					
 			# 	else:
 			# 		print(".", end='')
