@@ -104,7 +104,6 @@ def search(
 					dist_marker = "🟧 "
 				else:
 					dist_marker = "🟥 "
-					
 				if distance_1 == minimum_dist:
 					
 					distance = distance_1
