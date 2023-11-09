@@ -91,8 +91,6 @@ def search(
 				distance_3 = float('{:.2f}'.format(distance_3))
 			else:
 				distance_3 = 100
-
-		
 			
 			if min([distance_1, distance_2, distance_3]) <= search_distance:
 				
