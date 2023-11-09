@@ -8,7 +8,7 @@ TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 def extremum(symbol, frame, request_limit_length):
-	futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol.strip()}&interval={frame}&limit={request_limit_length}'
+	futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
 	klines = requests.get(futures_klines)
 	
 	if klines.status_code == 200:
