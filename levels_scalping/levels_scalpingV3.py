@@ -7,6 +7,28 @@ import telebot
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
+def extremum(symbol, frame, request_limit_length):
+	futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
+	klines = requests.get(futures_klines)
+	if klines.status_code == 200:
+		response_length = len(klines.json()) if klines.json() != None else 0
+		if response_length == request_limit_length:
+			binance_candle_data = klines.json()
+			open = list(float(i[1]) for i in binance_candle_data)
+			high = list(float(i[2]) for i in binance_candle_data)
+			low = list(float(i[3]) for i in binance_candle_data)
+			close = list(float(i[4]) for i in binance_candle_data)
+			volume = list(float(i[5]) for i in binance_candle_data)
+			trades = list(int(i[8]) for i in binance_candle_data)
+			buy_volume = list(float(i[9]) for i in binance_candle_data)
+			sell_volume = [volume[0] - buy_volume[0]]
+			
+			return [max(high), min(low)]
+		
+	else:
+		print(f"TROUBLES WITH {symbol} DATA")
+		
+	
 def search(
 		symbol,
 		reload_time,
@@ -47,12 +69,10 @@ def search(
 			distance_1 = abs(close - combined_list[-1][0]) / (close / 100) if combined_list[-1][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
 			distance_2 = abs(close - combined_list[-2][0]) / (close / 100) if combined_list[-2][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
 			distance_3 = abs(close - combined_list[-3][0]) / (close / 100) if combined_list[-3][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
-			# distance_4 = abs(close - combined_list[-4][0]) / (close / 100) if combined_list[-4][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
 			
 			distance_1 = float('{:.2f}'.format(distance_1))
 			distance_2 = float('{:.2f}'.format(distance_2))
 			distance_3 = float('{:.2f}'.format(distance_3))
-			# distance_4 = float('{:.2f}'.format(distance_4))
 
 			
 			if min([distance_1, distance_2, distance_3]) <= search_distance:
@@ -77,12 +97,16 @@ def search(
 					size_in_dollars = int((combined_list[-1][0] * combined_list[-1][1]) / 1000)
 					zero_addition = (max_decimal-decimal_x)*'0'
 					last_size_in_thousands = int(combined_list[-max_minimum_candle][1] / 1000)
+					msg = (f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
+					      f"{size_in_thousands}K > {last_size_in_thousands}K")
 					
-					msg = f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n" \
-					      f"{size_in_thousands}K > {last_size_in_thousands}K"
+					max_min = extremum(symbol, '1m', 10)
+					max_of_range = max_min[0]
+					min_of_range = max_min[1]
 					
-					print(msg)
-					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
+					if size_price >= max_of_range and min_of_range >= size_price:
+						print(msg)
+						if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
 	
 				elif distance_2 == minimum_dist:
 					
@@ -93,12 +117,16 @@ def search(
 					size_in_dollars = int((combined_list[-2][0] * combined_list[-2][1]) / 1000)
 					zero_addition = (max_decimal - decimal_x) * '0'
 					last_size_in_thousands = int(combined_list[-max_minimum_candle][1] / 1000)
+					msg = (f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
+					      f"{size_in_thousands}K > {last_size_in_thousands}K")
 					
-					msg = f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n" \
-					      f"{size_in_thousands}K > {last_size_in_thousands}K"
+					max_min = extremum(symbol, '1m', 10)
+					max_of_range = max_min[0]
+					min_of_range = max_min[1]
 					
-					print(msg)
-					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
+					if size_price >= max_of_range and min_of_range >= size_price:
+						print(msg)
+						if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
 				
 				elif distance_3 == minimum_dist:
 					
@@ -109,17 +137,21 @@ def search(
 					size_in_dollars = int((combined_list[-3][0] * combined_list[-3][1]) / 1000)
 					zero_addition = (max_decimal - decimal_x) * '0'
 					last_size_in_thousands = int(combined_list[-max_minimum_candle][1] / 1000)
+					msg = (f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
+					      f"{size_in_thousands}K > {last_size_in_thousands}K")
 					
-					msg = f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n" \
-					      f"{size_in_thousands}K > {last_size_in_thousands}K"
+					max_min = extremum(symbol, '1m', 10)
+					max_of_range = max_min[0]
+					min_of_range = max_min[1]
 					
-					print(msg)
-					if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
-				
+					if size_price >= max_of_range and min_of_range >= size_price:
+						print(msg)
+						if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
 			# 	else:
 			# 		print(".")
 			# else:
 			# 	print(".")
+		
 		time.sleep(reload_time)
 		
 if __name__ == '__main__':
@@ -138,7 +170,6 @@ if __name__ == '__main__':
 		shared_queue = manager.Queue()
 
 		time1 = time.perf_counter()
-		# pairs = ['GASUSDT', 'BLURUSDT', 'API3USDT', 'XVSUSDT', 'UNFIUSDT', 'BTCUSDT']
 		
 		print(f">>> {datetime.now().strftime('%H:%M:%S')}")
 
@@ -164,8 +195,6 @@ if __name__ == '__main__':
 			
 		for pro in the_processes:
 			pro.close()
-		
-		# printer(shared_queue)
 			
 		time2 = time.perf_counter()
 		time3 = time2 - time1
