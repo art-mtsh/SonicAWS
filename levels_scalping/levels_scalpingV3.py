@@ -67,15 +67,32 @@ def search(
 			decimal_2 = len(str(combined_list[34][0]).split('.')[-1].rstrip('0'))
 			decimal_3 = len(str(combined_list[23][0]).split('.')[-1].rstrip('0'))
 			max_decimal = max([decimal_1, decimal_2, decimal_3])
-		
-			distance_1 = abs(close - combined_list[-1][0]) / (close / 100) if combined_list[-1][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
-			distance_2 = abs(close - combined_list[-2][0]) / (close / 100) if combined_list[-2][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
-			distance_3 = abs(close - combined_list[-3][0]) / (close / 100) if combined_list[-3][1] >= combined_list[-max_minimum_candle][1] * multiplier else 100
 			
-			distance_1 = float('{:.2f}'.format(distance_1))
-			distance_2 = float('{:.2f}'.format(distance_2))
-			distance_3 = float('{:.2f}'.format(distance_3))
+			max_avg_size = combined_list[-max_minimum_candle][1] * multiplier
+			
+			max_min = extremum(symbol, '1m', 5)
+			max_of_range = max_min[0]
+			min_of_range = max_min[1]
+			
+			if combined_list[-1][1] >= max_avg_size and (combined_list[-1][0] >= max_of_range or min_of_range >= combined_list[-1][0]):
+				distance_1 = abs(close - combined_list[-1][0]) / (close / 100)
+				distance_1 = float('{:.2f}'.format(distance_1))
+			else:
+				distance_1 = 100
+				
+			if combined_list[-2][1] >= max_avg_size and (combined_list[-2][0] >= max_of_range or min_of_range >= combined_list[-2][0]):
+				distance_2 = abs(close - combined_list[-2][0]) / (close / 100)
+				distance_2 = float('{:.2f}'.format(distance_2))
+			else:
+				distance_2 = 100
+				
+			if combined_list[-3][1] >= max_avg_size and (combined_list[-3][0] >= max_of_range or min_of_range >= combined_list[-3][0]):
+				distance_3 = abs(close - combined_list[-3][0]) / (close / 100)
+				distance_3 = float('{:.2f}'.format(distance_3))
+			else:
+				distance_3 = 100
 
+		
 			
 			if min([distance_1, distance_2, distance_3]) <= search_distance:
 				
@@ -102,16 +119,8 @@ def search(
 					msg = (f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
 					      f"{size_in_thousands}K > {last_size_in_thousands}K")
 					
-					max_min = extremum(symbol, '1m', 10)
-					max_of_range = max_min[0]
-					min_of_range = max_min[1]
-					
-					if size_price >= max_of_range or min_of_range >= size_price:
-						print(msg)
-						if display_on_tg == 1: bot1.send_message(662482931, dist_marker+msg)
-					else:
-						print(msg+" INSIDE OF RANGE!")
-						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg + " INSIDE OF RANGE!")
+					print(msg)
+					if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
 						
 				elif distance_2 == minimum_dist:
 					
@@ -125,16 +134,8 @@ def search(
 					msg = (f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
 					      f"{size_in_thousands}K > {last_size_in_thousands}K")
 					
-					max_min = extremum(symbol, '1m', 10)
-					max_of_range = max_min[0]
-					min_of_range = max_min[1]
-					
-					if size_price >= max_of_range or min_of_range >= size_price:
-						print(msg)
-						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
-					else:
-						print(msg+" INSIDE OF RANGE!")
-						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg + " INSIDE OF RANGE!")
+					print(msg)
+					if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
 						
 				elif distance_3 == minimum_dist:
 					
@@ -148,16 +149,9 @@ def search(
 					msg = (f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
 					      f"{size_in_thousands}K > {last_size_in_thousands}K")
 					
-					max_min = extremum(symbol, '1m', 10)
-					max_of_range = max_min[0]
-					min_of_range = max_min[1]
+					print(msg)
+					if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
 					
-					if size_price >= max_of_range or min_of_range >= size_price:
-						print(msg)
-						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg)
-					else:
-						print(msg+" INSIDE OF RANGE!")
-						if display_on_tg == 1: bot1.send_message(662482931, dist_marker + msg + " INSIDE OF RANGE!")
 			# 	else:
 			# 		print(".", end='')
 			# else:
