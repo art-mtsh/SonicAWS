@@ -17,7 +17,8 @@ def binance_pairs(chunks, quote_assets, day_range_filter, day_density_filter, ti
         quoteAsset = data['quoteAsset']
         if quoteAsset in quote_assets:
             ts_dict.update({symbol: tick_size})
-        
+    
+    
     day_info_dict = {}
     futures_day_info_url = "https://fapi.binance.com/fapi/v1/ticker/24hr"
     spot_day_info_url = "https://api.binance.com/api/v3/ticker/24hr"

@@ -39,6 +39,7 @@ def search(
 		search_distance,
 		max_minimum_candle,
 		multiplier,
+		size_filter
 ):
 	
 	while True:
@@ -116,8 +117,9 @@ def search(
 					msg = (f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
 					      f"{size_in_thousands}K > {last_size_in_thousands}K, {max_of_range}-{min_of_range}")
 					
-					print(msg)
-					if display_on_tg == 1 and (max_decimal - decimal_x) >= 2 and size_in_dollars >= 100:
+					if size_in_dollars >= size_filter:
+						print(msg)
+					if display_on_tg == 1 and (max_decimal - decimal_x) >= 2 and size_in_dollars >= size_filter:
 						bot1.send_message(662482931, dist_marker + msg)
 						
 				elif distance_2 == minimum_dist:
@@ -132,8 +134,9 @@ def search(
 					msg = (f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
 					      f"{size_in_thousands}K > {last_size_in_thousands}K, {max_of_range}-{min_of_range}")
 					
-					print(msg)
-					if display_on_tg == 1 and (max_decimal - decimal_x) >= 2 and size_in_dollars >= 100:
+					if size_in_dollars >= size_filter:
+						print(msg)
+					if display_on_tg == 1 and (max_decimal - decimal_x) >= 2 and size_in_dollars >= size_filter:
 						bot1.send_message(662482931, dist_marker + msg)
 						
 				elif distance_3 == minimum_dist:
@@ -148,8 +151,9 @@ def search(
 					msg = (f"\n{distance}% {symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
 					      f"{size_in_thousands}K > {last_size_in_thousands}K, {max_of_range}-{min_of_range}")
 					
-					print(msg)
-					if display_on_tg == 1 and (max_decimal - decimal_x) >= 2 and size_in_dollars >= 100:
+					if size_in_dollars >= size_filter:
+						print(msg)
+					if display_on_tg == 1 and (max_decimal - decimal_x) >= 2 and size_in_dollars >= size_filter:
 						bot1.send_message(662482931, dist_marker + msg)
 					
 			# 	else:
@@ -168,6 +172,7 @@ if __name__ == '__main__':
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	max_minimum_candle = int(input("Start avg candle (def. 4): ") or 4)
 	multiplier = int(input("Multiplier (def. x3): ") or 3)
+	size_filter = int(input("Size filter in K (def. 70): ") or 70)
 
 	if True:
 		
@@ -188,6 +193,7 @@ if __name__ == '__main__':
 				                  search_distance,
 				                  max_minimum_candle,
 				                  multiplier,
+				                  size_filter,
 			                      ))
 			the_processes.append(process)
 
