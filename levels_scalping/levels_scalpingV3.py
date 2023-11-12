@@ -65,8 +65,7 @@ def search(
 				# 	f"last_size_in_thousands {last_size_in_thousands}"
 				# )
 				
-				msg = (f"\n{min_distance}% FUTURES #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
-				       f"{size_in_thousands}K > {last_size_in_thousands}K")
+				msg = (f"\n{min_distance}% FUTURES #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
 				if size_in_dollars >= size_filter:
 					print(msg)
@@ -110,8 +109,7 @@ def search(
 				# 	f"last_size_in_thousands {last_size_in_thousands}"
 				# )
 		
-				msg = (f"\n{min_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
-				       f"{size_in_thousands}K > {last_size_in_thousands}K")
+				msg = (f"\n{min_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
 				if size_in_dollars >= size_filter:
 					print(msg)
