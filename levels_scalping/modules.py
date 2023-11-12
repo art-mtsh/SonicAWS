@@ -5,13 +5,15 @@ TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 def extremum(symbol, frame, request_limit_length):
-	futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
-	klines = requests.get(futures_klines)
+
+	response = requests.get(f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}')
 	
-	if klines.status_code == 200:
-		response_length = len(klines.json()) if klines.json() != None else 0
+	if response.status_code == 200:
+		
+		response_length = len(response.json()) if response.json() != None else 0
+		
 		if response_length == request_limit_length:
-			binance_candle_data = klines.json()
+			binance_candle_data = response.json()
 			open = list(float(i[1]) for i in binance_candle_data)
 			high = list(float(i[2]) for i in binance_candle_data)
 			low = list(float(i[3]) for i in binance_candle_data)
@@ -20,14 +22,27 @@ def extremum(symbol, frame, request_limit_length):
 			trades = list(int(i[8]) for i in binance_candle_data)
 			buy_volume = list(float(i[9]) for i in binance_candle_data)
 			sell_volume = [volume[0] - buy_volume[0]]
+			
 			return [max(high), min(low)]
+		
+		else:
+			msg = f"Not enough data for {symbol} on 1m"
+			bot1.send_message(662482931, msg)
+			print(msg)
+	
+	
+	elif response.status_code == 429:
+		msg = f"{symbol} LIMITS REACHED !!!! 429 CODE !!!!"
+		bot1.send_message(662482931, msg)
+		bot1.send_message(662482931, msg)
+		bot1.send_message(662482931, msg)
+		print(msg)
 	
 	else:
-		print(f"TROUBLES WITH {symbol.strip()} DATA, status code {klines.status_code}")
-		print(futures_klines)
-		return [0, 0]
-	
-	
+		msg = f"Troubles with {symbol} data request on 1m, status code {response.status_code}"
+		bot1.send_message(662482931, msg)
+		print(msg)
+
 
 def order_book(url):
 
@@ -57,6 +72,7 @@ def order_book(url):
 		bot1.send_message(662482931, "LIMITS REACHED !!!! 429 CODE !!!!")
 		bot1.send_message(662482931, "LIMITS REACHED !!!! 429 CODE !!!!")
 		bot1.send_message(662482931, "LIMITS REACHED !!!! 429 CODE !!!!")
+		print(f"LIMITS REACHED !!!! 429 CODE !!!!")
 	
 	# else:
 	# 	print(url)

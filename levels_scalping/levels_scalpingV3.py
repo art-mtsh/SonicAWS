@@ -16,7 +16,8 @@ def search(
 		search_distance,
 		max_minimum_candle,
 		multiplier,
-		size_filter
+		size_filter,
+		time_log
 ):
 	
 	while True:
@@ -64,13 +65,13 @@ def search(
 				# 	f"last_size_in_thousands {last_size_in_thousands}"
 				# )
 				
-				msg = (f"\n{min_distance}% #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
+				msg = (f"\n{min_distance}% FUTURES #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
 				       f"{size_in_thousands}K > {last_size_in_thousands}K")
 				
 				if size_in_dollars >= size_filter:
 					print(msg)
-				if display_on_tg == 1 and (f_max_decimal - decimal_x) >= 2 and size_in_dollars >= size_filter:
-					bot1.send_message(662482931, msg)
+					if display_on_tg == 1:
+						bot1.send_message(662482931, msg)
 	
 		# else:
 		# 	print(f"Some shit with {symbol} futures data!")
@@ -109,13 +110,13 @@ def search(
 				# 	f"last_size_in_thousands {last_size_in_thousands}"
 				# )
 		
-				msg = (f"\n{min_distance}% #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
+				msg = (f"\n{min_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K \n"
 				       f"{size_in_thousands}K > {last_size_in_thousands}K")
 				
 				if size_in_dollars >= size_filter:
 					print(msg)
-				if display_on_tg == 1 and (s_max_decimal - decimal_x) >= 2 and size_in_dollars >= size_filter:
-					bot1.send_message(662482931, msg)
+					if display_on_tg == 1:
+						bot1.send_message(662482931, msg)
 			
 		# else:
 		# 	print(f"Some shit with {symbol} spot data!")
@@ -135,29 +136,26 @@ def search(
 		time3 = time2 - time1
 		time3 = float('{:.2f}'.format(time3))
 		
-		print(f"{symbol} {datetime.now().strftime('%H:%M:%S')} / done in {time3} seconds")
+		if time_log > 0:
+			print(f"{symbol} ... {time3} seconds")
+			# print(f"{symbol} {datetime.now().strftime('%H:%M:%S')} / done in {time3} seconds")
 		
 		time.sleep(reload_time)
 		
 if __name__ == '__main__':
 	
-	# pairs = (input('Pairs: ')).split(', ')
-	# reload_time = float(input("Reload seconds (def. 2): ") or 2)
-	# display_on_tg = int(input("Telegram alert? (def. 0): ") or 0)
-	# request_limit_length = 100 # int(input("Request length (def. 100): ") or 100)
-	# search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	# max_minimum_candle = int(input("Start avg candle (def. 4): ") or 4)
-	# multiplier = int(input("Multiplier (def. x3): ") or 3)
-	# size_filter = int(input("Size filter in K (def. 70): ") or 70)
+	reload_time = 2.5 # float(input("Reload seconds (def. 2): ") or 2)
+	request_limit_length = 100 # int(input("Request length (def. 100): ") or 100)
+	max_minimum_candle = 4 # int(input("Start avg candle (def. 4): ") or 4)
 	
-	pairs = ["HIFIUSDT", "ARKUSDT", "BLURUSDT", "GASUSDT", "STORJUSDT", "TIAUSDT", "LUNA2USDT", "BNTUSDT", "ZRXUSDT"]
-	reload_time = 500000
-	display_on_tg = 0
-	request_limit_length = 100
-	search_distance = 5
-	max_minimum_candle = 4
-	multiplier = 2
-	size_filter = 0
+	
+	pairs = (input('Pairs: ')).split(', ')
+	display_on_tg = int(input("Telegram alert? (def. 0): ") or 0)
+	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
+	multiplier = int(input("Multiplier (def. x3): ") or 3)
+	size_filter = int(input("Size filter in K (def. 100): ") or 100)
+	time_log = int(input("Print time log? (def. 0): ") or 0)
+	
 
 	if True:
 		
@@ -178,6 +176,7 @@ if __name__ == '__main__':
 				                  max_minimum_candle,
 				                  multiplier,
 				                  size_filter,
+				                  time_log,
 			                      ))
 			the_processes.append(process)
 
