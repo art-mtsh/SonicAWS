@@ -145,8 +145,8 @@ def search(
 if __name__ == '__main__':
 	
 	reload_time = 2.5 # float(input("Reload seconds (def. 2): ") or 2)
-	request_limit_length = 100 # int(input("Request length (def. 100): ") or 100)
-	max_minimum_candle = 4 # int(input("Start avg candle (def. 4): ") or 4)
+	request_limit_length = 100
+	max_minimum_candle = 4
 	
 	
 	pairs = (input('Pairs: ')).split(', ')
