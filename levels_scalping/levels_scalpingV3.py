@@ -135,7 +135,7 @@ def search(
 		time3 = float('{:.2f}'.format(time3))
 		
 		if time_log > 0:
-			print(f"{symbol} ... {time3} seconds")
+			print(f"{time3} s")
 			# print(f"{symbol} {datetime.now().strftime('%H:%M:%S')} / done in {time3} seconds")
 		
 		time.sleep(reload_time)
