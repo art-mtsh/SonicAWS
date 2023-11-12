@@ -11,6 +11,8 @@ trades daily
 
 """
 
+excluded = ['SOLUSDT', 'TRBUSDT']
+
 def calculate(dict_of_pairs):
     
     request_limit_length = 288
@@ -50,11 +52,11 @@ def calculate(dict_of_pairs):
                 ts_percent = float(ts) / (close[-1] / 100)
                 ts_percent = float('{:.4f}'.format(ts_percent))
                 
-                if daily_trades >= 1500 and avg_atr_per >= 0.8 and ts_percent <= 0.03:
+                if daily_volume >= 100 and daily_trades >= 700 and avg_atr_per >= 1.0 and ts_percent <= 0.03 and symbol not in excluded:
                     # print(f"{symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
                     print(symbol, end=", ")
                 if symbol == 'BTCUSDT':
-                    print(f" ====>>> {symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
+                    print(f" ======>>> {symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
                     
 def split_dict(input_dict, num_parts):
     avg = len(input_dict) // num_parts
