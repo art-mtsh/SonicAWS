@@ -142,16 +142,17 @@ def search(
 		
 if __name__ == '__main__':
 	
-	reload_time = 2.5 # float(input("Reload seconds (def. 2): ") or 2)
+
 	request_limit_length = 100
 	max_minimum_candle = 4
 	
-	
 	pairs = (input('Pairs: ')).split(', ')
-	display_on_tg = int(input("Telegram alert? (def. 0): ") or 0)
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	multiplier = int(input("Multiplier (def. x3): ") or 3)
 	size_filter = int(input("Size filter in K (def. 100): ") or 100)
+	multiplier = int(input("Multiplier (def. x3): ") or 3)
+	
+	reload_time = float(input("Reload seconds min 2.5 (def. 2.5): ") or 2.5)
+	display_on_tg = int(input("Telegram alert? (def. 0): ") or 0)
 	time_log = int(input("Print time log? (def. 0): ") or 0)
 	
 
