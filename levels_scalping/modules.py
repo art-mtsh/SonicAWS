@@ -85,30 +85,42 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	max_of_range = max_min[0]
 	min_of_range = max_min[1]
 	
+	price_1 = combined_list[-1][0]
+	size_1 = combined_list[-1][1]
+	size_1_dollars = (price_1 * size_1) / 1000
+	distance_1 = abs(close - price_1) / (close / 100)
+	distance_1 = float('{:.2f}'.format(distance_1))
+	
+	price_2 = combined_list[-1][0]
+	size_2 = combined_list[-1][1]
+	size_2_dollars = (price_2 * size_2) / 1000
+	distance_2 = abs(close - price_2) / (close / 100)
+	distance_2 = float('{:.2f}'.format(distance_2))
+	
+	price_3 = combined_list[-1][0]
+	size_3 = combined_list[-1][1]
+	size_3_dollars = (price_3 * size_3) / 1000
+	distance_3 = abs(close - price_3) / (close / 100)
+	distance_3 = float('{:.2f}'.format(distance_3))
+	
 	res = []
 	
-	if combined_list[-1][1] >= max_avg_size and combined_list[-1][1] >= size_filter and \
-		(combined_list[-1][0] >= max_of_range or min_of_range >= combined_list[-1][0]) and \
-		abs(close - combined_list[-1][0]) / (close / 100) <= search_distance:
+	if price_1 >= max_avg_size and size_1_dollars >= size_filter and \
+		(price_1 >= max_of_range or min_of_range >= price_1) and \
+		abs(close - price_1) / (close / 100) <= search_distance:
 		
-		distance_1 = abs(close - combined_list[-1][0]) / (close / 100)
-		distance_1 = float('{:.2f}'.format(distance_1))
-		res.append([distance_1, combined_list[-1][0], combined_list[-1][1]])
+		res.append([distance_1, price_1, size_1])
 	
-	if combined_list[-2][1] >= max_avg_size and combined_list[-2][1] >= size_filter and \
-		(combined_list[-2][0] >= max_of_range or min_of_range >= combined_list[-2][0]) and \
-		abs(close - combined_list[-2][0]) / (close / 100) <= search_distance:
-		
-		distance_2 = abs(close - combined_list[-2][0]) / (close / 100)
-		distance_2 = float('{:.2f}'.format(distance_2))
-		res.append([distance_2, combined_list[-2][0], combined_list[-2][1]])
+	if price_2 >= max_avg_size and size_2_dollars >= size_filter and \
+		(price_2 >= max_of_range or min_of_range >= price_2) and \
+		abs(close - price_2) / (close / 100) <= search_distance:
+
+		res.append([distance_2, price_2, size_2])
 	
-	if combined_list[-3][1] >= max_avg_size and combined_list[-3][1] >= size_filter and \
-		(combined_list[-3][0] >= max_of_range or min_of_range >= combined_list[-3][0]) and \
-		abs(close - combined_list[-3][0]) / (close / 100) <= search_distance:
-		
-		distance_3 = abs(close - combined_list[-3][0]) / (close / 100)
-		distance_3 = float('{:.2f}'.format(distance_3))
-		res.append([distance_3, combined_list[-3][0], combined_list[-3][1]])
+	if price_3 >= max_avg_size and size_3_dollars >= size_filter and \
+		(price_3 >= max_of_range or min_of_range >= price_3) and \
+		abs(close - price_3) / (close / 100) <= search_distance:
+
+		res.append([distance_3, price_3, size_3])
 		
 	return res
