@@ -14,7 +14,6 @@ def search(
 		display_on_tg,
 		request_limit_length,
 		search_distance,
-		max_minimum_candle,
 		multiplier,
 		size_filter,
 		time_log
@@ -39,7 +38,7 @@ def search(
 			f_combined_list = futures_data[1]
 			f_max_decimal = futures_data[2]
 			
-			f_max_avg_size = f_combined_list[-max_minimum_candle][1] * multiplier
+			f_max_avg_size = f_combined_list[-4][1] * multiplier
 			f_distances = three_distances(symbol, f_combined_list, f_max_avg_size, f_close)
 		
 			min_distance = min(f_distances)
@@ -54,7 +53,7 @@ def search(
 				size_in_thousands = int(f_combined_list[-min_index][1] / 1000)
 				size_in_dollars = int((f_combined_list[-min_index][0] * f_combined_list[-min_index][1]) / 1000)
 				zero_addition = (f_max_decimal - decimal_x) * '0'
-				last_size_in_thousands = int(f_combined_list[-max_minimum_candle][1] / 1000)
+				last_size_in_thousands = int(f_combined_list[-4][1] / 1000)
 				
 				msg = (f"{min_distance}% FUT #{symbol}: #{size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
@@ -87,7 +86,7 @@ def search(
 			s_combined_list = spot_data[1]
 			s_max_decimal = spot_data[2]
 	
-			s_max_avg_size = s_combined_list[-max_minimum_candle][1] * multiplier
+			s_max_avg_size = s_combined_list[-4][1] * multiplier
 			s_distances = three_distances(symbol, s_combined_list, s_max_avg_size, s_close)
 			
 			min_distance = min(s_distances)
@@ -101,7 +100,7 @@ def search(
 				size_in_thousands = int(s_combined_list[-min_index][1] / 1000)
 				size_in_dollars = int((s_combined_list[-min_index][0] * s_combined_list[-min_index][1]) / 1000)
 				zero_addition = (s_max_decimal - decimal_x) * '0'
-				last_size_in_thousands = int(s_combined_list[-max_minimum_candle][1] / 1000)
+				last_size_in_thousands = int(s_combined_list[-4][1] / 1000)
 		
 				msg = (f"{min_distance}% SPOT #{symbol}: #{size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
@@ -142,7 +141,6 @@ if __name__ == '__main__':
 	
 
 	request_limit_length = 100
-	max_minimum_candle = 4
 	
 	pairs = (input('Pairs: ')).split(', ')
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
@@ -169,7 +167,6 @@ if __name__ == '__main__':
 				                  display_on_tg,
 				                  request_limit_length,
 				                  search_distance,
-				                  max_minimum_candle,
 				                  multiplier,
 				                  size_filter,
 				                  time_log,
