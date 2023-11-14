@@ -151,9 +151,9 @@ if __name__ == '__main__':
 	size_filter = int(input("Size filter in K (def. 100): ") or 100)
 	multiplier = int(input("Multiplier (def. x3): ") or 3)
 	
-	display_on_tg = int(input("Telegram alert? (def. 0): ") or 0)
+	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 0): ") or 0)
-	reload_time = 60 / ((1150 / 11) / len(pairs)) - 2.5
+	reload_time = 60 / ((1100 / 11) / len(pairs)) - 2.5
 
 	if True:
 		
