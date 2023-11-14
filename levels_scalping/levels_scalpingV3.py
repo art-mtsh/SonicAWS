@@ -37,8 +37,8 @@ def search(
 			f_close = futures_data[0]
 			f_combined_list = futures_data[1]
 			f_max_decimal = futures_data[2]
-			
 			f_max_avg_size = f_combined_list[-4][1] * multiplier
+			
 			f_distances = three_distances(symbol, f_close, f_combined_list, f_max_avg_size, search_distance, size_filter)
 			
 			f_fifth_distance = 100
@@ -66,7 +66,7 @@ def search(
 				msg = (f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
-				levels_check_spot.clear()
+				levels_check_futures.clear()
 				
 				if display_on_tg == 1:
 					bot1.send_message(662482931, msg + "\nRepeated 5 times!")
@@ -80,8 +80,8 @@ def search(
 			s_close = spot_data[0]
 			s_combined_list = spot_data[1]
 			s_max_decimal = spot_data[2]
-	
 			s_max_avg_size = s_combined_list[-4][1] * multiplier
+			
 			s_distances = three_distances(symbol, s_close, s_combined_list, s_max_avg_size, search_distance, size_filter)
 			
 			s_fifth_distance = 100
