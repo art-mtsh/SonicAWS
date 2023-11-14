@@ -233,8 +233,8 @@ def printer(s_queue):
 	
 	# message = ""
 	
-	if not s_queue.empty():
-		bot1.send_message(662482931, "💵💵💵")
+	# if not s_queue.empty():
+	# 	bot1.send_message(662482931, "💵💵💵")
 	
 	while not s_queue.empty():
 		data = s_queue.get()
@@ -250,12 +250,12 @@ if __name__ == '__main__':
 	
 	proc = 14
 	gap_filter = 0.5 # float(input("Max gap filter (def. 0.2%): ") or 0.2)
-	density_filter = 25 # int(input("Density filter (def. 30): ") or 30)
-	tick_size_filter = 0.1 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
-	atr_per_filter = 0.20 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
-	trades_k_filter = 100 # int(input("Trades filter (def. 100): ") or 100)
+	density_filter = 30 # int(input("Density filter (def. 30): ") or 30)
+	tick_size_filter = 0.03 # float(input("Ticksize filter (def. 0.03%): ") or 0.03)
+	atr_per_filter = 0.30 # float(input("ATR% filter (def. 0.3%): ") or 0.3)
+	trades_k_filter = 500 # int(input("Trades filter (def. 100): ") or 100)
 	search_distance = 1.0
-	levels_scatter = 0.03 / 100
+	levels_scatter = 0.02 / 100
 	
 	# print(f"\n"
 	#       f"Processes = {proc} \n"
@@ -285,7 +285,7 @@ if __name__ == '__main__':
 			last_second_digit = now.strftime('%S')
 			time.sleep(1)
 			
-			if int(last_second_digit) == 0:
+			if int(last_minute_digit) % 3 == 0 and int(last_second_digit) == 0:
 				break
 
 	while True:

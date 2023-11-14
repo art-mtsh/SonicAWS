@@ -20,6 +20,9 @@ def search(
 		time_log
 ):
 	
+	levels_check_futures = []
+	levels_check_spot = []
+	
 	while True:
 		
 		time1 = time.perf_counter()
@@ -53,22 +56,18 @@ def search(
 				zero_addition = (f_max_decimal - decimal_x) * '0'
 				last_size_in_thousands = int(f_combined_list[-max_minimum_candle][1] / 1000)
 				
-				# print(
-				# 	f"FUTURES {symbol}, "
-				# 	f"min_distance {min_distance}%, "
-				# 	f"min_index {min_index}, "
-				# 	f"decimal_x {decimal_x}, "
-				# 	f"size_price {size_price}, "
-				# 	f"size_in_thousands {size_in_thousands}, "
-				# 	f"size_in_dollars {size_in_dollars}, "
-				# 	f"zero_addition {zero_addition}, "
-				# 	f"last_size_in_thousands {last_size_in_thousands}"
-				# )
-				
 				msg = (f"{min_distance}% FUT #{symbol}: #{size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
 				if size_in_dollars >= size_filter:
-					print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
+					
+					levels_check_futures.append(size_price)
+					
+					if levels_check_futures.count(size_price) >= 5:
+						
+						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
+						print(f"{size_price} is repeated 5 times!")
+						levels_check_futures.clear()
+						
 					if display_on_tg == 1:
 						bot1.send_message(662482931, msg)
 	
@@ -96,39 +95,23 @@ def search(
 				size_in_dollars = int((s_combined_list[-min_index][0] * s_combined_list[-min_index][1]) / 1000)
 				zero_addition = (s_max_decimal - decimal_x) * '0'
 				last_size_in_thousands = int(s_combined_list[-max_minimum_candle][1] / 1000)
-			
-				# print(
-				# 	f"SPOT {symbol}, "
-				# 	f"min_distance {min_distance}%, "
-				# 	f"min_index {min_index}, "
-				# 	f"decimal_x {decimal_x}, "
-				# 	f"size_price {size_price}, "
-				# 	f"size_in_thousands {size_in_thousands}, "
-				# 	f"size_in_dollars {size_in_dollars}, "
-				# 	f"zero_addition {zero_addition}, "
-				# 	f"last_size_in_thousands {last_size_in_thousands}"
-				# )
 		
 				msg = (f"{min_distance}% SPOT #{symbol}: #{size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
 				if size_in_dollars >= size_filter:
-					print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
+					
+					levels_check_spot.append(size_price)
+					
+					if levels_check_spot.count(size_price) >= 5:
+						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
+						print(f"{size_price} is repeated 5 times!")
+						levels_check_spot.clear()
+						
 					if display_on_tg == 1:
 						bot1.send_message(662482931, msg)
 			
 		# else:
 		# 	print(f"Some shit with {symbol} spot data!")
-		
-		# if minimum_dist <= search_distance:
-		#
-		# 	if minimum_dist <= search_distance / 4:
-		# 		dist_marker = "🟩 "
-		# 	elif minimum_dist <= search_distance / 4 * 2:
-		# 		dist_marker = "🟨 "
-		# 	elif minimum_dist <= search_distance / 4 * 3:
-		# 		dist_marker = "🟧 "
-		# 	else:
-		# 		dist_marker = "🟥 "
 		
 		time2 = time.perf_counter()
 		time3 = time2 - time1
