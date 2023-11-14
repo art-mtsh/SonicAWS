@@ -69,9 +69,10 @@ def search(
 						levels_check_futures.clear()
 						
 						if display_on_tg == 1:
-							bot1.send_message(662482931, msg)
+							bot1.send_message(662482931, msg + "\nRepeated 5 times!")
 					
 					else:
+						
 						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 						
 						if display_on_tg == 1:
@@ -109,14 +110,16 @@ def search(
 					levels_check_spot.append(size_price)
 					
 					if levels_check_spot.count(size_price) >= 5:
+						
 						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 						print(f"{size_price} is repeated 5 times!")
 						levels_check_spot.clear()
 						
 						if display_on_tg == 1:
-							bot1.send_message(662482931, msg)
+							bot1.send_message(662482931, msg + "\nRepeated 5 times!")
 						
 					else:
+						
 						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 						
 						if display_on_tg == 1:
