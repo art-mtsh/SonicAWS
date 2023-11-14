@@ -160,7 +160,7 @@ if __name__ == '__main__':
 		manager = Manager()
 		shared_queue = manager.Queue()
 		
-		print(f">>> {datetime.now().strftime('%H:%M:%S')} {len(pairs)} pairs, {int(reload_time + 2.5)} reload period")
+		print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, {int(reload_time + 2.5)} s. reload period")
 
 		the_processes = []
 		for pair in pairs:
