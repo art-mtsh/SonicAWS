@@ -81,7 +81,7 @@ def order_book(url):
 	
 def three_distances(symbol, combined_list, max_avg_size, close):
 	
-	max_min = extremum(symbol, '1m', 10)
+	max_min = extremum(symbol, '1m', 5)
 	max_of_range = max_min[0]
 	min_of_range = max_min[1]
 	
