@@ -105,21 +105,21 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	
 	res = []
 	
-	if price_1 >= max_avg_size and size_1_dollars >= size_filter and \
+	if size_1 >= max_avg_size and size_1_dollars >= size_filter and \
 		(price_1 >= max_of_range or min_of_range >= price_1) and \
-		abs(close - price_1) / (close / 100) <= search_distance:
+		distance_1 <= search_distance:
 		
 		res.append([distance_1, price_1, size_1])
 	
-	if price_2 >= max_avg_size and size_2_dollars >= size_filter and \
+	if size_2 >= max_avg_size and size_2_dollars >= size_filter and \
 		(price_2 >= max_of_range or min_of_range >= price_2) and \
-		abs(close - price_2) / (close / 100) <= search_distance:
+		distance_2 <= search_distance:
 
 		res.append([distance_2, price_2, size_2])
 	
-	if price_3 >= max_avg_size and size_3_dollars >= size_filter and \
+	if size_3 >= max_avg_size and size_3_dollars >= size_filter and \
 		(price_3 >= max_of_range or min_of_range >= price_3) and \
-		abs(close - price_3) / (close / 100) <= search_distance:
+		distance_3 <= search_distance:
 
 		res.append([distance_3, price_3, size_3])
 		
