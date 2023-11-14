@@ -91,14 +91,14 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	distance_1 = abs(close - price_1) / (close / 100)
 	distance_1 = float('{:.2f}'.format(distance_1))
 	
-	price_2 = combined_list[-1][0]
-	size_2 = combined_list[-1][1]
+	price_2 = combined_list[-2][0]
+	size_2 = combined_list[-2][1]
 	size_2_dollars = (price_2 * size_2) / 1000
 	distance_2 = abs(close - price_2) / (close / 100)
 	distance_2 = float('{:.2f}'.format(distance_2))
 	
-	price_3 = combined_list[-1][0]
-	size_3 = combined_list[-1][1]
+	price_3 = combined_list[-3][0]
+	size_3 = combined_list[-3][1]
 	size_3_dollars = (price_3 * size_3) / 1000
 	distance_3 = abs(close - price_3) / (close / 100)
 	distance_3 = float('{:.2f}'.format(distance_3))
