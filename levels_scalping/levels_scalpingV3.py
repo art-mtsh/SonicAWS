@@ -65,7 +65,7 @@ def search(
 				# 	f"last_size_in_thousands {last_size_in_thousands}"
 				# )
 				
-				msg = (f"{min_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
+				msg = (f"{min_distance}% FUT #{symbol}: #{size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
 				if size_in_dollars >= size_filter:
 					print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
@@ -109,7 +109,7 @@ def search(
 				# 	f"last_size_in_thousands {last_size_in_thousands}"
 				# )
 		
-				msg = (f"{min_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
+				msg = (f"{min_distance}% SPOT #{symbol}: #{size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
 				if size_in_dollars >= size_filter:
 					print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
@@ -151,10 +151,9 @@ if __name__ == '__main__':
 	size_filter = int(input("Size filter in K (def. 100): ") or 100)
 	multiplier = int(input("Multiplier (def. x3): ") or 3)
 	
-	reload_time = float(input("Reload seconds min 2.5 (def. 2.5): ") or 2.5)
 	display_on_tg = int(input("Telegram alert? (def. 0): ") or 0)
 	time_log = int(input("Print time log? (def. 0): ") or 0)
-	
+	reload_time = 60 / ((1150 / 11) / len(pairs)) - 2.5
 
 	if True:
 		
