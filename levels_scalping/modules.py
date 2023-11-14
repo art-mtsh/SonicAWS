@@ -23,7 +23,7 @@ def extremum(symbol, frame, request_limit_length):
 			buy_volume = list(float(i[9]) for i in binance_candle_data)
 			sell_volume = [volume[0] - buy_volume[0]]
 			
-			return [max(high), min(low)]
+			return [max(high), min(low), close[-1]]
 		
 		else:
 			msg = f"Not enough data for {symbol} on 1m"
@@ -79,29 +79,36 @@ def order_book(url):
 	# 	print(response.status_code)
 
 	
-def three_distances(symbol, combined_list, max_avg_size, close):
+def three_distances(symbol, close, combined_list, max_avg_size, search_distance, size_filter):
 	
 	max_min = extremum(symbol, '1m', 5)
 	max_of_range = max_min[0]
 	min_of_range = max_min[1]
 	
-	if combined_list[-1][1] >= max_avg_size and (combined_list[-1][0] >= max_of_range or min_of_range >= combined_list[-1][0]):
+	res = []
+	
+	if combined_list[-1][1] >= max_avg_size and combined_list[-1][1] >= size_filter and \
+		(combined_list[-1][0] >= max_of_range or min_of_range >= combined_list[-1][0]) and \
+		abs(close - combined_list[-1][0]) / (close / 100) <= search_distance:
+		
 		distance_1 = abs(close - combined_list[-1][0]) / (close / 100)
 		distance_1 = float('{:.2f}'.format(distance_1))
-	else:
-		distance_1 = 100
+		res.append([distance_1, combined_list[-1][0], combined_list[-1][1]])
 	
-	if combined_list[-2][1] >= max_avg_size and (combined_list[-2][0] >= max_of_range or min_of_range >= combined_list[-2][0]):
+	if combined_list[-2][1] >= max_avg_size and combined_list[-2][1] >= size_filter and \
+		(combined_list[-2][0] >= max_of_range or min_of_range >= combined_list[-2][0]) and \
+		abs(close - combined_list[-2][0]) / (close / 100) <= search_distance:
+		
 		distance_2 = abs(close - combined_list[-2][0]) / (close / 100)
 		distance_2 = float('{:.2f}'.format(distance_2))
-	else:
-		distance_2 = 100
+		res.append([distance_2, combined_list[-2][0], combined_list[-2][1]])
 	
-	if combined_list[-3][1] >= max_avg_size and (combined_list[-3][0] >= max_of_range or min_of_range >= combined_list[-3][0]):
+	if combined_list[-3][1] >= max_avg_size and combined_list[-3][1] >= size_filter and \
+		(combined_list[-3][0] >= max_of_range or min_of_range >= combined_list[-3][0]) and \
+		abs(close - combined_list[-3][0]) / (close / 100) <= search_distance:
+		
 		distance_3 = abs(close - combined_list[-3][0]) / (close / 100)
 		distance_3 = float('{:.2f}'.format(distance_3))
-	else:
-		distance_3 = 100
+		res.append([distance_3, combined_list[-3][0], combined_list[-3][1]])
 		
-	return [distance_1, distance_2, distance_3]
-
+	return res

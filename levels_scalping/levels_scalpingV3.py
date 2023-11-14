@@ -39,43 +39,38 @@ def search(
 			f_max_decimal = futures_data[2]
 			
 			f_max_avg_size = f_combined_list[-4][1] * multiplier
-			f_distances = three_distances(symbol, f_combined_list, f_max_avg_size, f_close)
-		
-			min_distance = min(f_distances)
+			f_distances = three_distances(symbol, f_close, f_combined_list, f_max_avg_size, search_distance, size_filter)
 			
-			if min_distance <= search_distance:
+			f_fifth_distance = 100
+			f_fifth_level = 0
+			f_fifth_size = 0
+			
+			if len(f_distances) != 0:
 				
-				min_index = f_distances.index(min_distance)
-				min_index = min_index + 1
+				for i in f_distances:
+					levels_check_futures.append(i[1])
+
+					if levels_check_futures.count(i[1]) >= 5 and i[0] < f_fifth_distance:
+						f_fifth_distance = i[0]
+						f_fifth_level = i[1]
+						f_fifth_size = i[2]
+			
+			if f_fifth_distance <= search_distance:
 				
-				decimal_x = len(str(f_combined_list[-min_index][0]).split('.')[-1].rstrip('0'))
-				size_price = f_combined_list[-min_index][0]
-				size_in_thousands = int(f_combined_list[-min_index][1] / 1000)
-				size_in_dollars = int((f_combined_list[-min_index][0] * f_combined_list[-min_index][1]) / 1000)
+				decimal_x = len(str(f_fifth_level).split('.')[-1].rstrip('0'))
+				size_price = f_fifth_level
+				size_in_thousands = int(f_fifth_size / 1000)
+				size_in_dollars = int((f_fifth_level * f_fifth_size) / 1000)
 				zero_addition = (f_max_decimal - decimal_x) * '0'
-				last_size_in_thousands = int(f_combined_list[-4][1] / 1000)
 				
-				msg = (f"{min_distance}% FUT #{symbol}: #{size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
+				msg = (f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
-				if size_in_dollars >= size_filter:
-					
-					levels_check_futures.append(size_price)
-					
-					if levels_check_futures.count(size_price) >= 5:
-						
-						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
-						print(f"{size_price} is repeated 5 times!")
-						levels_check_futures.clear()
-						
-						if display_on_tg == 1:
-							bot1.send_message(662482931, msg + "\nRepeated 5 times!")
-					
-					else:
-						
-						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
-						
-						if display_on_tg == 1:
-							bot1.send_message(662482931, msg)
+				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
+				levels_check_spot.clear()
+				
+				if display_on_tg == 1:
+					bot1.send_message(662482931, msg + "\nRepeated 5 times!")
+
 	
 		# else:
 		# 	print(f"Some shit with {symbol} futures data!")
@@ -87,42 +82,37 @@ def search(
 			s_max_decimal = spot_data[2]
 	
 			s_max_avg_size = s_combined_list[-4][1] * multiplier
-			s_distances = three_distances(symbol, s_combined_list, s_max_avg_size, s_close)
+			s_distances = three_distances(symbol, s_close, s_combined_list, s_max_avg_size, search_distance, size_filter)
 			
-			min_distance = min(s_distances)
+			s_fifth_distance = 100
+			s_fifth_level = 0
+			s_fifth_size = 0
 			
-			if min_distance <= search_distance:
-				min_index = s_distances.index(min_distance)
-				min_index = min_index + 1
+			if len(s_distances) != 0:
 				
-				decimal_x = len(str(s_combined_list[-min_index][0]).split('.')[-1].rstrip('0'))
-				size_price = s_combined_list[-min_index][0]
-				size_in_thousands = int(s_combined_list[-min_index][1] / 1000)
-				size_in_dollars = int((s_combined_list[-min_index][0] * s_combined_list[-min_index][1]) / 1000)
+				for i in s_distances:
+					levels_check_spot.append(i[1])
+					
+					if levels_check_spot.count(i[1]) >= 5 and i[0] < s_fifth_distance:
+						s_fifth_distance = i[0]
+						s_fifth_level = i[1]
+						s_fifth_size = i[2]
+			
+			if s_fifth_distance <= search_distance:
+				
+				decimal_x = len(str(s_fifth_level).split('.')[-1].rstrip('0'))
+				size_price = s_fifth_level
+				size_in_thousands = int(s_fifth_size / 1000)
+				size_in_dollars = int((s_fifth_level * s_fifth_size) / 1000)
 				zero_addition = (s_max_decimal - decimal_x) * '0'
-				last_size_in_thousands = int(s_combined_list[-4][1] / 1000)
-		
-				msg = (f"{min_distance}% SPOT #{symbol}: #{size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
-				if size_in_dollars >= size_filter:
-					
-					levels_check_spot.append(size_price)
-					
-					if levels_check_spot.count(size_price) >= 5:
-						
-						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
-						print(f"{size_price} is repeated 5 times!")
-						levels_check_spot.clear()
-						
-						if display_on_tg == 1:
-							bot1.send_message(662482931, msg + "\nRepeated 5 times!")
-						
-					else:
-						
-						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
-						
-						if display_on_tg == 1:
-							bot1.send_message(662482931, msg)
+				msg = (f"{s_fifth_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
+				
+				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
+				levels_check_spot.clear()
+				
+				if display_on_tg == 1:
+					bot1.send_message(662482931, msg + "\nRepeated 5 times!")
 			
 		# else:
 		# 	print(f"Some shit with {symbol} spot data!")
@@ -133,7 +123,6 @@ def search(
 		
 		if time_log > 0:
 			print(f"{time3} s")
-			# print(f"{symbol} {datetime.now().strftime('%H:%M:%S')} / done in {time3} seconds")
 		
 		time.sleep(reload_time)
 		

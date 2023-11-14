@@ -1,6 +1,9 @@
-le = [2, 3,2,2,2,21,1,1,2,2,2,2]
+le = []
 
-print(le.count(2))
+print(len(le))
 
-le.clear()
+le += [[2, 32], [2, 332], [2, 4432]]
+le += [[3, 876]]
+
 print(le)
+print(len(le))
