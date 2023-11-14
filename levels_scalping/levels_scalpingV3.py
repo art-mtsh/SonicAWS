@@ -67,12 +67,15 @@ def search(
 						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 						print(f"{size_price} is repeated 5 times!")
 						levels_check_futures.clear()
+						
+						if display_on_tg == 1:
+							bot1.send_message(662482931, msg)
 					
 					else:
 						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 						
-					if display_on_tg == 1:
-						bot1.send_message(662482931, msg)
+						if display_on_tg == 1:
+							bot1.send_message(662482931, msg)
 	
 		# else:
 		# 	print(f"Some shit with {symbol} futures data!")
@@ -110,11 +113,14 @@ def search(
 						print(f"{size_price} is repeated 5 times!")
 						levels_check_spot.clear()
 						
+						if display_on_tg == 1:
+							bot1.send_message(662482931, msg)
+						
 					else:
 						print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 						
-					if display_on_tg == 1:
-						bot1.send_message(662482931, msg)
+						if display_on_tg == 1:
+							bot1.send_message(662482931, msg)
 			
 		# else:
 		# 	print(f"Some shit with {symbol} spot data!")
