@@ -7,3 +7,6 @@ le += [[3, 876]]
 
 print(le)
 print(len(le))
+
+le.clear()
+print(le)
