@@ -136,6 +136,7 @@ def search(
 		
 		if time_log > 0:
 			print(f"{time3} s")
+			sys.stdout.flush()
 		
 		time.sleep(reload_time)
 		
