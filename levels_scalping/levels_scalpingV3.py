@@ -16,6 +16,7 @@ def search(
 		request_limit_length,
 		search_distance,
 		multiplier,
+		level_repeat,
 		size_filter,
 		time_log
 ):
@@ -50,7 +51,7 @@ def search(
 				for i in f_distances:
 					levels_check_futures.append(i[1])
 
-					if levels_check_futures.count(i[1]) >= 5 and i[0] < f_fifth_distance:
+					if levels_check_futures.count(i[1]) >= level_repeat and i[0] < f_fifth_distance:
 						
 						# print(f"\nFutures levels list: {levels_check_futures} have 5 duplicates")
 						# sys.stdout.flush()
@@ -149,6 +150,7 @@ if __name__ == '__main__':
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	size_filter = int(input("Size filter in K (def. 100): ") or 100)
 	multiplier = int(input("Multiplier (def. x3): ") or 3)
+	level_repeat = int(input("Level repeats (def. x10): ") or 10)
 	
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 0): ") or 0)
@@ -171,6 +173,7 @@ if __name__ == '__main__':
 				                  request_limit_length,
 				                  search_distance,
 				                  multiplier,
+				                  level_repeat,
 				                  size_filter,
 				                  time_log,
 			                      ))
