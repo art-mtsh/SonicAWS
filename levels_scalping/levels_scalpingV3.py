@@ -55,7 +55,7 @@ def search(
 						f_fifth_level = i[1]
 						f_fifth_size = i[2]
 			
-			if f_fifth_distance <= search_distance:
+			if f_fifth_distance != 100:
 				
 				decimal_x = len(str(f_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = f_fifth_level
@@ -67,6 +67,7 @@ def search(
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
 				levels_check_futures.clear()
+				print(f"Futures levels list: {levels_check_futures}")
 				
 				if display_on_tg == 1:
 					bot1.send_message(662482931, msg + "\nRepeated 5 times!")
@@ -98,7 +99,7 @@ def search(
 						s_fifth_level = i[1]
 						s_fifth_size = i[2]
 			
-			if s_fifth_distance <= search_distance:
+			if s_fifth_distance != 100:
 				
 				decimal_x = len(str(s_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = s_fifth_level
@@ -110,6 +111,7 @@ def search(
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
 				levels_check_spot.clear()
+				print(f"Spot levels list: {levels_check_spot}")
 				
 				if display_on_tg == 1:
 					bot1.send_message(662482931, msg + "\nRepeated 5 times!")
