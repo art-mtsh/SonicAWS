@@ -62,7 +62,7 @@ def search(
 			
 			if f_fifth_distance != 100:
 				
-				print(f"Futures levels list: {levels_check_futures}")
+				print(f"\nFutures levels list: {levels_check_futures}")
 				
 				decimal_x = len(str(f_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = f_fifth_level
@@ -108,7 +108,7 @@ def search(
 			
 			if s_fifth_distance != 100:
 				
-				print(f"Spot levels list: {levels_check_futures}")
+				print(f"\nSpot levels list: {levels_check_futures}")
 				
 				decimal_x = len(str(s_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = s_fifth_level
