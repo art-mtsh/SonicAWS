@@ -3,9 +3,7 @@ from datetime import datetime
 from multiprocessing import Process, Manager
 import telebot
 from modules import order_book, three_distances
-import logging
-
-# logging.basicConfig(level=logging.DEBUG)
+import sys
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -26,8 +24,6 @@ def search(
 	levels_check_spot = []
 	
 	while True:
-		
-		
 		
 		time1 = time.perf_counter()
 		# ==== DATA REQUEST ====
@@ -51,7 +47,6 @@ def search(
 			f_fifth_size = 0
 			
 			if len(f_distances) != 0:
-				print(f"{symbol} FUTURES f_distances returned {f_distances}")
 				for i in f_distances:
 					levels_check_futures.append(i[1])
 
@@ -99,7 +94,6 @@ def search(
 			s_fifth_size = 0
 			
 			if len(s_distances) != 0:
-				print(f"{symbol} SPOT s_distances returned {s_distances}")
 				for i in s_distances:
 					levels_check_spot.append(i[1])
 					
@@ -132,6 +126,8 @@ def search(
 			
 		# else:
 		# 	print(f"Some shit with {symbol} spot data!")
+		
+		sys.stdout.flush()
 		
 		time2 = time.perf_counter()
 		time3 = time2 - time1
