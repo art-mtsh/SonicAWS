@@ -51,18 +51,19 @@ def search(
 			f_fifth_size = 0
 			
 			if len(f_distances) != 0:
-				
+				print(f"{symbol} FUTURES f_distances returned {f_distances}")
 				for i in f_distances:
 					levels_check_futures.append(i[1])
 
 					if levels_check_futures.count(i[1]) >= 5 and i[0] < f_fifth_distance:
+						
+						print(f"\nFutures levels list: {levels_check_futures} have 5 duplicates")
+						
 						f_fifth_distance = i[0]
 						f_fifth_level = i[1]
 						f_fifth_size = i[2]
 			
 			if f_fifth_distance != 100:
-				
-				print(f"\nFutures levels list: {levels_check_futures}")
 				
 				decimal_x = len(str(f_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = f_fifth_level
@@ -75,6 +76,7 @@ def search(
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
 				levels_check_futures.clear()
 				print(f"Futures levels list: {levels_check_futures}")
+				print("")
 				
 				if display_on_tg == 1:
 					bot1.send_message(662482931, msg + "\nRepeated 5 times!")
@@ -97,18 +99,19 @@ def search(
 			s_fifth_size = 0
 			
 			if len(s_distances) != 0:
-				
+				print(f"{symbol} SPOT s_distances returned {s_distances}")
 				for i in s_distances:
 					levels_check_spot.append(i[1])
 					
 					if levels_check_spot.count(i[1]) >= 5 and i[0] < s_fifth_distance:
+						
+						print(f"\nSpot levels list: {levels_check_spot} have 5 duplicates")
+						
 						s_fifth_distance = i[0]
 						s_fifth_level = i[1]
 						s_fifth_size = i[2]
 			
 			if s_fifth_distance != 100:
-				
-				print(f"\nSpot levels list: {levels_check_futures}")
 				
 				decimal_x = len(str(s_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = s_fifth_level
@@ -122,6 +125,7 @@ def search(
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
 				levels_check_spot.clear()
 				print(f"Spot levels list: {levels_check_spot}")
+				print("")
 				
 				if display_on_tg == 1:
 					bot1.send_message(662482931, msg + "\nRepeated 5 times!")
