@@ -62,6 +62,8 @@ def search(
 			
 			if f_fifth_distance != 100:
 				
+				print(f"Futures levels list: {levels_check_futures}")
+				
 				decimal_x = len(str(f_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = f_fifth_level
 				size_in_thousands = int(f_fifth_size / 1000)
@@ -71,7 +73,6 @@ def search(
 				msg = (f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
-				print(f"Futures levels list: {levels_check_futures}")
 				levels_check_futures.clear()
 				print(f"Futures levels list: {levels_check_futures}")
 				
@@ -107,6 +108,8 @@ def search(
 			
 			if s_fifth_distance != 100:
 				
+				print(f"Spot levels list: {levels_check_futures}")
+				
 				decimal_x = len(str(s_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = s_fifth_level
 				size_in_thousands = int(s_fifth_size / 1000)
@@ -117,7 +120,6 @@ def search(
 				
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
-				print(f"Spot levels list: {levels_check_futures}")
 				levels_check_spot.clear()
 				print(f"Spot levels list: {levels_check_spot}")
 				
