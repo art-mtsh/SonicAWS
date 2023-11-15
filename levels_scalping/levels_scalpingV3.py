@@ -52,8 +52,8 @@ def search(
 
 					if levels_check_futures.count(i[1]) >= 5 and i[0] < f_fifth_distance:
 						
-						print(f"\nFutures levels list: {levels_check_futures} have 5 duplicates")
-						sys.stdout.flush()
+						# print(f"\nFutures levels list: {levels_check_futures} have 5 duplicates")
+						# sys.stdout.flush()
 						
 						f_fifth_distance = i[0]
 						f_fifth_level = i[1]
@@ -71,8 +71,8 @@ def search(
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
 				levels_check_futures.clear()
-				print(f"Futures levels list: {levels_check_futures}")
-				print("")
+				# print(f"Futures levels list: {levels_check_futures}")
+				# print("")
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
@@ -101,8 +101,8 @@ def search(
 					
 					if levels_check_spot.count(i[1]) >= 5 and i[0] < s_fifth_distance:
 						
-						print(f"\nSpot levels list: {levels_check_spot} have 5 duplicates")
-						sys.stdout.flush()
+						# print(f"\nSpot levels list: {levels_check_spot} have 5 duplicates")
+						# sys.stdout.flush()
 						
 						s_fifth_distance = i[0]
 						s_fifth_level = i[1]
@@ -120,8 +120,8 @@ def search(
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
 				levels_check_spot.clear()
-				print(f"Spot levels list: {levels_check_spot}")
-				print("")
+				# print(f"Spot levels list: {levels_check_spot}")
+				# print("")
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
