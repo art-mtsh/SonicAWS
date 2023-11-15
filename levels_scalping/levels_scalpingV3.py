@@ -117,7 +117,7 @@ def search(
 				
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
-				print(f"Futures levels list: {levels_check_futures}")
+				print(f"Spot levels list: {levels_check_futures}")
 				levels_check_spot.clear()
 				print(f"Spot levels list: {levels_check_spot}")
 				
