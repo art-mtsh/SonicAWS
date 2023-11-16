@@ -70,14 +70,14 @@ def search(
 				
 				msg = (f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
-				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
+				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + f"\nRepeated {level_repeat} times!")
 				levels_check_futures.clear()
 				# print(f"Futures levels list: {levels_check_futures}")
 				# print("")
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					bot1.send_message(662482931, msg + "\nRepeated 5 times!")
+					bot1.send_message(662482931, msg + f"\nRepeated {level_repeat} times!")
 
 	
 		# else:
@@ -119,14 +119,14 @@ def search(
 				
 				msg = (f"{s_fifth_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
-				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + "\nRepeated 5 times!")
+				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + f"\nRepeated {level_repeat} times!")
 				levels_check_spot.clear()
 				# print(f"Spot levels list: {levels_check_spot}")
 				# print("")
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					bot1.send_message(662482931, msg + "\nRepeated 5 times!")
+					bot1.send_message(662482931, msg + f"\nRepeated {level_repeat} times!")
 			
 		# else:
 		# 	print(f"Some shit with {symbol} spot data!")
