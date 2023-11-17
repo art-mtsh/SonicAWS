@@ -138,7 +138,6 @@ def search(
 		
 if __name__ == '__main__':
 	
-
 	request_limit_length = 100
 	
 	pairs = (input('Pairs: ')).split(', ')
@@ -150,6 +149,7 @@ if __name__ == '__main__':
 	
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
+	
 	reload_time = 60 / ((1100 / 11) / len(pairs)) - 2.5
 
 	if True:
