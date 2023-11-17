@@ -17,7 +17,8 @@ def search(
 		search_distance,
 		multiplier,
 		level_repeat,
-		size_filter,
+		futures_size_filter,
+		spot_size_filter,
 		time_log
 ):
 	
@@ -41,7 +42,7 @@ def search(
 			f_max_decimal = futures_data[2]
 			f_max_avg_size = f_combined_list[-4][1] * multiplier
 			
-			f_distances = three_distances(symbol, f_close, f_combined_list, f_max_avg_size, search_distance, size_filter)
+			f_distances = three_distances(symbol, f_close, f_combined_list, f_max_avg_size, search_distance, futures_size_filter)
 			
 			f_fifth_distance = 100
 			f_fifth_level = 0
@@ -52,9 +53,6 @@ def search(
 					levels_check_futures.append(i[1])
 
 					if levels_check_futures.count(i[1]) >= level_repeat and i[0] < f_fifth_distance:
-						
-						# print(f"\nFutures levels list: {levels_check_futures} have 5 duplicates")
-						# sys.stdout.flush()
 						
 						f_fifth_distance = i[0]
 						f_fifth_level = i[1]
@@ -90,7 +88,7 @@ def search(
 			s_max_decimal = spot_data[2]
 			s_max_avg_size = s_combined_list[-4][1] * multiplier
 			
-			s_distances = three_distances(symbol, s_close, s_combined_list, s_max_avg_size, search_distance, size_filter)
+			s_distances = three_distances(symbol, s_close, s_combined_list, s_max_avg_size, search_distance, spot_size_filter)
 			
 			s_fifth_distance = 100
 			s_fifth_level = 0
@@ -101,9 +99,6 @@ def search(
 					levels_check_spot.append(i[1])
 					
 					if levels_check_spot.count(i[1]) >= 5 and i[0] < s_fifth_distance:
-						
-						# print(f"\nSpot levels list: {levels_check_spot} have 5 duplicates")
-						# sys.stdout.flush()
 						
 						s_fifth_distance = i[0]
 						s_fifth_level = i[1]
@@ -136,7 +131,7 @@ def search(
 		time3 = float('{:.2f}'.format(time3))
 		
 		if time_log > 0:
-			print(f"{time3} s")
+			print(f"{symbol}: {time3} s")
 			sys.stdout.flush()
 		
 		time.sleep(reload_time)
@@ -148,7 +143,8 @@ if __name__ == '__main__':
 	
 	pairs = (input('Pairs: ')).split(', ')
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	size_filter = int(input("Size filter in K (def. 100): ") or 100)
+	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
+	spot_size_filter = int(input("Spot size filter in K (def. 20): ") or 20)
 	multiplier = int(input("Multiplier (def. x3): ") or 3)
 	level_repeat = int(input("Level repeats (def. x10): ") or 10)
 	
@@ -161,7 +157,7 @@ if __name__ == '__main__':
 		manager = Manager()
 		shared_queue = manager.Queue()
 		
-		print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, {int(reload_time + 2.5)} s. reload period")
+		print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, {reload_time + 2.5} s. reload period")
 
 		the_processes = []
 		for pair in pairs:
@@ -174,7 +170,8 @@ if __name__ == '__main__':
 				                  search_distance,
 				                  multiplier,
 				                  level_repeat,
-				                  size_filter,
+				                  futures_size_filter,
+				                  spot_size_filter,
 				                  time_log,
 			                      ))
 			the_processes.append(process)
