@@ -53,7 +53,7 @@ def search(
 					levels_check_futures.append(i[1])
 
 					if levels_check_futures.count(i[1]) >= level_repeat and i[0] < f_fifth_distance:
-						
+						# print(f"Futures levels list: {levels_check_futures}")
 						f_fifth_distance = i[0]
 						f_fifth_level = i[1]
 						f_fifth_size = i[2]
@@ -99,8 +99,8 @@ def search(
 				for i in s_distances:
 					levels_check_spot.append(i[1])
 					
-					if levels_check_spot.count(i[1]) >= 5 and i[0] < s_fifth_distance:
-						
+					if levels_check_spot.count(i[1]) >= level_repeat and i[0] < s_fifth_distance:
+						# print(f"Spot levels list: {levels_check_spot}")
 						s_fifth_distance = i[0]
 						s_fifth_level = i[1]
 						s_fifth_size = i[2]
