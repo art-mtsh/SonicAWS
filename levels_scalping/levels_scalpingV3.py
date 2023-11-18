@@ -65,17 +65,18 @@ def search(
 				size_in_thousands = int(f_fifth_size / 1000)
 				size_in_dollars = int((f_fifth_level * f_fifth_size) / 1000)
 				zero_addition = (f_max_decimal - decimal_x) * '0'
+				direction = "\nSupport!" if f_close > size_price else "\nResistance!"
 				
 				msg = (f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
-				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + f"\nRepeated {level_repeat} times!")
+				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + direction)
 				levels_check_futures.clear()
 				# print(f"Futures levels list: {levels_check_futures}")
 				# print("")
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					bot1.send_message(662482931, msg + f"\nRepeated {level_repeat} times!")
+					bot1.send_message(662482931, msg + direction)
 
 	
 		# else:
@@ -111,17 +112,18 @@ def search(
 				size_in_thousands = int(s_fifth_size / 1000)
 				size_in_dollars = int((s_fifth_level * s_fifth_size) / 1000)
 				zero_addition = (s_max_decimal - decimal_x) * '0'
+				direction = "\nSupport!" if s_close > size_price else "\nResistance!"
 				
 				msg = (f"{s_fifth_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
-				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + f"\nRepeated {level_repeat} times!")
+				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + direction)
 				levels_check_spot.clear()
 				# print(f"Spot levels list: {levels_check_spot}")
 				# print("")
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					bot1.send_message(662482931, msg + f"\nRepeated {level_repeat} times!")
+					bot1.send_message(662482931, msg + direction)
 			
 		# else:
 		# 	print(f"Some shit with {symbol} spot data!")
