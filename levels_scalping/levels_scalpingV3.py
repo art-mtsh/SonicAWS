@@ -146,8 +146,8 @@ if __name__ == '__main__':
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
 	spot_size_filter = int(input("Spot size filter in K (def. 20): ") or 20)
-	multiplier = int(input("Multiplier (def. x4): ") or 4)
-	level_repeat = int(input("Level repeats (def. 10): ") or 10)
+	multiplier = int(input("Multiplier (def. x5): ") or 5)
+	level_repeat = int(input("Level repeats (def. 5): ") or 5)
 	
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
