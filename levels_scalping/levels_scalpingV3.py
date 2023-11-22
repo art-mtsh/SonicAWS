@@ -133,7 +133,7 @@ def search(
 		time3 = float('{:.2f}'.format(time3))
 		
 		if time_log > 0:
-			print(f"{symbol}: {time3} s")
+			print(f"{symbol}: {time3} s , went to sleep on {reload_time}")
 			sys.stdout.flush()
 		
 		time.sleep(reload_time)
