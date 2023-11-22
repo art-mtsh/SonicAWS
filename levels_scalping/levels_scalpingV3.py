@@ -114,7 +114,7 @@ def search(
 				zero_addition = (s_max_decimal - decimal_x) * '0'
 				direction = "\nSupport!" if s_close > size_price else "\nResistance!"
 				
-				msg = (f"{s_fifth_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
+				msg = (f"{s_fifth_distance}% 🔥 SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K")
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + direction)
 				levels_check_spot.clear()

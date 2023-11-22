@@ -52,7 +52,7 @@ def calculate(dict_of_pairs):
                 ts_percent = float(ts) / (close[-1] / 100)
                 ts_percent = float('{:.4f}'.format(ts_percent))
                 
-                if daily_volume >= 3 and daily_trades >= 500 and avg_atr_per >= 0.9 and ts_percent <= 0.04 and symbol not in excluded:
+                if daily_volume >= 3 and daily_trades >= 400 and avg_atr_per >= 0.8 and ts_percent <= 0.07 and symbol not in excluded:
                     # print(f"{symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
                     print(symbol, end=", ")
                 # if symbol == 'BTCUSDT':
