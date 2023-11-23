@@ -150,6 +150,7 @@ if __name__ == '__main__':
 		avg_atr_per_filter = 0.8,
 		ts_percent_filter = 0.08
 	)
+	
 	print(pairs)
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
