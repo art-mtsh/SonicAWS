@@ -147,19 +147,22 @@ if __name__ == '__main__':
 	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
 	spot_size_filter = int(input("Spot size filter in K (def. 20): ") or 20)
 	multiplier = int(input("Multiplier (def. x5): ") or 5)
-	level_repeat = int(input("Level repeats (def. 5): ") or 5)
+	# level_repeat = int(input("Level repeats (def. 5): ") or 5)
 	
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
-	reload_time = 60 / ((1100 / 11) / len(pairs)) - 2.5
-
+	reload_time = 60 / ((1100 / 11) / len(pairs)) - 2
+	
+	level_repeat = 30 / reload_time
+	
+	
 	if True:
 		
 		manager = Manager()
 		shared_queue = manager.Queue()
 		
-		print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, sleep time {float('{:.2f}'.format(reload_time))} s.")
+		print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, level repeat: {level_repeat} sleep time {float('{:.2f}'.format(reload_time))} s.")
 
 		the_processes = []
 		for pair in pairs:
