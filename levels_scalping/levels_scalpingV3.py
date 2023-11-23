@@ -150,7 +150,7 @@ if __name__ == '__main__':
 		avg_atr_per_filter = 0.8,
 		ts_percent_filter = 0.08
 	)
-	
+	print(pairs)
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
 	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
@@ -170,7 +170,6 @@ if __name__ == '__main__':
 		manager = Manager()
 		shared_queue = manager.Queue()
 		
-		print(pairs)
 		print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, level repeat: {level_repeat}, sleep time {float('{:.2f}'.format(reload_time))} s.")
 		print("Sleep 20 seconds...")
 		time.sleep(20)
