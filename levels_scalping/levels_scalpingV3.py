@@ -154,7 +154,7 @@ if __name__ == '__main__':
 	
 	reload_time = 60 / ((1100 / 11) / len(pairs)) - 2
 	
-	level_repeat = 30 / reload_time
+	level_repeat = int(30 / reload_time)
 	
 	
 	if True:
