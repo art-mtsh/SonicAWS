@@ -4,6 +4,7 @@ from multiprocessing import Process, Manager
 import telebot
 from modules import order_book, three_distances
 import sys
+from get_pairsV4 import get_pairs
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -142,10 +143,17 @@ if __name__ == '__main__':
 	
 	request_limit_length = 100
 	
-	pairs = (input('Pairs: ')).split(', ')
+	# pairs = (input('Pairs: ')).split(', ')
+	pairs = get_pairs(
+		daily_volume_filter = 4,
+	    daily_trades_filter = 400,
+		avg_atr_per_filter = 0.8,
+		ts_percent_filter = 0.08
+	)
+	
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
-	spot_size_filter = int(input("Spot size filter in K (def. 20): ") or 20)
+	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
 	multiplier = int(input("Multiplier (def. x5): ") or 5)
 	# level_repeat = int(input("Level repeats (def. 5): ") or 5)
 	
@@ -162,7 +170,10 @@ if __name__ == '__main__':
 		manager = Manager()
 		shared_queue = manager.Queue()
 		
-		print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, level repeat: {level_repeat} sleep time {float('{:.2f}'.format(reload_time))} s.")
+		print(pairs)
+		print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, level repeat: {level_repeat}, sleep time {float('{:.2f}'.format(reload_time))} s.")
+		print("Sleep 20 seconds...")
+		time.sleep(20)
 
 		the_processes = []
 		for pair in pairs:

@@ -1,4 +1,4 @@
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 import requests
 
 """
@@ -13,7 +13,13 @@ trades daily
 
 excluded = ['SOLUSDT', 'TRBUSDT']
 
-def calculate(dict_of_pairs):
+def calculate(dict_of_pairs,
+              daily_volume_filter,
+              daily_trades_filter,
+              avg_atr_per_filter,
+              ts_percent_filter,
+              shared_queue,
+              ):
     
     request_limit_length = 288
     frame = '5m'
@@ -52,9 +58,16 @@ def calculate(dict_of_pairs):
                 ts_percent = float(ts) / (close[-1] / 100)
                 ts_percent = float('{:.4f}'.format(ts_percent))
                 
-                if daily_volume >= 3 and daily_trades >= 400 and avg_atr_per >= 0.8 and ts_percent <= 0.07 and symbol not in excluded:
+                if daily_volume >= daily_volume_filter and \
+                    daily_trades >= daily_trades_filter and \
+                    avg_atr_per >= avg_atr_per_filter and \
+                    ts_percent <= ts_percent_filter and \
+                    symbol not in excluded:
+                    
                     # print(f"{symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
-                    print(symbol, end=", ")
+                    # print(symbol, end=", ")
+                    shared_queue.put(symbol)
+                
                 # if symbol == 'BTCUSDT':
                 #     print(f" ======>>> {symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
                     
@@ -72,7 +85,7 @@ def split_dict(input_dict, num_parts):
     return result
 
 
-if __name__ == '__main__':
+def get_pairs(daily_volume_filter, daily_trades_filter, avg_atr_per_filter, ts_percent_filter):
     
     ts_dict = {}
     
@@ -90,12 +103,20 @@ if __name__ == '__main__':
             ts_dict.update({symbol: tick_size})
     
     list_of_dicts = split_dict(ts_dict, 16)
+    
+    manager = Manager()
+    shared_queue = manager.Queue()
 
     the_processes = []
     for dict_of_pairs in list_of_dicts:
         process = Process(target=calculate,
                           args=(
                               dict_of_pairs,
+                              daily_volume_filter,
+                              daily_trades_filter,
+                              avg_atr_per_filter,
+                              ts_percent_filter,
+                              shared_queue,
                           ))
         the_processes.append(process)
     
@@ -105,6 +126,15 @@ if __name__ == '__main__':
     for pro in the_processes:
         pro.join()
     
+    pairs = []
+    while not shared_queue.empty():
+        pairs.append(shared_queue.get())
+    
     for pro in the_processes:
         pro.close()
+    
+    return pairs
 
+
+# if __name__ == '__main__':
+#     print(get_pairs(daily_volume_filter = 4, daily_trades_filter = 400, avg_atr_per_filter = 0.8, ts_percent_filter = 0.08))
