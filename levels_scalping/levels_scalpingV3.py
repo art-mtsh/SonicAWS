@@ -143,6 +143,8 @@ if __name__ == '__main__':
 	
 	request_limit_length = 100
 	
+	print("Getting pairs...")
+	
 	# pairs = (input('Pairs: ')).split(', ')
 	pairs = get_pairs(
 		daily_volume_filter = 4,
