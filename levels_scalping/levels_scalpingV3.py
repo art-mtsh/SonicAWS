@@ -143,6 +143,7 @@ if __name__ == '__main__':
 	)
 	
 	print(pairs)
+	
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
 	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
@@ -155,6 +156,9 @@ if __name__ == '__main__':
 	reload_time = 60 / ((1100 / 11) / len(pairs)) - 2
 	
 	level_repeat = int(20 / reload_time)
+	
+	if display_on_tg == 1:
+		bot1.send_message(662482931, pairs)
 	
 	
 	if True:
