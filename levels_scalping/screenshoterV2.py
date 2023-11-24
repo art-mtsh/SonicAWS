@@ -7,8 +7,22 @@ import requests
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
-
-def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list, chart_title):
+def screenshoter_send(symbol, level, chart_title):
+    
+    r_length = 100
+    
+    futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval=1m&limit={r_length}'
+    klines = requests.get(futures_klines)
+    
+    if klines.status_code == 200:
+        response_length = len(klines.json()) if klines.json() is not None else 0
+        if response_length == r_length:
+            binance_candle_data = klines.json()
+            cOpen = [float(entry[1]) for entry in binance_candle_data]
+            cHigh = [float(entry[2]) for entry in binance_candle_data]
+            cLow = [float(entry[3]) for entry in binance_candle_data]
+            cClose = [float(entry[4]) for entry in binance_candle_data]
+    
     # Create a Matplotlib figure for the candlestick chart
     fig, ax = plt.subplots(figsize=(8, 5))
     fig.set_facecolor("#F0F0F0")
@@ -32,7 +46,9 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
             
         # grid
         plt.grid(color='grey', linestyle='-', linewidth=0.1)
-
+    
+    ax.axhline(level, color='red', linestyle='--', linewidth=1)
+    
     # Customize the chart title
     plt.suptitle(chart_title)
     
@@ -58,23 +74,5 @@ def screenshoter_send(symbol, cOpen: list, cHigh: list, cLow: list, cClose: list
     plt.cla()
     plt.clf()
 
-symbol = "SPELLUSDT"
-timeinterval = "5m"
-distancetoSR = 10  # Replace with your desired value
-direction = "UP"  # Replace with your desired direction
 
-request_length = 48
-
-futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={timeinterval}&limit={request_length}'
-klines = requests.get(futures_klines)
-
-if klines.status_code == 200:
-    response_length = len(klines.json()) if klines.json() is not None else 0
-    if response_length == request_length:
-        binance_candle_data = klines.json()
-        cOpen = [float(entry[1]) for entry in binance_candle_data]
-        cHigh = [float(entry[2]) for entry in binance_candle_data]
-        cLow = [float(entry[3]) for entry in binance_candle_data]
-        cClose = [float(entry[4]) for entry in binance_candle_data]
-
-        screenshoter_send(symbol, cOpen, cHigh, cLow, cClose, chart_title=f"{symbol} parameters1")
+# screenshoter_send('SPELLUSDT', 0.000630, 'title630')

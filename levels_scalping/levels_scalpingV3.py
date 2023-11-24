@@ -5,6 +5,7 @@ import telebot
 from modules import order_book, three_distances
 import sys
 from get_pairsV4 import get_pairs
+from screenshoterV2 import screenshoter_send
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -66,16 +67,18 @@ def search(
 				size_in_thousands = int(f_fifth_size / 1000)
 				size_in_dollars = int((f_fifth_level * f_fifth_size) / 1000)
 				zero_addition = (f_max_decimal - decimal_x) * '0'
-				direction = f"\nSupport with {level_repeat} repeats!" if f_close > size_price else f"\nResistance with {level_repeat} repeats!"
+				# direction = f"\nSupport with {level_repeat} repeats!" if f_close > size_price else f"\nResistance with {level_repeat} repeats!"
 				
 				msg = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
 				
-				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + direction)
+				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 				levels_check_futures.clear()
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					bot1.send_message(662482931, msg + direction)
+					bot1.send_message(662482931, msg)
+					title = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
+					screenshoter_send(symbol, size_price, title)
 			
 		if spot_data != None:
 			
@@ -107,16 +110,19 @@ def search(
 				size_in_thousands = int(s_fifth_size / 1000)
 				size_in_dollars = int((s_fifth_level * s_fifth_size) / 1000)
 				zero_addition = (s_max_decimal - decimal_x) * '0'
-				direction = f"\nSupport with {level_repeat} repeats!" if s_close > size_price else f"\nResistance with {level_repeat} repeats!"
+				# direction = f"\nSupport with {level_repeat} repeats!" if s_close > size_price else f"\nResistance with {level_repeat} repeats!"
 				
 				msg = f"{s_fifth_distance}% 🔥 SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
 				
-				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg + direction)
+				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 				levels_check_spot.clear()
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					bot1.send_message(662482931, msg + direction)
+					bot1.send_message(662482931, msg)
+					title = f"{s_fifth_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
+					screenshoter_send(symbol, size_price, title)
+					
 		
 		time2 = time.perf_counter()
 		time3 = time2 - time1
