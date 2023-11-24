@@ -158,7 +158,7 @@ if __name__ == '__main__':
 	level_repeat = int(20 / reload_time)
 	
 	if display_on_tg == 1:
-		bot1.send_message(662482931, pairs)
+		bot1.send_message(662482931, str(pairs))
 	
 	
 	if True:
