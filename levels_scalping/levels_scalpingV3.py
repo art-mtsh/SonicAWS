@@ -134,7 +134,6 @@ if __name__ == '__main__':
 	
 	print("Getting pairs...")
 	
-	# pairs = (input('Pairs: ')).split(', ')
 	pairs = get_pairs(
 		daily_volume_filter = 4,
 	    daily_trades_filter = 400,
@@ -148,13 +147,10 @@ if __name__ == '__main__':
 	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
 	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
 	multiplier = int(input("Multiplier (def. x5): ") or 5)
-	# level_repeat = int(input("Level repeats (def. 5): ") or 5)
-	
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
 	reload_time = 60 / ((1100 / 11) / len(pairs)) - 2
-	
 	level_repeat = int(20 / reload_time)
 	
 	if display_on_tg == 1:
