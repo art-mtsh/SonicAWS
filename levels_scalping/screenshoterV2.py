@@ -75,4 +75,4 @@ def screenshoter_send(symbol, level, chart_title):
     plt.clf()
 
 
-screenshoter_send('SPELLUSDT', 0.000630, 'title630')
+# screenshoter_send('SPELLUSDT', 0.000630, 'title630')
