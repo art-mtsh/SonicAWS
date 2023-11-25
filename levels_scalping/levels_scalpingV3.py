@@ -157,7 +157,7 @@ if __name__ == '__main__':
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
 	reload_time = 60 / ((1100 / 11) / len(pairs)) - 2
-	level_repeat = int(20 / reload_time)
+	level_repeat = int(20 / (reload_time + 1.5))
 	
 	if display_on_tg == 1:
 		bot1.send_message(662482931, str(pairs))
