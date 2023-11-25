@@ -9,7 +9,7 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 def screenshoter_send(symbol, level, chart_title):
     
-    r_length = 100
+    r_length = 180
     
     futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval=1m&limit={r_length}'
     klines = requests.get(futures_klines)
@@ -24,7 +24,7 @@ def screenshoter_send(symbol, level, chart_title):
             cClose = [float(entry[4]) for entry in binance_candle_data]
     
     # Create a Matplotlib figure for the candlestick chart
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(12, 5))
     fig.set_facecolor("#F0F0F0")
     ax.set_facecolor("#E6E1BE")
     
@@ -64,7 +64,7 @@ def screenshoter_send(symbol, level, chart_title):
     # plt.show()
     
     # SAVE AND SEND
-    plt.savefig(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', dpi=400, bbox_inches='tight', pad_inches=0.2)
+    plt.savefig(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', dpi=500, bbox_inches='tight', pad_inches=0.2)
     pic = open(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', 'rb')
     bot1.send_photo(662482931, pic)
 
@@ -75,4 +75,4 @@ def screenshoter_send(symbol, level, chart_title):
     plt.clf()
 
 
-# screenshoter_send('SPELLUSDT', 0.000630, 'title630')
+screenshoter_send('SPELLUSDT', 0.000630, 'title630')
