@@ -138,13 +138,13 @@ if __name__ == '__main__':
 	
 	request_limit_length = 100
 	
-	print("Pairs section:")
+	print("\nPairs section:")
 	daily_volume_filter = int(input("Daily volume, millions (def. 3): ") or 3)
 	daily_trades_filter = int(input("Daily trades, thousands (def. 400): ") or 400)
 	avg_atr_per_filter = float(input("ATR% filter (def. 0.8%): ") or 0.8)
 	ts_percent_filter = float(input("Ticksize filter (def. 0.08%): ") or 0.08)
 
-	print("Sizes section:")
+	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
 	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
@@ -152,16 +152,16 @@ if __name__ == '__main__':
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
-	print("Getting pairs...")
+	print("\nGetting pairs...")
 	pairs = get_pairs(
 		daily_volume_filter=daily_volume_filter,
 		daily_trades_filter=daily_trades_filter,
 		avg_atr_per_filter=avg_atr_per_filter,
 		ts_percent_filter=ts_percent_filter
 	)
-	print(pairs)
+	print(pairs + "\n")
 	
-	reload = 60 / ((1100 / 11) / len(pairs)) - 2
+	reload = 60 / ((1100 / 11) / len(pairs)) - 1.5
 	reload_time = reload if reload > 0 else 1
 	level_repeat = int(20 / (reload_time + 1.5))
 	
