@@ -163,47 +163,44 @@ if __name__ == '__main__':
 	print("")
 	
 	reload = 60 / ((1100 / 11) / len(pairs)) - 1.5
-	reload_time = reload if reload > 0 else 1
+	reload_time = reload if reload >= 1 else 1
 	level_repeat = int(20 / (reload_time + 1.5))
 	
 	if display_on_tg == 1:
 		bot1.send_message(662482931, str(pairs))
-	
-	
-	if True:
-		
-		manager = Manager()
-		shared_queue = manager.Queue()
-		
-		print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, level repeat: {level_repeat}, sleep time {float('{:.2f}'.format(reload_time))} s.")
-		print("Sleep 20 seconds...")
-		time.sleep(20)
-
-		the_processes = []
-		for pair in pairs:
-			process = Process(target=search,
-			                  args=(
-				                  pair,
-				                  reload_time,
-				                  display_on_tg,
-				                  request_limit_length,
-				                  search_distance,
-				                  multiplier,
-				                  level_repeat,
-				                  futures_size_filter,
-				                  spot_size_filter,
-				                  time_log,
-			                      ))
-			the_processes.append(process)
-
-		for pro in the_processes:
-			pro.start()
-		
-		for pro in the_processes:
-			pro.join()
 			
-		for pro in the_processes:
-			pro.close()
+	manager = Manager()
+	shared_queue = manager.Queue()
+	
+	print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, level repeat: {level_repeat}, sleep time {float('{:.2f}'.format(reload_time))} s.")
+	print("Sleep 20 seconds...")
+	time.sleep(20)
 
-		print("Process ended.")
+	the_processes = []
+	for pair in pairs:
+		process = Process(target=search,
+		                  args=(
+			                  pair,
+			                  reload_time,
+			                  display_on_tg,
+			                  request_limit_length,
+			                  search_distance,
+			                  multiplier,
+			                  level_repeat,
+			                  futures_size_filter,
+			                  spot_size_filter,
+			                  time_log,
+		                      ))
+		the_processes.append(process)
+
+	for pro in the_processes:
+		pro.start()
+	
+	for pro in the_processes:
+		pro.join()
+		
+	for pro in the_processes:
+		pro.close()
+
+	print("Process ended.")
 		
