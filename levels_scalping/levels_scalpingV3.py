@@ -159,7 +159,8 @@ if __name__ == '__main__':
 		avg_atr_per_filter=avg_atr_per_filter,
 		ts_percent_filter=ts_percent_filter
 	)
-	print(pairs + "\n")
+	print(pairs)
+	print("")
 	
 	reload = 60 / ((1100 / 11) / len(pairs)) - 1.5
 	reload_time = reload if reload > 0 else 1
