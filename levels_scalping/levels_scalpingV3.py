@@ -139,7 +139,6 @@ if __name__ == '__main__':
 	request_limit_length = 100
 	
 	print("Pairs section:")
-	
 	daily_volume_filter = int(input("Daily volume, millions (def. 3): ") or 3)
 	daily_trades_filter = int(input("Daily trades, thousands (def. 400): ") or 400)
 	avg_atr_per_filter = float(input("ATR% filter (def. 0.8%): ") or 0.8)
@@ -154,14 +153,12 @@ if __name__ == '__main__':
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
 	print("Getting pairs...")
-	
 	pairs = get_pairs(
 		daily_volume_filter=daily_volume_filter,
 		daily_trades_filter=daily_trades_filter,
 		avg_atr_per_filter=avg_atr_per_filter,
 		ts_percent_filter=ts_percent_filter
 	)
-	
 	print(pairs)
 	
 	reload = 60 / ((1100 / 11) / len(pairs)) - 2
