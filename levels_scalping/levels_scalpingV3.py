@@ -78,7 +78,7 @@ def search(
 				if display_on_tg == 1:
 					bot1.send_message(662482931, msg)
 					title = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
-					screenshoter_send(symbol, size_price, title)
+					screenshoter_send(symbol, "f", size_price, title)
 			
 		if spot_data != None:
 			
@@ -121,7 +121,7 @@ def search(
 				if display_on_tg == 1:
 					bot1.send_message(662482931, msg)
 					title = f"{s_fifth_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
-					screenshoter_send(symbol, size_price, title)
+					screenshoter_send(symbol, "s", size_price, title)
 					
 		
 		time2 = time.perf_counter()

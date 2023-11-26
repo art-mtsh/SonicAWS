@@ -7,12 +7,15 @@ import requests
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
-def screenshoter_send(symbol, level, chart_title):
+def screenshoter_send(symbol, type, level, chart_title):
     
     r_length = 180
     
     futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval=1m&limit={r_length}'
-    klines = requests.get(futures_klines)
+    spot_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval=1m&limit={r_length}'
+    
+    
+    klines = requests.get(futures_klines) if type == 'f' else requests.get(spot_klines)
     
     if klines.status_code == 200:
         response_length = len(klines.json()) if klines.json() is not None else 0
@@ -75,4 +78,4 @@ def screenshoter_send(symbol, level, chart_title):
     plt.clf()
 
 
-# screenshoter_send('SPELLUSDT', 0.000630, 'title630')
+# screenshoter_send('SPELLUSDT', "s", 0.000630, 'title630')
