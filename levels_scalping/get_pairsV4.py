@@ -11,7 +11,7 @@ trades daily
 
 """
 
-excluded = ['USTCUSDT']
+excluded = ["USTCUSDT"]
 
 def calculate(dict_of_pairs,
               daily_volume_filter,
@@ -137,4 +137,4 @@ def get_pairs(daily_volume_filter, daily_trades_filter, avg_atr_per_filter, ts_p
 
 
 # if __name__ == '__main__':
-#     print(get_pairs(daily_volume_filter = 4, daily_trades_filter = 400, avg_atr_per_filter = 0.8, ts_percent_filter = 0.08))
+#     print(get_pairs(daily_volume_filter = 0, daily_trades_filter = 0, avg_atr_per_filter = 0.8, ts_percent_filter = 0.1))
