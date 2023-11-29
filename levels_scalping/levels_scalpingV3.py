@@ -129,7 +129,7 @@ def search(
 		time3 = float('{:.2f}'.format(time3))
 		
 		if time_log > 0:
-			print(f"{symbol}: {time3} s , went to sleep on {float('{:.2f}'.format(reload_time))} s.")
+			print(f"{symbol}: {time3} + {float('{:.2f}'.format(reload_time))} s, levels: {len(levels_check_futures)}/{len(levels_check_spot)}")
 			sys.stdout.flush()
 		
 		time.sleep(reload_time)
