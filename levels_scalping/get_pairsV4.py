@@ -11,7 +11,7 @@ trades daily
 
 """
 
-excluded = ['SOLUSDT', 'TRBUSDT']
+excluded = ['USTCUSDT']
 
 def calculate(dict_of_pairs,
               daily_volume_filter,
