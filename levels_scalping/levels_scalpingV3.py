@@ -141,7 +141,8 @@ if __name__ == '__main__':
 	print("\nPairs section:")
 	daily_volume_filter = int(input("Daily volume, millions (def. 0): ") or 0)
 	daily_trades_filter = int(input("Daily trades, thousands (def. 0): ") or 0)
-	avg_atr_per_filter = float(input("ATR% filter (def. 0.8%): ") or 0.8)
+	four_h_change_filter = float(input("4H range (def. 5.0%): ") or 5.0)
+	avg_atr_per_filter = float(input("ATR% filter (def. 0.0%): ") or 0.0)
 	ts_percent_filter = float(input("Ticksize filter (def. 0.1%): ") or 0.1)
 
 	print("\nSizes section:")
@@ -156,6 +157,7 @@ if __name__ == '__main__':
 	pairs = get_pairs(
 		daily_volume_filter=daily_volume_filter,
 		daily_trades_filter=daily_trades_filter,
+		four_h_change_filter = four_h_change_filter,
 		avg_atr_per_filter=avg_atr_per_filter,
 		ts_percent_filter=ts_percent_filter
 	)

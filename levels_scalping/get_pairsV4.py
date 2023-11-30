@@ -16,6 +16,7 @@ excluded = ["USTCUSDT"]
 def calculate(dict_of_pairs,
               daily_volume_filter,
               daily_trades_filter,
+              four_h_change_filter,
               avg_atr_per_filter,
               ts_percent_filter,
               shared_queue,
@@ -46,6 +47,9 @@ def calculate(dict_of_pairs,
     
                 daily_change = (close[-1] - close[0]) / (close[-1] / 100)
                 daily_change = float('{:.2f}'.format(daily_change))
+                
+                four_h_change = (max(high[-1:-49:-1]) - min(low[-1:-49:-1])) / (close[-1] / 100)
+                four_h_change = float('{:.2f}'.format(four_h_change))
     
                 daily_volume = sum(volume) / 1000000
                 daily_volume = float('{:.2f}'.format(daily_volume))
@@ -60,11 +64,12 @@ def calculate(dict_of_pairs,
                 
                 if daily_volume >= daily_volume_filter and \
                     daily_trades >= daily_trades_filter and \
+                    four_h_change >= four_h_change_filter and \
                     avg_atr_per >= avg_atr_per_filter and \
                     ts_percent <= ts_percent_filter and \
                     symbol not in excluded:
                     
-                    # print(f"{symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
+                    print(f"{symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, 4H change: {four_h_change}%, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
                     # print(symbol, end=", ")
                     shared_queue.put(symbol)
                 
@@ -85,7 +90,7 @@ def split_dict(input_dict, num_parts):
     return result
 
 
-def get_pairs(daily_volume_filter, daily_trades_filter, avg_atr_per_filter, ts_percent_filter):
+def get_pairs(daily_volume_filter, daily_trades_filter, four_h_change_filter, avg_atr_per_filter, ts_percent_filter):
     
     ts_dict = {}
     
@@ -114,6 +119,7 @@ def get_pairs(daily_volume_filter, daily_trades_filter, avg_atr_per_filter, ts_p
                               dict_of_pairs,
                               daily_volume_filter,
                               daily_trades_filter,
+                              four_h_change_filter,
                               avg_atr_per_filter,
                               ts_percent_filter,
                               shared_queue,
@@ -137,4 +143,4 @@ def get_pairs(daily_volume_filter, daily_trades_filter, avg_atr_per_filter, ts_p
 
 
 # if __name__ == '__main__':
-#     print(get_pairs(daily_volume_filter = 0, daily_trades_filter = 0, avg_atr_per_filter = 0.8, ts_percent_filter = 0.1))
+#     print(get_pairs(daily_volume_filter = 0, daily_trades_filter = 0, four_h_change_filter = 5, avg_atr_per_filter = 0.0,  ts_percent_filter = 0.1))
