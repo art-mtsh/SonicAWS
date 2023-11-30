@@ -56,7 +56,7 @@ def calculate(dict_of_pairs,
     
                 daily_trades = int(sum(trades) / 1000)
     
-                avg_atr_per = [(high[-c] - low[-c]) / (close[-c] / 100) for c in range(int(request_limit_length / 4))]
+                avg_atr_per = [(high[-c] - low[-c]) / (close[-c] / 100) for c in range(int(request_limit_length / 6))]
                 avg_atr_per = float('{:.2f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
     
                 ts_percent = float(ts) / (close[-1] / 100)
