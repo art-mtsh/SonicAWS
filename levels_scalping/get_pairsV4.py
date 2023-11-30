@@ -69,7 +69,7 @@ def calculate(dict_of_pairs,
                     ts_percent <= ts_percent_filter and \
                     symbol not in excluded:
                     
-                    print(f"{symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, 4H change: {four_h_change}%, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
+                    # print(f"{symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, 4H change: {four_h_change}%, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
                     # print(symbol, end=", ")
                     shared_queue.put(symbol)
                 
