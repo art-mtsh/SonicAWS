@@ -153,12 +153,12 @@ def get_pairs(x_range_filter,
     return pairs
 
 
-if __name__ == '__main__':
-    print(get_pairs(
-        x_range_filter = 0,
-        x_change_filter = 0,
-        x_volume_filter = 0,
-        x_trades_filter = 0,
-        x_atr_per_filter = 0.25,
-        ts_percent_filter = 0.1
-    ))
+# if __name__ == '__main__':
+#     print(get_pairs(
+#         x_range_filter = 0,
+#         x_change_filter = 0,
+#         x_volume_filter = 0,
+#         x_trades_filter = 0,
+#         x_atr_per_filter = 0.25,
+#         ts_percent_filter = 0.1
+#     ))
