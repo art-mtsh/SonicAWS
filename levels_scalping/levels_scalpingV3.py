@@ -139,11 +139,12 @@ if __name__ == '__main__':
 	request_limit_length = 100
 	
 	print("\nPairs section:")
-	daily_volume_filter = int(input("Daily volume, millions (def. 0): ") or 0)
-	daily_trades_filter = int(input("Daily trades, thousands (def. 0): ") or 0)
-	four_h_change_filter = float(input("4H range (def. 5.0%): ") or 5.0)
-	avg_atr_per_filter = float(input("ATR% filter (def. 0.0%): ") or 0.0)
-	ts_percent_filter = float(input("Ticksize filter (def. 0.1%): ") or 0.1)
+	x_range_filter = int(input("4H range, % (def. 0): ") or 0)
+	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
+	x_volume_filter = int(input("4H volume, milions (def. 0): ") or 0)
+	x_trades_filter = int(input("4H trades, thousands (def. 0): ") or 0)
+	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.25): ") or 0.25)
+	ts_percent_filter = float(input("4H ticksize, % (def. 0.10): ") or 0.10)
 
 	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
@@ -155,10 +156,11 @@ if __name__ == '__main__':
 	
 	print("\nGetting pairs...")
 	pairs = get_pairs(
-		daily_volume_filter=daily_volume_filter,
-		daily_trades_filter=daily_trades_filter,
-		four_h_change_filter = four_h_change_filter,
-		avg_atr_per_filter=avg_atr_per_filter,
+		x_range_filter=x_range_filter,
+		x_change_filter=x_change_filter,
+		x_volume_filter=x_volume_filter,
+		x_trades_filter=x_trades_filter,
+		x_atr_per_filter=x_atr_per_filter,
 		ts_percent_filter=ts_percent_filter
 	)
 	print(pairs)

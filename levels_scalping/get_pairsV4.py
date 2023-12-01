@@ -14,16 +14,17 @@ trades daily
 excluded = ["USTCUSDT"]
 
 def calculate(dict_of_pairs,
-              daily_volume_filter,
-              daily_trades_filter,
-              four_h_change_filter,
-              avg_atr_per_filter,
+              x_range_filter,
+              x_change_filter,
+              x_volume_filter,
+              x_trades_filter,
+              x_atr_per_filter,
               ts_percent_filter,
               shared_queue,
               ):
     
-    request_limit_length = 288
-    frame = '5m'
+    request_limit_length = 240
+    frame = '1m'
     
     for symbol, ts in dict_of_pairs.items():
         futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
@@ -42,34 +43,38 @@ def calculate(dict_of_pairs,
                 buy_volume = list(float(i[9]) for i in binance_candle_data)
                 sell_volume = [volume[0] - buy_volume[0]]
     
-                daily_volatility = (max(high) - min(low)) / (close[-1] / 100)
-                daily_volatility = float('{:.2f}'.format(daily_volatility))
+                x_range = (max(high) - min(low)) / (close[-1] / 100)
+                x_range = float('{:.2f}'.format(x_range))
     
-                daily_change = (close[-1] - close[0]) / (close[-1] / 100)
-                daily_change = float('{:.2f}'.format(daily_change))
-                
-                four_h_change = (max(high[-1:-49:-1]) - min(low[-1:-49:-1])) / (close[-1] / 100)
-                four_h_change = float('{:.2f}'.format(four_h_change))
+                x_change = (close[-1] - close[0]) / (close[-1] / 100)
+                x_change = float('{:.2f}'.format(x_change))
     
-                daily_volume = sum(volume) / 1000000
-                daily_volume = float('{:.2f}'.format(daily_volume))
+                x_volume = sum(volume) / 1000000
+                x_volume = float('{:.2f}'.format(x_volume))
     
-                daily_trades = int(sum(trades) / 1000)
+                x_trades = int(sum(trades) / 1000)
     
-                avg_atr_per = [(high[-c] - low[-c]) / (close[-c] / 100) for c in range(int(request_limit_length / 6))]
-                avg_atr_per = float('{:.2f}'.format(sum(avg_atr_per) / len(avg_atr_per)))
+                x_atr_per = [(high[-c] - low[-c]) / (close[-c] / 100) for c in range(request_limit_length)]
+                x_atr_per = float('{:.2f}'.format(sum(x_atr_per) / len(x_atr_per)))
     
                 ts_percent = float(ts) / (close[-1] / 100)
                 ts_percent = float('{:.4f}'.format(ts_percent))
                 
-                if daily_volume >= daily_volume_filter and \
-                    daily_trades >= daily_trades_filter and \
-                    four_h_change >= four_h_change_filter and \
-                    avg_atr_per >= avg_atr_per_filter and \
+                if x_range >= x_range_filter and \
+                    x_change >= x_change_filter and \
+                    x_volume >= x_volume_filter and \
+                    x_trades >= x_trades_filter and \
+                    x_atr_per >= x_atr_per_filter and \
                     ts_percent <= ts_percent_filter and \
                     symbol not in excluded:
                     
-                    # print(f"{symbol} volatility: {daily_volatility}%, day change: {daily_change}%, volume: {daily_volume}M, trades: {daily_trades}K, 4H change: {four_h_change}%, atr5m: {avg_atr_per}%, ticksize: {ts_percent}%")
+                    print(f"{symbol}, "
+                          f"range {x_range}, "
+                          f"change {x_change}, "
+                          f"volume {x_volume}, "
+                          f"trades {x_trades}, "
+                          f"avg ATR {x_atr_per}, "
+                          f"ticksize {ts_percent}")
                     # print(symbol, end=", ")
                     shared_queue.put(symbol)
                 
@@ -90,7 +95,12 @@ def split_dict(input_dict, num_parts):
     return result
 
 
-def get_pairs(daily_volume_filter, daily_trades_filter, four_h_change_filter, avg_atr_per_filter, ts_percent_filter):
+def get_pairs(x_range_filter,
+              x_change_filter,
+              x_volume_filter,
+              x_trades_filter,
+              x_atr_per_filter,
+              ts_percent_filter,):
     
     ts_dict = {}
     
@@ -117,10 +127,11 @@ def get_pairs(daily_volume_filter, daily_trades_filter, four_h_change_filter, av
         process = Process(target=calculate,
                           args=(
                               dict_of_pairs,
-                              daily_volume_filter,
-                              daily_trades_filter,
-                              four_h_change_filter,
-                              avg_atr_per_filter,
+                              x_range_filter,
+                              x_change_filter,
+                              x_volume_filter,
+                              x_trades_filter,
+                              x_atr_per_filter,
                               ts_percent_filter,
                               shared_queue,
                           ))
@@ -142,5 +153,12 @@ def get_pairs(daily_volume_filter, daily_trades_filter, four_h_change_filter, av
     return pairs
 
 
-# if __name__ == '__main__':
-#     print(get_pairs(daily_volume_filter = 0, daily_trades_filter = 0, four_h_change_filter = 5, avg_atr_per_filter = 0.0,  ts_percent_filter = 0.1))
+if __name__ == '__main__':
+    print(get_pairs(
+        x_range_filter = 0,
+        x_change_filter = 0,
+        x_volume_filter = 0,
+        x_trades_filter = 0,
+        x_atr_per_filter = 0.25,
+        ts_percent_filter = 0.1
+    ))
