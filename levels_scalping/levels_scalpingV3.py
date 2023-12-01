@@ -160,7 +160,7 @@ if __name__ == '__main__':
 		f"x_volume_filter = {x_volume_filter}\n"
 		f"x_trades_filter = {x_trades_filter}\n"
 		f"x_atr_per_filter = {x_atr_per_filter}\n"
-		f"ts_percent_filter = {ts_percent_filter}\n"
+		f"ts_percent_filter = {ts_percent_filter}\n\n"
 		f"search_distance = {search_distance}\n"
 		f"futures_size_filter = {futures_size_filter}\n"
 		f"spot_size_filter = {spot_size_filter}\n"
