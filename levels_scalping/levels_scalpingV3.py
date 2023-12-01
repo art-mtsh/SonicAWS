@@ -143,16 +143,30 @@ if __name__ == '__main__':
 	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
 	x_volume_filter = int(input("4H volume, milions (def. 0): ") or 0)
 	x_trades_filter = int(input("4H trades, thousands (def. 0): ") or 0)
-	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.25): ") or 0.25)
-	ts_percent_filter = float(input("4H ticksize, % (def. 0.10): ") or 0.10)
+	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.20): ") or 0.20)
+	ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
 	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	futures_size_filter = int(input("Futures size filter in K (def. 150): ") or 150)
+	futures_size_filter = int(input("Futures size filter in K (def. 100): ") or 100)
 	spot_size_filter = int(input("Spot size filter in K (def. 10): ") or 10)
 	multiplier = int(input("Multiplier (def. x4): ") or 4)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
+	
+	msg_parameters = (
+		f"x_range_filter = {x_range_filter}\n"
+		f"x_change_filter = {x_change_filter}\n"
+		f"x_volume_filter = {x_volume_filter}\n"
+		f"x_trades_filter = {x_trades_filter}\n"
+		f"x_atr_per_filter = {x_atr_per_filter}\n"
+		f"ts_percent_filter = {ts_percent_filter}\n"
+		f"search_distance = {search_distance}\n"
+		f"futures_size_filter = {futures_size_filter}\n"
+		f"spot_size_filter = {spot_size_filter}\n"
+		f"multiplier = {multiplier}\n"
+	)
+	bot1.send_message(662482931, msg_parameters)
 	
 	print("\nGetting pairs...")
 	pairs = get_pairs(
