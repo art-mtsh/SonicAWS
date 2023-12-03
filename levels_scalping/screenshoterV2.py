@@ -67,7 +67,7 @@ def screenshoter_send(symbol, type, level, chart_title):
     # plt.show()
     
     # SAVE AND SEND
-    plt.savefig(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', dpi=300, bbox_inches='tight', pad_inches=0.2)
+    plt.savefig(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', dpi=150, bbox_inches='tight', pad_inches=0.2)
     pic = open(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', 'rb')
     bot1.send_photo(662482931, pic)
 
