@@ -70,15 +70,15 @@ def search(
 				# direction = f"\nSupport with {level_repeat} repeats!" if f_close > size_price else f"\nResistance with {level_repeat} repeats!"
 				
 				msg = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
+				title = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 				levels_check_futures.clear()
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					bot1.send_message(662482931, msg)
-					title = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
-					screenshoter_send(symbol, "f", size_price, title)
+					# bot1.send_message(662482931, msg)
+					screenshoter_send(symbol, "f", size_price, title, msg)
 			
 		if spot_data != None:
 			
@@ -113,15 +113,15 @@ def search(
 				# direction = f"\nSupport with {level_repeat} repeats!" if s_close > size_price else f"\nResistance with {level_repeat} repeats!"
 				
 				msg = f"{s_fifth_distance}% 🔥 SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
+				title = f"{s_fifth_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 				levels_check_spot.clear()
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					bot1.send_message(662482931, msg)
-					title = f"{s_fifth_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
-					screenshoter_send(symbol, "s", size_price, title)
+					# bot1.send_message(662482931, msg)
+					screenshoter_send(symbol, "s", size_price, title, msg)
 					
 		
 		time2 = time.perf_counter()
