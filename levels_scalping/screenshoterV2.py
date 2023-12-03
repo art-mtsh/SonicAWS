@@ -27,7 +27,7 @@ def screenshoter_send(symbol, type, level, chart_title):
             cClose = [float(entry[4]) for entry in binance_candle_data]
     
     # Create a Matplotlib figure for the candlestick chart
-    fig, ax = plt.subplots(figsize=(12, 5))
+    fig, ax = plt.subplots(figsize=(10, 4))
     fig.set_facecolor("#F0F0F0")
     ax.set_facecolor("#E6E1BE")
     
@@ -67,7 +67,7 @@ def screenshoter_send(symbol, type, level, chart_title):
     # plt.show()
     
     # SAVE AND SEND
-    plt.savefig(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', dpi=500, bbox_inches='tight', pad_inches=0.2)
+    plt.savefig(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', dpi=300, bbox_inches='tight', pad_inches=0.2)
     pic = open(f'FT{symbol}_{cOpen[-1]}_{cClose[-1]}.png', 'rb')
     bot1.send_photo(662482931, pic)
 
