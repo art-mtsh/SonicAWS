@@ -70,7 +70,7 @@ def search(
 				# direction = f"\nSupport with {level_repeat} repeats!" if f_close > size_price else f"\nResistance with {level_repeat} repeats!"
 				
 				msg = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
-				title = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
+				title = f"{f_fifth_distance}% FUT {symbol}"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 				levels_check_futures.clear()
@@ -113,7 +113,7 @@ def search(
 				# direction = f"\nSupport with {level_repeat} repeats!" if s_close > size_price else f"\nResistance with {level_repeat} repeats!"
 				
 				msg = f"{s_fifth_distance}% 🔥 SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
-				title = f"{s_fifth_distance}% SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
+				title = f"{s_fifth_distance}% SPOT {symbol}"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 				levels_check_spot.clear()
