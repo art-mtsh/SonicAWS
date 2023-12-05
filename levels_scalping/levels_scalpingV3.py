@@ -21,6 +21,7 @@ def search(
 		level_repeat,
 		futures_size_filter,
 		spot_size_filter,
+		only_round: bool,
 		time_log
 ):
 	
@@ -77,8 +78,10 @@ def search(
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					# bot1.send_message(662482931, msg)
-					screenshoter_send(symbol, "f", size_price, title, msg)
+					if only_round and (f_max_decimal - decimal_x) >= 2:
+						screenshoter_send(symbol, "f", size_price, title, msg)
+					else:
+						screenshoter_send(symbol, "f", size_price, title, msg)
 			
 		if spot_data != None:
 			
@@ -120,9 +123,10 @@ def search(
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					# bot1.send_message(662482931, msg)
-					screenshoter_send(symbol, "s", size_price, title, msg)
-					
+					if only_round and (s_max_decimal - decimal_x) >= 2:
+						screenshoter_send(symbol, "s", size_price, title, msg)
+					else:
+						screenshoter_send(symbol, "s", size_price, title, msg)
 		
 		time2 = time.perf_counter()
 		time3 = time2 - time1
@@ -141,16 +145,17 @@ if __name__ == '__main__':
 	print("\nPairs section:")
 	x_range_filter = int(input("4H range, % (def. 0): ") or 0)
 	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
-	x_volume_filter = int(input("4H volume, milions (def. 0): ") or 0)
-	x_trades_filter = int(input("4H trades, thousands (def. 0): ") or 0)
-	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.20): ") or 0.20)
+	x_volume_filter = float(input("4H volume, milions (def. 0.5): ") or 0.5)
+	x_trades_filter = int(input("4H trades, thousands (def. 100): ") or 100)
+	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.30): ") or 0.30)
 	ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
 	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
-	spot_size_filter = int(input("Spot size filter in K (def. 20): ") or 20)
+	futures_size_filter = int(input("Futures size filter in K (def. 150): ") or 150)
+	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
 	multiplier = int(input("Multiplier (def. x5): ") or 5)
+	only_round = bool(input("Size only on round level? (def. False): ") or False)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
@@ -165,6 +170,7 @@ if __name__ == '__main__':
 		f"futures_size_filter = {futures_size_filter}\n"
 		f"spot_size_filter = {spot_size_filter}\n"
 		f"multiplier = {multiplier}\n"
+		f"only_round = {only_round}"
 	)
 	bot1.send_message(662482931, msg_parameters)
 	
@@ -207,6 +213,7 @@ if __name__ == '__main__':
 			                  level_repeat,
 			                  futures_size_filter,
 			                  spot_size_filter,
+			                  only_round,
 			                  time_log,
 		                      ))
 		the_processes.append(process)
