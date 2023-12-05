@@ -78,8 +78,9 @@ def search(
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					if only_round and (f_max_decimal - decimal_x) >= 2:
-						screenshoter_send(symbol, "f", size_price, title, msg)
+					if only_round:
+						if (f_max_decimal - decimal_x) >= 2:
+							screenshoter_send(symbol, "f", size_price, title, msg)
 					else:
 						screenshoter_send(symbol, "f", size_price, title, msg)
 			
@@ -123,8 +124,9 @@ def search(
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					if only_round and (s_max_decimal - decimal_x) >= 2:
-						screenshoter_send(symbol, "s", size_price, title, msg)
+					if only_round:
+						if (s_max_decimal - decimal_x) >= 2:
+							screenshoter_send(symbol, "s", size_price, title, msg)
 					else:
 						screenshoter_send(symbol, "s", size_price, title, msg)
 		
