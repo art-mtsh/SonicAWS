@@ -145,8 +145,8 @@ if __name__ == '__main__':
 	print("\nPairs section:")
 	x_range_filter = int(input("4H range, % (def. 0): ") or 0)
 	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
-	x_volume_filter = float(input("4H volume, milions (def. 0.5): ") or 0.5)
-	x_trades_filter = int(input("4H trades, thousands (def. 100): ") or 100)
+	x_volume_filter = int(input("4H volume, millions (def. 1): ") or 1)
+	x_trades_filter = int(input("4H trades, thousands (def. 200): ") or 200)
 	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.30): ") or 0.30)
 	ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
@@ -154,8 +154,8 @@ if __name__ == '__main__':
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	futures_size_filter = int(input("Futures size filter in K (def. 150): ") or 150)
 	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
-	multiplier = int(input("Multiplier (def. x5): ") or 5)
-	only_round = bool(input("Size only on round level? (def. False): ") or False)
+	multiplier = int(input("Multiplier (def. x4): ") or 4)
+	only_round = bool(input("Size only on round level? (def. True): ") or True)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
