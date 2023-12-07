@@ -157,7 +157,8 @@ if __name__ == '__main__':
 	futures_size_filter = int(input("Futures size filter in K (def. 150): ") or 150)
 	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
 	multiplier = int(input("Multiplier (def. x4): ") or 4)
-	only_round = bool(input("Size only on round level? (def. True): ") or True)
+	only_round = str(input("Size only on round level? (def. True): ") or True)
+	only_round = True if only_round == "True" else False
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	

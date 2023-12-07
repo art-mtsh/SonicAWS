@@ -1,12 +1,3 @@
-le = []
-
-print(len(le))
-
-le += [[2, 32], [2, 332], [2, 4432]]
-le += [[3, 876]]
-
-print(le)
-print(len(le))
-
-le.clear()
-print(le)
+only_round = str(input("Size only on round level? (def. True): ") or True)
+only_round = True if only_round == "True" else False
+print(only_round)
