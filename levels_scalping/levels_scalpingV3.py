@@ -188,9 +188,9 @@ if __name__ == '__main__':
 	print(pairs)
 	print("")
 	
-	reload = 60 / ((1100 / 12) / len(pairs)) - 1.5
+	reload = 60 / ((1100 / 12) / len(pairs)) - 3
 	reload_time = reload if reload >= 1 else 1
-	level_repeat = int(60 / (reload_time + 1.5))
+	level_repeat = int(60 / (reload_time + 3))
 	
 	if display_on_tg == 1:
 		bot1.send_message(662482931, str(pairs))
