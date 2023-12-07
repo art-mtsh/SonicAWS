@@ -154,8 +154,8 @@ if __name__ == '__main__':
 
 	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	futures_size_filter = int(input("Futures size filter in K (def. 150): ") or 150)
-	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
+	futures_size_filter = int(input("Futures size filter in K (def. 150): ") or 200)
+	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 20)
 	multiplier = int(input("Multiplier (def. x4): ") or 4)
 	only_round = int(input("Size only on round level? (def. 1): ") or 1)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
