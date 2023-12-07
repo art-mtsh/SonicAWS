@@ -21,7 +21,7 @@ def search(
 		level_repeat,
 		futures_size_filter,
 		spot_size_filter,
-		only_round: bool,
+		only_round,
 		time_log
 ):
 	
@@ -78,7 +78,7 @@ def search(
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					if only_round:
+					if only_round == 1:
 						if (f_max_decimal - decimal_x) >= 2:
 							screenshoter_send(symbol, "f", size_price, title, msg)
 					else:
@@ -124,7 +124,7 @@ def search(
 				sys.stdout.flush()
 				
 				if display_on_tg == 1:
-					if only_round:
+					if only_round == 1:
 						if (s_max_decimal - decimal_x) >= 2:
 							screenshoter_send(symbol, "s", size_price, title, msg)
 					else:
@@ -157,8 +157,7 @@ if __name__ == '__main__':
 	futures_size_filter = int(input("Futures size filter in K (def. 150): ") or 150)
 	spot_size_filter = int(input("Spot size filter in K (def. 15): ") or 15)
 	multiplier = int(input("Multiplier (def. x4): ") or 4)
-	only_round = str(input("Size only on round level? (def. True): ") or "True")
-	only_round = True if only_round == "True" else False
+	only_round = int(input("Size only on round level? (def. 1): ") or 1)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
