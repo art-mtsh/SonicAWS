@@ -148,7 +148,7 @@ if __name__ == '__main__':
 	x_range_filter = int(input("4H range, % (def. 0): ") or 0)
 	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
 	x_volume_filter = int(input("4H volume, millions (def. 1): ") or 1)
-	x_trades_filter = int(input("4H trades, thousands (def. 200): ") or 200)
+	x_trades_filter = int(input("4H trades, thousands (def. 200): ") or 1)
 	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.30): ") or 0.30)
 	ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
