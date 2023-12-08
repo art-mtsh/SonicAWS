@@ -74,17 +74,18 @@ def search(
 				title = f"{f_fifth_distance}% FUT {symbol}"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
+				
+				# if display_on_tg == 1:
+				# 	if only_round == 1:
+				# 		if (f_max_decimal - decimal_x) >= 2:
+				# 			screenshoter_send(symbol, "f", size_price, title, msg)
+				# 	else:
+				# 		screenshoter_send(symbol, "f", size_price, title, msg)
+				
+				screenshoter_send(symbol, "f", size_price, title, msg)
+			
 				levels_check_futures.clear()
 				sys.stdout.flush()
-				
-				if display_on_tg == 1:
-					if only_round == 1:
-						if (f_max_decimal - decimal_x) >= 2:
-							screenshoter_send(symbol, "f", size_price, title, msg)
-					else:
-						screenshoter_send(symbol, "f", size_price, title, msg)
-				
-				# bot1.send_message(662482931, msg)
 			
 		if spot_data != None:
 			
@@ -122,17 +123,18 @@ def search(
 				title = f"{s_fifth_distance}% SPOT {symbol}"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
+				
+				# if display_on_tg == 1:
+				# 	if only_round == 1:
+				# 		if (s_max_decimal - decimal_x) >= 2:
+				# 			screenshoter_send(symbol, "s", size_price, title, msg)
+				# 	else:
+				# 		screenshoter_send(symbol, "s", size_price, title, msg)
+				
+				screenshoter_send(symbol, "f", size_price, title, msg)
+				
 				levels_check_spot.clear()
 				sys.stdout.flush()
-				
-				if display_on_tg == 1:
-					if only_round == 1:
-						if (s_max_decimal - decimal_x) >= 2:
-							screenshoter_send(symbol, "s", size_price, title, msg)
-					else:
-						screenshoter_send(symbol, "s", size_price, title, msg)
-				
-				# bot1.send_message(662482931, msg)
 				
 		time2 = time.perf_counter()
 		time3 = time2 - time1
