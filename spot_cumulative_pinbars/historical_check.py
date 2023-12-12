@@ -8,13 +8,6 @@ from spot_divergences.module_get_pairs_binanceV2 import binance_pairs
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
-# end_date_timestamp = datetime(2023, 10, 5).timestamp()
-# end_date = datetime.fromtimestamp(end_date_timestamp)
-# hours_to_add = 9  # +++++++++++++++++++++++++
-# minutes_to_add = 0  # +++++++++++++++++++++++++
-# time_to_add = timedelta(hours=hours_to_add, minutes=minutes_to_add)
-# new_date = end_date + time_to_add
-# end_date = new_date.timestamp() * 1000
 
 def search(filtered_symbols, binance_frame, request_limit_length, body_percent_filter, total_range_filter, pin_close_part, gap_filter, tick_size_filter, room_to_the_left):
 	

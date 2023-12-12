@@ -180,6 +180,7 @@ if __name__ == '__main__':
 		f"multiplier = {multiplier}\n"
 		f"only_round = {only_round}"
 	)
+	
 	bot1.send_message(662482931, msg_parameters)
 	
 	print("\nGetting pairs...")
