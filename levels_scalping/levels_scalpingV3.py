@@ -19,7 +19,6 @@ def search(
 		search_distance,
 		multiplier,
 		level_repeat,
-		only_round,
 		time_log
 ):
 	
@@ -160,7 +159,6 @@ if __name__ == '__main__':
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
 	multiplier = int(input("Multiplier (def. x4): ") or 4)
 	seconds_approve = int(input("Lifetime of size, seconds (def. 180): ") or 180)
-	only_round = int(input("Size only on round level? (def. 1): ") or 1)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
@@ -173,7 +171,7 @@ if __name__ == '__main__':
 		f"ts_percent_filter = {ts_percent_filter}\n\n"
 		f"search_distance = {search_distance}\n"
 		f"multiplier = {multiplier}\n"
-		f"only_round = {only_round}"
+		f"seconds_approve = {seconds_approve}\n"
 	)
 	
 	bot1.send_message(662482931, msg_parameters)
@@ -215,7 +213,6 @@ if __name__ == '__main__':
 			                  search_distance,
 			                  multiplier,
 			                  level_repeat,
-			                  only_round,
 			                  time_log,
 		                      ))
 		the_processes.append(process)
