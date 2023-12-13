@@ -115,6 +115,8 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	
 	res = []
 	
+	print(f"{market_type}: {symbol} ---> {int(size_3_dollars)} ---> {int(size_2_dollars)} ---> {int(size_1_dollars)}. VOLUME60 {int(avg_vol_60)}")
+	
 	if size_1 >= max_avg_size and size_1_dollars >= avg_vol_60 and distance_1 <= search_distance:
 		# and (price_1 >= max_of_range or min_of_range >= price_1):
 		# and max_of_range >= price_1 >= min_of_range:
