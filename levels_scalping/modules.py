@@ -4,9 +4,13 @@ import telebot
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
-def extremum(symbol, frame, request_limit_length):
-
-	response = requests.get(f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}')
+def extremum(symbol, frame, request_limit_length, market_type: str):
+	
+	futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
+	spot_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
+	
+	url = futures_klines if market_type == "f" else spot_klines
+	response = requests.get(url)
 	
 	if response.status_code == 200:
 		
@@ -23,14 +27,18 @@ def extremum(symbol, frame, request_limit_length):
 			buy_volume = list(float(i[9]) for i in binance_candle_data)
 			sell_volume = [volume[0] - buy_volume[0]]
 			
-			return [max(high), min(low), close[-1]]
+			max_last = max(high[-5:-1])
+			min_last = min(low[-5:-1])
+			avg_vol = sum(volume) / request_limit_length
+			avg_vol = avg_vol * close[-1]
+			
+			return [max_last, min_last, avg_vol]
 		
 		else:
 			msg = f"Not enough data for {symbol} on 1m"
 			bot1.send_message(662482931, msg)
 			print(msg)
-	
-	
+			
 	elif response.status_code == 429:
 		msg = f"{symbol} LIMITS REACHED !!!! 429 CODE !!!!"
 		bot1.send_message(662482931, msg)
@@ -43,6 +51,7 @@ def extremum(symbol, frame, request_limit_length):
 		bot1.send_message(662482931, msg)
 		print(msg)
 
+# print(extremum("BEAMXUSDT", "1m", 60, "f"))
 
 def order_book(url):
 
@@ -79,11 +88,12 @@ def order_book(url):
 	# 	print(response.status_code)
 
 	
-def three_distances(symbol, close, combined_list, max_avg_size, search_distance, size_filter):
+def three_distances(symbol, close, combined_list, max_avg_size, search_distance, market_type: str):
 	
-	max_min = extremum(symbol, '1m', 4)
+	max_min = extremum(symbol, '1m', 60, market_type)
 	max_of_range = max_min[0]
 	min_of_range = max_min[1]
+	avg_vol_60 = max_min[2]
 	
 	price_1 = combined_list[-1][0]
 	size_1 = combined_list[-1][1]
@@ -105,17 +115,17 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	
 	res = []
 	
-	if size_1 >= max_avg_size and size_1_dollars >= size_filter and distance_1 <= search_distance and (price_1 >= max_of_range or min_of_range >= price_1):
+	if size_1 >= max_avg_size and size_1_dollars >= avg_vol_60 and distance_1 <= search_distance and (price_1 >= max_of_range or min_of_range >= price_1):
 		# and max_of_range >= price_1 >= min_of_range:
 		
 		res.append([distance_1, price_1, size_1])
 	
-	if size_2 >= max_avg_size and size_2_dollars >= size_filter and distance_2 <= search_distance and (price_2 >= max_of_range or min_of_range >= price_2):
+	if size_2 >= max_avg_size and size_2_dollars >= avg_vol_60 and distance_2 <= search_distance and (price_2 >= max_of_range or min_of_range >= price_2):
 		# and max_of_range >= price_2 >= min_of_range:
 
 		res.append([distance_2, price_2, size_2])
 	
-	if size_3 >= max_avg_size and size_3_dollars >= size_filter and distance_3 <= search_distance and (price_3 >= max_of_range or min_of_range >= price_3):
+	if size_3 >= max_avg_size and size_3_dollars >= avg_vol_60 and distance_3 <= search_distance and (price_3 >= max_of_range or min_of_range >= price_3):
 		# and max_of_range >= price_3 >= min_of_range:
 		
 		res.append([distance_3, price_3, size_3])

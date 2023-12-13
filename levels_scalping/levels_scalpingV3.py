@@ -45,7 +45,7 @@ def search(
 			f_max_decimal = futures_data[2]
 			f_max_avg_size = f_combined_list[-4][1] * multiplier
 			
-			f_distances = three_distances(symbol, f_close, f_combined_list, f_max_avg_size, search_distance, futures_size_filter)
+			f_distances = three_distances(symbol, f_close, f_combined_list, f_max_avg_size, search_distance, "f")
 			
 			f_fifth_distance = 100
 			f_fifth_level = 0
@@ -94,7 +94,7 @@ def search(
 			s_max_decimal = spot_data[2]
 			s_max_avg_size = s_combined_list[-4][1] * multiplier
 			
-			s_distances = three_distances(symbol, s_close, s_combined_list, s_max_avg_size, search_distance, spot_size_filter)
+			s_distances = three_distances(symbol, s_close, s_combined_list, s_max_avg_size, search_distance, "s")
 			
 			s_fifth_distance = 100
 			s_fifth_level = 0
