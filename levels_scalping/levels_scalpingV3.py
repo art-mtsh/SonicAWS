@@ -19,8 +19,6 @@ def search(
 		search_distance,
 		multiplier,
 		level_repeat,
-		futures_size_filter,
-		spot_size_filter,
 		only_round,
 		time_log
 ):
@@ -160,8 +158,6 @@ if __name__ == '__main__':
 
 	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	futures_size_filter = int(input("Futures size filter in K (def. 200): ") or 200)
-	spot_size_filter = int(input("Spot size filter in K (def. 20): ") or 20)
 	multiplier = int(input("Multiplier (def. x4): ") or 4)
 	only_round = int(input("Size only on round level? (def. 1): ") or 1)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
@@ -175,8 +171,6 @@ if __name__ == '__main__':
 		f"x_atr_per_filter = {x_atr_per_filter}\n"
 		f"ts_percent_filter = {ts_percent_filter}\n\n"
 		f"search_distance = {search_distance}\n"
-		f"futures_size_filter = {futures_size_filter}\n"
-		f"spot_size_filter = {spot_size_filter}\n"
 		f"multiplier = {multiplier}\n"
 		f"only_round = {only_round}"
 	)
@@ -220,8 +214,6 @@ if __name__ == '__main__':
 			                  search_distance,
 			                  multiplier,
 			                  level_repeat,
-			                  futures_size_filter,
-			                  spot_size_filter,
 			                  only_round,
 			                  time_log,
 		                      ))
