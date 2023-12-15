@@ -65,7 +65,6 @@ def search(
 				size_in_thousands = int(f_fifth_size / 1000)
 				size_in_dollars = int((f_fifth_level * f_fifth_size) / 1000)
 				zero_addition = (f_max_decimal - decimal_x) * '0'
-				# direction = f"\nSupport with {level_repeat} repeats!" if f_close > size_price else f"\nResistance with {level_repeat} repeats!"
 				
 				msg = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
 				title = f"{f_fifth_distance}% FUT {symbol}"
