@@ -121,6 +121,7 @@ def search(
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
 				
 				# if display_on_tg == 1:
+
 				# 	if only_round == 1:
 				# 		if (s_max_decimal - decimal_x) >= 2:
 				# 			screenshoter_send(symbol, "s", size_price, title, msg)

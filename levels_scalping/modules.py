@@ -118,16 +118,19 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	if size_1 >= max_avg_size and size_1_dollars >= avg_vol_60 and distance_1 <= search_distance \
 		and (price_1 <= min_of_range <= price_1 * 1.002 or price_1 * 0.998 <= max_of_range <= price_1):
 
+		print(f"{symbol} size price {price_1}, min of range {min_of_range}, max of range {max_of_range}")
 		res.append([distance_1, price_1, size_1])
 	
 	if size_2 >= max_avg_size and size_2_dollars >= avg_vol_60 and distance_2 <= search_distance \
 		and (price_2 <= min_of_range <= price_2 * 1.002 or price_2 * 0.998 <= max_of_range <= price_2):
 
+		print(f"{symbol} size price {price_2}, min of range {min_of_range}, max of range {max_of_range}")
 		res.append([distance_2, price_2, size_2])
 	
 	if size_3 >= max_avg_size and size_3_dollars >= avg_vol_60 and distance_3 <= search_distance \
 		and (price_3 <= min_of_range <= price_3 * 1.002 or price_3 * 0.998 <= max_of_range <= price_3):
-		
+
+		print(f"{symbol} size price {price_3}, min of range {min_of_range}, max of range {max_of_range}")
 		res.append([distance_3, price_3, size_3])
 		
 	return res
