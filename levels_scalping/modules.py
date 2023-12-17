@@ -27,8 +27,8 @@ def extremum(symbol, frame, request_limit_length, market_type: str):
 			buy_volume = list(float(i[9]) for i in binance_candle_data)
 			sell_volume = [volume[0] - buy_volume[0]]
 			
-			max_last = max(high[-5:-1])
-			min_last = min(low[-5:-1])
+			max_last = max(high[-6:-1])
+			min_last = min(low[-6:-1])
 			avg_vol = sum(volume) / len(volume)
 			avg_vol = avg_vol * close[-1]
 			
@@ -114,24 +114,19 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	distance_3 = float('{:.2f}'.format(distance_3))
 	
 	res = []
-	
-	# print(f"{market_type}: {symbol} ---> {int(size_3_dollars)} ---> {int(size_2_dollars)} ---> {int(size_1_dollars)}. VOLUME60 {int(avg_vol_60)}")
-	
-	if size_1 >= max_avg_size and size_1_dollars >= avg_vol_60 and distance_1 <= search_distance:
-		# and (price_1 >= max_of_range or min_of_range >= price_1):
-		# and max_of_range >= price_1 >= min_of_range:
-		
+
+	if size_1 >= max_avg_size and size_1_dollars >= avg_vol_60 and distance_1 <= search_distance \
+		and (price_1 <= min_of_range <= price_1 * 1.002 or price_1 * 0.998 <= max_of_range <= price_1):
+
 		res.append([distance_1, price_1, size_1])
 	
-	if size_2 >= max_avg_size and size_2_dollars >= avg_vol_60 and distance_2 <= search_distance:
-		# and (price_2 >= max_of_range or min_of_range >= price_2):
-		# and max_of_range >= price_2 >= min_of_range:
+	if size_2 >= max_avg_size and size_2_dollars >= avg_vol_60 and distance_2 <= search_distance \
+		and (price_2 <= min_of_range <= price_2 * 1.002 or price_2 * 0.998 <= max_of_range <= price_2):
 
 		res.append([distance_2, price_2, size_2])
 	
-	if size_3 >= max_avg_size and size_3_dollars >= avg_vol_60 and distance_3 <= search_distance:
-		# and (price_3 >= max_of_range or min_of_range >= price_3):
-		# and max_of_range >= price_3 >= min_of_range:
+	if size_3 >= max_avg_size and size_3_dollars >= avg_vol_60 and distance_3 <= search_distance \
+		and (price_3 <= min_of_range <= price_3 * 1.002 or price_3 * 0.998 <= max_of_range <= price_3):
 		
 		res.append([distance_3, price_3, size_3])
 		
