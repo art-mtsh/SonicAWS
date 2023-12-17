@@ -32,7 +32,7 @@ def extremum(symbol, frame, request_limit_length, market_type: str):
 			avg_vol = sum(volume) / len(volume)
 			avg_vol = avg_vol * close[-1]
 			
-			return [max_last, min_last, avg_vol]
+			return [high, low, avg_vol]
 		
 		else:
 			msg = f"Not enough data for {symbol} on 1m"
@@ -83,9 +83,9 @@ def order_book(url):
 
 def three_distances(symbol, close, combined_list, max_avg_size, search_distance, market_type: str):
 	
-	max_min = extremum(symbol, '1m', 60, market_type)
-	max_of_range = max_min[0]
-	min_of_range = max_min[1]
+	max_min = extremum(symbol, '1m', 90, market_type)
+	high = max_min[0]
+	low = max_min[1]
 	avg_vol_60 = max_min[2] / 1000
 	
 	price_1 = combined_list[-1][0]
@@ -108,22 +108,41 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	
 	res = []
 
-	if size_1 >= max_avg_size and size_1_dollars >= avg_vol_60 and distance_1 <= search_distance \
-		and (price_1 == min_of_range or price_1 == max_of_range):
-		# and (price_1 <= min_of_range <= price_1 * 1.002 or price_1 * 0.998 <= max_of_range <= price_1):
+	if size_1 >= max_avg_size and size_1_dollars >= avg_vol_60 and distance_1 <= search_distance:
 
-		res.append([distance_1, price_1, size_1])
+		for i in range(1, len(high)):
+			if high[-i] >= max(high[-1:-i-5:-1]) and price_1 * 0.999 <= high[-i] <= price_1:
+				res.append([distance_1, price_1, size_1])
+				break
+
+		for i in range(1, len(low)):
+			if low[-i] <= min(low[-1:-i-5:-1]) and price_1 <= low[-i] <= price_1 * 1.001:
+				res.append([distance_1, price_1, size_1])
+				break
+
+	if size_2 >= max_avg_size and size_2_dollars >= avg_vol_60 and distance_2 <= search_distance:
+
+		for i in range(1, len(high)):
+			if high[-i] >= max(high[-1:-i - 5:-1]) and price_2 * 0.999 <= high[-i] <= price_2:
+				res.append([distance_1, price_2, size_1])
+				break
+
+		for i in range(1, len(low)):
+			if low[-i] <= min(low[-1:-i - 5:-1]) and price_2 <= low[-i] <= price_2 * 1.001:
+				res.append([distance_1, price_2, size_1])
+				break
+
 	
-	if size_2 >= max_avg_size and size_2_dollars >= avg_vol_60 and distance_2 <= search_distance \
-		and (price_2 == min_of_range or price_2 == max_of_range):
-		# and (price_2 <= min_of_range <= price_2 * 1.002 or price_2 * 0.998 <= max_of_range <= price_2):
+	if size_3 >= max_avg_size and size_3_dollars >= avg_vol_60 and distance_3 <= search_distance:
 
-		res.append([distance_2, price_2, size_2])
-	
-	if size_3 >= max_avg_size and size_3_dollars >= avg_vol_60 and distance_3 <= search_distance \
-		and (price_3 == min_of_range or price_3 == max_of_range):
-		# and (price_3 <= min_of_range <= price_3 * 1.002 or price_3 * 0.998 <= max_of_range <= price_3):
+		for i in range(1, len(high)):
+			if high[-i] >= max(high[-1:-i - 5:-1]) and price_3 * 0.999 <= high[-i] <= price_3:
+				res.append([distance_1, price_3, size_1])
+				break
 
-		res.append([distance_3, price_3, size_3])
+		for i in range(1, len(low)):
+			if low[-i] <= min(low[-1:-i - 5:-1]) and price_3 <= low[-i] <= price_3 * 1.001:
+				res.append([distance_1, price_3, size_1])
+				break
 		
 	return res

@@ -149,16 +149,16 @@ if __name__ == '__main__':
 	
 	print("\nPairs section:")
 	x_range_filter = int(input("4H range, % (def. 1): ") or 1)
-	x_change_filter = int(input("4H change, % (def. 1): ") or 1)
+	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
 	x_volume_filter = int(input("4H volume, millions (def. 1): ") or 1)
 	x_trades_filter = int(input("4H trades, thousands (def. 1): ") or 1)
-	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.25): ") or 0.25)
+	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.20): ") or 0.20)
 	ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
 	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	multiplier = int(input("Multiplier (def. x4): ") or 4)
-	seconds_approve = int(input("Lifetime of size, seconds (def. 180): ") or 180)
+	multiplier = int(input("Multiplier (def. x4): ") or 3)
+	seconds_approve = int(input("Lifetime of size, seconds (def. 30): ") or 30)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
 	
