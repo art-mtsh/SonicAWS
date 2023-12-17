@@ -27,8 +27,8 @@ def extremum(symbol, frame, request_limit_length, market_type: str):
 			buy_volume = list(float(i[9]) for i in binance_candle_data)
 			sell_volume = [volume[0] - buy_volume[0]]
 			
-			max_last = max(high[-6:-1])
-			min_last = min(low[-6:-1])
+			max_last = max(high[-11:-1])
+			min_last = min(low[-11:-1])
 			avg_vol = sum(volume) / len(volume)
 			avg_vol = avg_vol * close[-1]
 			
@@ -50,8 +50,6 @@ def extremum(symbol, frame, request_limit_length, market_type: str):
 		msg = f"Troubles with {symbol} data request on 1m, status code {response.status_code}"
 		bot1.send_message(662482931, msg)
 		print(msg)
-
-# print(extremum("BEAMXUSDT", "1m", 60, "f"))
 
 def order_book(url):
 
@@ -82,12 +80,7 @@ def order_book(url):
 		bot1.send_message(662482931, "LIMITS REACHED !!!! 429 CODE !!!!")
 		bot1.send_message(662482931, "LIMITS REACHED !!!! 429 CODE !!!!")
 		print(f"LIMITS REACHED !!!! 429 CODE !!!!")
-	
-	# else:
-	# 	print(url)
-	# 	print(response.status_code)
 
-	
 def three_distances(symbol, close, combined_list, max_avg_size, search_distance, market_type: str):
 	
 	max_min = extremum(symbol, '1m', 60, market_type)
@@ -116,21 +109,21 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	res = []
 
 	if size_1 >= max_avg_size and size_1_dollars >= avg_vol_60 and distance_1 <= search_distance \
-		and (price_1 <= min_of_range <= price_1 * 1.002 or price_1 * 0.998 <= max_of_range <= price_1):
+		and (price_1 == min_of_range or price_1 == max_of_range):
+		# and (price_1 <= min_of_range <= price_1 * 1.002 or price_1 * 0.998 <= max_of_range <= price_1):
 
-		# print(f"{symbol} size price {price_1}, min of range {min_of_range}, max of range {max_of_range}")
 		res.append([distance_1, price_1, size_1])
 	
 	if size_2 >= max_avg_size and size_2_dollars >= avg_vol_60 and distance_2 <= search_distance \
-		and (price_2 <= min_of_range <= price_2 * 1.002 or price_2 * 0.998 <= max_of_range <= price_2):
+		and (price_2 == min_of_range or price_2 == max_of_range):
+		# and (price_2 <= min_of_range <= price_2 * 1.002 or price_2 * 0.998 <= max_of_range <= price_2):
 
-		# print(f"{symbol} size price {price_2}, min of range {min_of_range}, max of range {max_of_range}")
 		res.append([distance_2, price_2, size_2])
 	
 	if size_3 >= max_avg_size and size_3_dollars >= avg_vol_60 and distance_3 <= search_distance \
-		and (price_3 <= min_of_range <= price_3 * 1.002 or price_3 * 0.998 <= max_of_range <= price_3):
+		and (price_3 == min_of_range or price_3 == max_of_range):
+		# and (price_3 <= min_of_range <= price_3 * 1.002 or price_3 * 0.998 <= max_of_range <= price_3):
 
-		# print(f"{symbol} size price {price_3}, min of range {min_of_range}, max of range {max_of_range}")
 		res.append([distance_3, price_3, size_3])
 		
 	return res
