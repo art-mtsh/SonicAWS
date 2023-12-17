@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
 	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	multiplier = int(input("Multiplier (def. x4): ") or 3)
+	multiplier = int(input("Multiplier (def. x3): ") or 3)
 	seconds_approve = int(input("Lifetime of size, seconds (def. 30): ") or 30)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 1): ") or 1)
@@ -188,7 +188,7 @@ if __name__ == '__main__':
 	print(pairs)
 	print("")
 	
-	reload = seconds_approve / ((1100 / 12) / len(pairs)) - 3
+	reload = seconds_approve / ((1100 / 14) / len(pairs)) - 3
 	reload_time = reload if reload >= 1 else 1
 	level_repeat = int(seconds_approve / (reload_time + 3))
 	

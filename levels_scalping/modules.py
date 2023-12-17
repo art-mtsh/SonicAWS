@@ -83,7 +83,7 @@ def order_book(url):
 
 def three_distances(symbol, close, combined_list, max_avg_size, search_distance, market_type: str):
 	
-	max_min = extremum(symbol, '1m', 90, market_type)
+	max_min = extremum(symbol, '1m', 186, market_type)
 	high = max_min[0]
 	low = max_min[1]
 	avg_vol_60 = max_min[2] / 1000
@@ -110,38 +110,44 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 
 	if size_1 >= max_avg_size and size_1_dollars >= avg_vol_60 and distance_1 <= search_distance:
 
-		for i in range(1, len(high)):
+		for i in range(1, len(high)-6):
 			if high[-i] >= max(high[-1:-i-5:-1]) and price_1 * 0.999 <= high[-i] <= price_1:
+				print(f"{symbol} {-i} candles ago was bounce at price {high[-i]}, current size {size_1}")
 				res.append([distance_1, price_1, size_1])
 				break
 
-		for i in range(1, len(low)):
+		for i in range(1, len(low)-6):
 			if low[-i] <= min(low[-1:-i-5:-1]) and price_1 <= low[-i] <= price_1 * 1.001:
+				print(f"{symbol} {-i} candles ago was bounce at price {low[-i]}, current size {size_1}")
 				res.append([distance_1, price_1, size_1])
 				break
 
 	if size_2 >= max_avg_size and size_2_dollars >= avg_vol_60 and distance_2 <= search_distance:
 
-		for i in range(1, len(high)):
+		for i in range(1, len(high)-6):
 			if high[-i] >= max(high[-1:-i - 5:-1]) and price_2 * 0.999 <= high[-i] <= price_2:
+				print(f"{symbol} {-i} candles ago was bounce at price {high[-i]}, current size {size_1}")
 				res.append([distance_1, price_2, size_1])
 				break
 
-		for i in range(1, len(low)):
+		for i in range(1, len(low)-6):
 			if low[-i] <= min(low[-1:-i - 5:-1]) and price_2 <= low[-i] <= price_2 * 1.001:
+				print(f"{symbol} {-i} candles ago was bounce at price {low[-i]}, current size {size_1}")
 				res.append([distance_1, price_2, size_1])
 				break
 
 	
 	if size_3 >= max_avg_size and size_3_dollars >= avg_vol_60 and distance_3 <= search_distance:
 
-		for i in range(1, len(high)):
+		for i in range(1, len(high)-6):
 			if high[-i] >= max(high[-1:-i - 5:-1]) and price_3 * 0.999 <= high[-i] <= price_3:
+				print(f"{symbol} {-i} candles ago was bounce at price {high[-i]}, current size {size_1}")
 				res.append([distance_1, price_3, size_1])
 				break
 
-		for i in range(1, len(low)):
+		for i in range(1, len(low)-6):
 			if low[-i] <= min(low[-1:-i - 5:-1]) and price_3 <= low[-i] <= price_3 * 1.001:
+				print(f"{symbol} {-i} candles ago was bounce at price {low[-i]}, current size {size_1}")
 				res.append([distance_1, price_3, size_1])
 				break
 		
