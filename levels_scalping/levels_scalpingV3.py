@@ -128,7 +128,7 @@ def search(
 				# 	else:
 				# 		screenshoter_send(symbol, "s", size_price, title, msg)
 				
-				screenshoter_send(symbol, "f", size_price, title, msg)
+				screenshoter_send(symbol, "s", size_price, title, msg)
 				
 				levels_check_spot.clear()
 				sys.stdout.flush()
@@ -160,7 +160,7 @@ if __name__ == '__main__':
 	multiplier = int(input("Multiplier (def. x3): ") or 3)
 	seconds_approve = int(input("Lifetime of size, seconds (def. 30): ") or 30)
 	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
-	time_log = int(input("Print time log? (def. 1): ") or 1)
+	time_log = int(input("Print time log? (def. 0): ") or 0)
 	
 	msg_parameters = (
 		f"x_range_filter = {x_range_filter}\n"
