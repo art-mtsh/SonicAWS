@@ -14,7 +14,6 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 def search(
 		symbol,
 		reload_time,
-		display_on_tg,
 		request_limit_length,
 		search_distance,
 		multiplier,
@@ -58,7 +57,7 @@ def search(
 						f_fifth_level = i[1]
 						f_fifth_size = i[2]
 			
-			if f_fifth_distance != 100:
+			if f_fifth_distance <= 1:
 				
 				decimal_x = len(str(f_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = f_fifth_level
@@ -70,14 +69,7 @@ def search(
 				title = f"{f_fifth_distance}% FUT {symbol}"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
-				
-				# if display_on_tg == 1:
-				# 	if only_round == 1:
-				# 		if (f_max_decimal - decimal_x) >= 2:
-				# 			screenshoter_send(symbol, "f", size_price, title, msg)
-				# 	else:
-				# 		screenshoter_send(symbol, "f", size_price, title, msg)
-				
+
 				screenshoter_send(symbol, "f", size_price, title, msg)
 			
 				levels_check_futures.clear()
@@ -106,7 +98,7 @@ def search(
 						s_fifth_level = i[1]
 						s_fifth_size = i[2]
 			
-			if s_fifth_distance != 100:
+			if s_fifth_distance <= 1:
 				
 				decimal_x = len(str(s_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = s_fifth_level
@@ -119,15 +111,7 @@ def search(
 				title = f"{s_fifth_distance}% SPOT {symbol}"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
-				
-				# if display_on_tg == 1:
 
-				# 	if only_round == 1:
-				# 		if (s_max_decimal - decimal_x) >= 2:
-				# 			screenshoter_send(symbol, "s", size_price, title, msg)
-				# 	else:
-				# 		screenshoter_send(symbol, "s", size_price, title, msg)
-				
 				screenshoter_send(symbol, "s", size_price, title, msg)
 				
 				levels_check_spot.clear()
@@ -152,14 +136,13 @@ if __name__ == '__main__':
 	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
 	x_volume_filter = int(input("4H volume, millions (def. 1): ") or 1)
 	x_trades_filter = int(input("4H trades, thousands (def. 1): ") or 1)
-	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.20): ") or 0.20)
+	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.25): ") or 0.25)
 	ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
 	print("\nSizes section:")
-	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
+	search_distance = float(input("Search distance (def. 3.0%): ") or 3.0)
 	multiplier = int(input("Multiplier (def. x3): ") or 3)
 	seconds_approve = int(input("Lifetime of size, seconds (def. 30): ") or 30)
-	display_on_tg = int(input("Telegram alert? (def. 1): ") or 1)
 	time_log = int(input("Print time log? (def. 0): ") or 0)
 	
 	msg_parameters = (
@@ -192,8 +175,7 @@ if __name__ == '__main__':
 	reload_time = reload if reload >= 1 else 1
 	level_repeat = int(seconds_approve / (reload_time + 3))
 	
-	if display_on_tg == 1:
-		bot1.send_message(662482931, str(pairs))
+	bot1.send_message(662482931, str(pairs))
 			
 	manager = Manager()
 	shared_queue = manager.Queue()
@@ -208,7 +190,6 @@ if __name__ == '__main__':
 		                  args=(
 			                  pair,
 			                  reload_time,
-			                  display_on_tg,
 			                  request_limit_length,
 			                  search_distance,
 			                  multiplier,
