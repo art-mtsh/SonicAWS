@@ -46,6 +46,7 @@ def search(
 			f_fifth_distance = 100
 			f_fifth_level = 0
 			f_fifth_size = 0
+			f_bigger_than = 0
 			
 			if len(f_distances) != 0:
 				for i in f_distances:
@@ -56,6 +57,7 @@ def search(
 						f_fifth_distance = i[0]
 						f_fifth_level = i[1]
 						f_fifth_size = i[2]
+						f_bigger_than = i[3]
 			
 			if f_fifth_distance <= 1:
 				
@@ -65,7 +67,7 @@ def search(
 				size_in_dollars = int((f_fifth_level * f_fifth_size) / 1000)
 				zero_addition = (f_max_decimal - decimal_x) * '0'
 				
-				msg = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
+				msg = f"{f_fifth_distance}% FUT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K (1/{f_bigger_than})"
 				title = f"{f_fifth_distance}% FUT {symbol}"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)
@@ -87,7 +89,8 @@ def search(
 			s_fifth_distance = 100
 			s_fifth_level = 0
 			s_fifth_size = 0
-			
+			s_bigger_than = 0
+
 			if len(s_distances) != 0:
 				for i in s_distances:
 					levels_check_spot.append(i[1])
@@ -97,7 +100,8 @@ def search(
 						s_fifth_distance = i[0]
 						s_fifth_level = i[1]
 						s_fifth_size = i[2]
-			
+						s_bigger_than = i[3]
+
 			if s_fifth_distance <= 1:
 				
 				decimal_x = len(str(s_fifth_level).split('.')[-1].rstrip('0'))
@@ -107,7 +111,7 @@ def search(
 				zero_addition = (s_max_decimal - decimal_x) * '0'
 				# direction = f"\nSupport with {level_repeat} repeats!" if s_close > size_price else f"\nResistance with {level_repeat} repeats!"
 				
-				msg = f"{s_fifth_distance}% 🔥 SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K"
+				msg = f"{s_fifth_distance}% 🔥 SPOT #{symbol}: {size_price}{zero_addition} x {size_in_thousands}K = ${size_in_dollars}K (1/{s_bigger_than})"
 				title = f"{s_fifth_distance}% SPOT {symbol}"
 				
 				print(f"{datetime.now().strftime('%H:%M:%S')}\n" + msg)

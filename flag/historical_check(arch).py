@@ -41,10 +41,7 @@ def search(
 				close = list(float(i[4]) for i in binance_candle_data)
 			
 				if len(open) == len(high) == len(low) == len(close) == request_length:
-
-
-
-
+					
 					for candle in range(request_length - donchian_length, donchian_length, -1):
 						
 						# ==== price gap ====
