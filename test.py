@@ -1,3 +1,7 @@
-l = [1, 3, 1,  5, 7, 8]
+l = []
 
-print(l.count(1))
+
+for i in range(1, 20):
+    l.append(i)
+
+print(l)

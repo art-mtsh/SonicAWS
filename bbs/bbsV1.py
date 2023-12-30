@@ -3,8 +3,15 @@ from datetime import datetime
 from multiprocessing import Process
 import requests
 import telebot
-from BBS.module_get_pairs_binanceV3 import binance_pairs
+from bbs.module_get_pairs_binanceV3 import binance_pairs
 from screenshoter import screenshoter_send
+
+'''
+
+Пошук BBSh на різних таймфреймах з відправкою алерта в телеграм!
+
+'''
+
 
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
@@ -61,7 +68,7 @@ def search(
 					low[-1] != 0 and close[-1] != 0 and \
 					max_gap <= gap_filter and density >= density_filter and len(high) == len(low) == request_limit_length:
 					
-					# ==== BBS SEARCH ====
+					# ==== bbs SEARCH ====
 					current_brr = abs(open[-1] - close[-1]) / ((high[-1] - low[-1]) / 100)
 					current_range = high[-1] - low[-1]
 					ranges_list = []
