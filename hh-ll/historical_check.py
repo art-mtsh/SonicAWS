@@ -221,6 +221,8 @@ def search(
 
 if __name__ == '__main__':
 
+	time1 = time.perf_counter()
+
 	proc = 2
 	frame = "1m"
 	gap_filter = 0.05

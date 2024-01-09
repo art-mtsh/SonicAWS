@@ -140,12 +140,12 @@ if __name__ == '__main__':
 	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
 	x_volume_filter = int(input("4H volume, millions (def. 1): ") or 1)
 	x_trades_filter = int(input("4H trades, thousands (def. 1): ") or 1)
-	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.30): ") or 0.30)
+	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.25): ") or 0.25)
 	ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
 	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	multiplier = int(input("Multiplier (def. x7): ") or 7)
+	multiplier = int(input("Multiplier (def. x6): ") or 6)
 	seconds_approve = int(input("Lifetime of size, seconds (def. 30): ") or 30)
 	time_log = int(input("Print time log? (def. 0): ") or 0)
 	
