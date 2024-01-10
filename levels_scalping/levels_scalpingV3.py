@@ -138,9 +138,9 @@ if __name__ == '__main__':
 	print("\nPairs section:")
 	x_range_filter = int(input("4H range, % (def. 1): ") or 1)
 	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
-	x_volume_filter = int(input("4H volume, millions (def. 1): ") or 1)
-	x_trades_filter = int(input("4H trades, thousands (def. 1): ") or 1)
-	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.25): ") or 0.25)
+	x_volume_filter = int(input("4H volume, millions (def. 10): ") or 10)
+	x_trades_filter = int(input("4H trades, thousands (def. 100): ") or 100)
+	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.3): ") or 0.3)
 	ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
 	print("\nSizes section:")
