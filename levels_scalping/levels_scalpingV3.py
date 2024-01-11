@@ -59,7 +59,7 @@ def search(
 						f_fifth_size = i[2]
 						f_bigger_than = i[3]
 			
-			if f_fifth_distance <= 1:
+			if f_fifth_distance <= search_distance:
 				
 				decimal_x = len(str(f_fifth_level).split('.')[-1].rstrip('0'))
 				size_price = f_fifth_level
