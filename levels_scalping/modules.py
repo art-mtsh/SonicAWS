@@ -170,26 +170,26 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 				res.append([distance_3, price_3, size_3, bigger_than])
 				break
 
-	for i in range(2, len(high)):
-
-		if high[-i] >= max(high[-1: -i - 5: -1]) and high[-1: -i - 5: -1].count(high[-i]) >= 5 and market_type == "f":
-			distance_4 = abs(close - high[-i]) / (close / 100)
-			distance_4 = float('{:.2f}'.format(distance_4))
-
-			if distance_4 <= 0.4:
-				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {high[-i]}, LEVEL")
-
-				res.append([distance_4, high[-i], 1, 1])
-				break
-
-		if low[-i] <= min(low[-1: -i - 5: -1]) and low[-1: -i - 5: -1].count(low[-i]) >= 5 and market_type == "f":
-			distance_4 = abs(close - low[-i]) / (close / 100)
-			distance_4 = float('{:.2f}'.format(distance_4))
-
-			if distance_4 <= 0.4:
-				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {low[-i]}, LEVEL")
-
-				res.append([distance_4, low[-i], 1, 1])
-				break
+	# for i in range(2, len(high)):
+	#
+	# 	if high[-i] >= max(high[-1: -i - 5: -1]) and high[-1: -i - 5: -1].count(high[-i]) >= 5 and market_type == "f":
+	# 		distance_4 = abs(close - high[-i]) / (close / 100)
+	# 		distance_4 = float('{:.2f}'.format(distance_4))
+	#
+	# 		if distance_4 <= 0.4:
+	# 			print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {high[-i]}, LEVEL")
+	#
+	# 			res.append([distance_4, high[-i], 1, 1])
+	# 			break
+	#
+	# 	if low[-i] <= min(low[-1: -i - 5: -1]) and low[-1: -i - 5: -1].count(low[-i]) >= 5 and market_type == "f":
+	# 		distance_4 = abs(close - low[-i]) / (close / 100)
+	# 		distance_4 = float('{:.2f}'.format(distance_4))
+	#
+	# 		if distance_4 <= 0.4:
+	# 			print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {low[-i]}, LEVEL")
+	#
+	# 			res.append([distance_4, low[-i], 1, 1])
+	# 			break
 
 	return res
