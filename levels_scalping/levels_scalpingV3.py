@@ -135,13 +135,13 @@ if __name__ == '__main__':
 	
 	request_limit_length = 100
 	
-	print("\nPairs section:")
-	x_range_filter = int(input("4H range, % (def. 1): ") or 1)
-	x_change_filter = int(input("4H change, % (def. 0): ") or 0)
-	x_volume_filter = int(input("4H volume, millions (def. 10): ") or 10)
-	x_trades_filter = int(input("4H trades, thousands (def. 100): ") or 100)
-	x_atr_per_filter = float(input("4H avg ATR, % (def. 0.3): ") or 0.3)
-	ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
+	# print("\nPairs section:")
+	# x_range_filter = int(input("4H range, % (def. 1): ") or 1)
+	# x_change_filter = int(input("4H change, % (def. 0): ") or 0)
+	# x_volume_filter = int(input("4H volume, millions (def. 10): ") or 10)
+	# x_trades_filter = int(input("4H trades, thousands (def. 100): ") or 100)
+	# x_atr_per_filter = float(input("4H avg ATR, % (def. 0.3): ") or 0.3)
+	# ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
 	print("\nSizes section:")
 	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
@@ -150,12 +150,12 @@ if __name__ == '__main__':
 	time_log = int(input("Print time log? (def. 0): ") or 0)
 	
 	msg_parameters = (
-		f"x_range_filter = {x_range_filter}\n"
-		f"x_change_filter = {x_change_filter}\n"
-		f"x_volume_filter = {x_volume_filter}\n"
-		f"x_trades_filter = {x_trades_filter}\n"
-		f"x_atr_per_filter = {x_atr_per_filter}\n"
-		f"ts_percent_filter = {ts_percent_filter}\n\n"
+		# f"x_range_filter = {x_range_filter}\n"
+		# f"x_change_filter = {x_change_filter}\n"
+		# f"x_volume_filter = {x_volume_filter}\n"
+		# f"x_trades_filter = {x_trades_filter}\n"
+		# f"x_atr_per_filter = {x_atr_per_filter}\n"
+		# f"ts_percent_filter = {ts_percent_filter}\n\n"
 		f"search_distance = {search_distance}\n"
 		f"multiplier = {multiplier}\n"
 		f"seconds_approve = {seconds_approve}\n"
@@ -164,14 +164,7 @@ if __name__ == '__main__':
 	bot1.send_message(662482931, msg_parameters)
 	
 	print("\nGetting pairs...")
-	pairs = get_pairs(
-		x_range_filter=x_range_filter,
-		x_change_filter=x_change_filter,
-		x_volume_filter=x_volume_filter,
-		x_trades_filter=x_trades_filter,
-		x_atr_per_filter=x_atr_per_filter,
-		ts_percent_filter=ts_percent_filter
-	)
+	pairs = get_pairs()
 	print(pairs)
 	print("")
 	
