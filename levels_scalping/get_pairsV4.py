@@ -136,7 +136,7 @@ def get_pairs():
     sorted_res = sorted(sorted_res, key=lambda x: x[3], reverse=True)
     total_sorted = len(sorted_res)
     max_sorted_atr = sorted_res[0][3]
-    sorted_res = [inner_list[0] for inner_list in sorted_res[:30]]
+    sorted_res = [inner_list[0] for inner_list in sorted_res[:50]]
 
     msg = (f"Sorted len {total_sorted} pairs (tick < 0.05%). \n\n"
            f"ATR values 0.25% - {max_sorted_atr}% \n\n"
@@ -144,8 +144,6 @@ def get_pairs():
            f"{str(sorted_res)}")
 
     bot1.send_message(662482931, msg)
-
-
 
     return sorted_res
 

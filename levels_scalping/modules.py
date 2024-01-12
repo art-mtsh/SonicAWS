@@ -114,7 +114,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 
 			if high[-i] > price_1:
 				break
-			elif high[-i] == price_1 and high[-i] >= max(high[-1:-i-3:-1]):
+			elif high[-i] == price_1 and high[-i] >= max(high[-1:-i-4:-1]):
 				bigger_than = int(combined_list[-1][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {high[-i]}, current size {size_1}")
 				res.append([distance_1, price_1, size_1, bigger_than])
@@ -124,7 +124,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 
 			if low[-i] < price_1:
 				break
-			elif low[-i] == price_1 and low[-i] <= min(low[-1:-i-3:-1]):
+			elif low[-i] == price_1 and low[-i] <= min(low[-1:-i-4:-1]):
 				bigger_than = int(combined_list[-1][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {low[-i]}, current size {size_1}")
 				res.append([distance_1, price_1, size_1, bigger_than])
@@ -135,7 +135,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 		for i in range(2, len(high)-6):
 			if high[-i] > price_2:
 				break
-			elif high[-i] == price_2 and high[-i] >= max(high[-1:-i-3:-1]):
+			elif high[-i] == price_2 and high[-i] >= max(high[-1:-i-4:-1]):
 				bigger_than = int(combined_list[-2][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {high[-i]}, current size {size_1}")
 				res.append([distance_2, price_2, size_2, bigger_than])
@@ -144,7 +144,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 		for i in range(2, len(low)-6):
 			if low[-i] < price_2:
 				break
-			elif low[-i] == price_2 and low[-i] <= min(low[-1:-i-3:-1]):
+			elif low[-i] == price_2 and low[-i] <= min(low[-1:-i-4:-1]):
 				bigger_than = int(combined_list[-2][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {low[-i]}, current size {size_1}")
 				res.append([distance_2, price_2, size_2, bigger_than])
@@ -155,7 +155,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 		for i in range(2, len(high)-6):
 			if high[-i] > price_3:
 				break
-			elif high[-i] == price_3 and high[-i] >= max(high[-1:-i-3:-1]):
+			elif high[-i] == price_3 and high[-i] >= max(high[-1:-i-4:-1]):
 				bigger_than = int(combined_list[-3][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {high[-i]}, current size {size_1}")
 				res.append([distance_3, price_3, size_3, bigger_than])
@@ -164,7 +164,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 		for i in range(2, len(low)-6):
 			if low[-i] < price_3:
 				break
-			elif low[-i] == price_3 and low[-i] <= min(low[-1:-i-3:-1]):
+			elif low[-i] == price_3 and low[-i] <= min(low[-1:-i-4:-1]):
 				bigger_than = int(combined_list[-3][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {low[-i]}, current size {size_1}")
 				res.append([distance_3, price_3, size_3, bigger_than])
