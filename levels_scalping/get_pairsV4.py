@@ -1,5 +1,9 @@
 from multiprocessing import Process, Manager
 import requests
+import telebot
+
+TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
+bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 """
 volatility = (max(day) - min(day) / 100%
@@ -130,7 +134,10 @@ def get_pairs():
 
     sorted_res = [inner_list for inner_list in pairs if inner_list[1] <= 0.05 and inner_list[3] >= 0.25]
     sorted_res = sorted(sorted_res, key=lambda x: x[3], reverse=True)
+    msg = f"Sorted len {len(sorted_res)} pairs. Max ATR value {sorted_res[0][3]}%"
     sorted_res = [inner_list[0] for inner_list in sorted_res[:20]]
+
+    bot1.send_message(662482931, msg)
 
     return sorted_res
 
