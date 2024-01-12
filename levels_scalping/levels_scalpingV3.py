@@ -144,9 +144,9 @@ if __name__ == '__main__':
 	# ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
 	print("\nSizes section:")
-	search_distance = float(input("Search distance (def. 1.0%): ") or 1.0)
-	multiplier = int(input("Multiplier (def. x6): ") or 6)
-	seconds_approve = int(input("Lifetime of size, seconds (def. 30): ") or 30)
+	search_distance = 1 # float(input(Search distance (def. 1.0%): ") or 1.0)
+	multiplier = 4 # int(input("Multiplier (def. x4): ") or 4)
+	seconds_approve = 30 # int(input("Lifetime of size, seconds (def. 30): ") or 30)
 	time_log = int(input("Print time log? (def. 0): ") or 0)
 	
 	msg_parameters = (
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 	reload_time = reload if reload >= 1 else 1
 	level_repeat = int(seconds_approve / (reload_time + 3))
 	
-	bot1.send_message(662482931, str(pairs))
+	# bot1.send_message(662482931, f"Here is your {len(pairs)} pairs: \n {str(pairs)}")
 			
 	manager = Manager()
 	shared_queue = manager.Queue()
