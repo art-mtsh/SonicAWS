@@ -137,17 +137,16 @@ def get_pairs():
 
     total_sorted = len(sorted_res)
     pairs_to_message = "".join(f"{i[0]}, {i[2]}K, {i[3]}%\n" for i in sorted_res)
-
-    work_quantity = 30
+    result = [inner_list[0] for inner_list in sorted_res[:30]]
 
     msg = (f"We have {total_sorted} pairs in total\n"
            f"(tick < 0.05%, ATR > 0.25)\n\n"
            f"{pairs_to_message} \n"
-           f"{work_quantity} pairs taken to calculate...")
+           f"{len(result)}/{len(sorted_res)} pairs taken to calculate...")
 
     bot1.send_message(662482931, msg)
 
-    return [inner_list[0] for inner_list in sorted_res[:work_quantity]]
+    return result
 
 
 if __name__ == '__main__':

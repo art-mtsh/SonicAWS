@@ -26,13 +26,20 @@ def extremum(symbol, frame, request_limit_length, market_type: str):
 			trades = list(int(i[8]) for i in binance_candle_data)
 			buy_volume = list(float(i[9]) for i in binance_candle_data)
 			sell_volume = [volume[0] - buy_volume[0]]
+
+			cumulative_delta = [int(buy_volume[0] - (volume[0] - buy_volume[0]))]
+
+			for i in range(1, len(close)):
+				b_vol = buy_volume[i]
+				s_vol = volume[i] - buy_volume[i]
+				new_delta = b_vol - s_vol
+				new_delta = cumulative_delta[-1] + new_delta
+				cumulative_delta.append(int(new_delta))
 			
-			max_last = max(high[-11:-1])
-			min_last = min(low[-11:-1])
 			avg_vol = sum(volume) / len(volume)
 			avg_vol = avg_vol * close[-1]
 			
-			return [high, low, avg_vol]
+			return [high, low, avg_vol, cumulative_delta]
 		
 		else:
 			msg = f"Not enough data for {symbol} on 1m"
@@ -87,6 +94,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 	high = max_min[0]
 	low = max_min[1]
 	avg_vol_60 = max_min[2] / 1000
+	cumulative_delta = max_min[3]
 	
 	price_1 = combined_list[-1][0]
 	size_1 = combined_list[-1][1]
@@ -114,7 +122,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 
 			if high[-i] > price_1:
 				break
-			elif high[-i] == price_1 and high[-i] >= max(high[-1:-i-4:-1]):
+			elif high[-i] == price_1 and high[-i] >= max(high[-1:-i-6:-1]):
 				bigger_than = int(combined_list[-1][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {high[-i]}, current size {size_1}")
 				res.append([distance_1, price_1, size_1, bigger_than])
@@ -124,7 +132,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 
 			if low[-i] < price_1:
 				break
-			elif low[-i] == price_1 and low[-i] <= min(low[-1:-i-4:-1]):
+			elif low[-i] == price_1 and low[-i] <= min(low[-1:-i-6:-1]):
 				bigger_than = int(combined_list[-1][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {low[-i]}, current size {size_1}")
 				res.append([distance_1, price_1, size_1, bigger_than])
@@ -135,7 +143,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 		for i in range(2, len(high)-6):
 			if high[-i] > price_2:
 				break
-			elif high[-i] == price_2 and high[-i] >= max(high[-1:-i-4:-1]):
+			elif high[-i] == price_2 and high[-i] >= max(high[-1:-i-6:-1]):
 				bigger_than = int(combined_list[-2][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {high[-i]}, current size {size_1}")
 				res.append([distance_2, price_2, size_2, bigger_than])
@@ -144,7 +152,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 		for i in range(2, len(low)-6):
 			if low[-i] < price_2:
 				break
-			elif low[-i] == price_2 and low[-i] <= min(low[-1:-i-4:-1]):
+			elif low[-i] == price_2 and low[-i] <= min(low[-1:-i-6:-1]):
 				bigger_than = int(combined_list[-2][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {low[-i]}, current size {size_1}")
 				res.append([distance_2, price_2, size_2, bigger_than])
@@ -155,7 +163,7 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 		for i in range(2, len(high)-6):
 			if high[-i] > price_3:
 				break
-			elif high[-i] == price_3 and high[-i] >= max(high[-1:-i-4:-1]):
+			elif high[-i] == price_3 and high[-i] >= max(high[-1:-i-6:-1]):
 				bigger_than = int(combined_list[-3][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {high[-i]}, current size {size_1}")
 				res.append([distance_3, price_3, size_3, bigger_than])
@@ -164,11 +172,30 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 		for i in range(2, len(low)-6):
 			if low[-i] < price_3:
 				break
-			elif low[-i] == price_3 and low[-i] <= min(low[-1:-i-4:-1]):
+			elif low[-i] == price_3 and low[-i] <= min(low[-1:-i-6:-1]):
 				bigger_than = int(combined_list[-3][1] / combined_list[-4][1])
 				print(f"{symbol} {market_type.capitalize()} {-i} candles ago was bounce at price {low[-i]}, current size {size_1}")
 				res.append([distance_3, price_3, size_3, bigger_than])
 				break
+
+	if high[-1] >= max(high[-181:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-181:-1]):
+		bot1.send_message(662482931, f"{symbol} BEARISH divergence 180")
+	elif high[-1] >= max(high[-121:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-121:-1]):
+		bot1.send_message(662482931, f"{symbol} BEARISH divergence 120")
+	elif high[-1] >= max(high[-61:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-61:-1]):
+		bot1.send_message(662482931, f"{symbol} BEARISH divergence 60")
+	elif high[-1] >= max(high[-31:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-31:-1]):
+		bot1.send_message(662482931, f"{symbol} BEARISH divergence 30")
+
+
+	elif low[-1] <= min(low[-181:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-181:-1]):
+		bot1.send_message(662482931, f"{symbol} BULLISH divergence 180")
+	elif low[-1] <= min(low[-121:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-121:-1]):
+		bot1.send_message(662482931, f"{symbol} BULLISH divergence 120")
+	elif low[-1] <= min(low[-61:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-61:-1]):
+		bot1.send_message(662482931, f"{symbol} BULLISH divergence 60")
+	elif low[-1] <= min(low[-31:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-31:-1]):
+		bot1.send_message(662482931, f"{symbol} BULLISH divergence 30")
 
 	# for i in range(2, len(high)):
 	#
