@@ -142,7 +142,7 @@ def get_pairs():
 
     msg = (f"We have {total_sorted} pairs in total\n"
            f"(tick < 0.05%, ATR > 0.25)\n\n"
-           f"{pairs_to_message} \n\n"
+           f"{pairs_to_message} \n"
            f"{work_quantity} pairs taken to calculate...")
 
     bot1.send_message(662482931, msg)
