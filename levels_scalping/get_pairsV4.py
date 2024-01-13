@@ -134,19 +134,21 @@ def get_pairs():
 
     sorted_res = [inner_list for inner_list in pairs if inner_list[1] <= 0.05 and inner_list[3] >= 0.25]
     sorted_res = sorted(sorted_res, key=lambda x: x[3], reverse=True)
-    total_sorted = len(sorted_res)
-    max_sorted_atr = sorted_res[0][3]
-    sorted_res = [inner_list[0] for inner_list in sorted_res[:50]]
 
-    msg = (f"Sorted len {total_sorted} pairs (tick < 0.05%). \n\n"
-           f"ATR values 0.25% - {max_sorted_atr}% \n\n"
-           f"Here is your {len(sorted_res)} pairs: \n\n"
-           f"{str(sorted_res)}")
+    total_sorted = len(sorted_res)
+    pairs_to_message = "".join(f"{i[0]}, {i[2]}K, {i[3]}%\n" for i in sorted_res)
+
+    work_quantity = 30
+
+    msg = (f"We have {total_sorted} pairs in total\n"
+           f"(tick < 0.05%, ATR > 0.25)\n\n"
+           f"{pairs_to_message} \n\n"
+           f"Got to work {work_quantity} pairs...")
 
     bot1.send_message(662482931, msg)
 
-    return sorted_res
+    return [inner_list[0] for inner_list in sorted_res[:work_quantity]]
 
 
-# if __name__ == '__main__':
-#     print(get_pairs())
+if __name__ == '__main__':
+    print(get_pairs())

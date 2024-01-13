@@ -134,28 +134,13 @@ def search(
 if __name__ == '__main__':
 	
 	request_limit_length = 100
-	
-	# print("\nPairs section:")
-	# x_range_filter = int(input("4H range, % (def. 1): ") or 1)
-	# x_change_filter = int(input("4H change, % (def. 0): ") or 0)
-	# x_volume_filter = int(input("4H volume, millions (def. 10): ") or 10)
-	# x_trades_filter = int(input("4H trades, thousands (def. 100): ") or 100)
-	# x_atr_per_filter = float(input("4H avg ATR, % (def. 0.3): ") or 0.3)
-	# ts_percent_filter = float(input("4H ticksize, % (def. 0.05): ") or 0.05)
 
-	print("\nSizes section:")
 	search_distance = 1 # float(input(Search distance (def. 1.0%): ") or 1.0)
-	multiplier = 4 # int(input("Multiplier (def. x4): ") or 4)
+	multiplier = 5 # int(input("Multiplier (def. x4): ") or 4)
 	seconds_approve = 45 # int(input("Lifetime of size, seconds (def. 30): ") or 30)
 	time_log = int(input("Print time log? (def. 0): ") or 0)
 	
 	msg_parameters = (
-		# f"x_range_filter = {x_range_filter}\n"
-		# f"x_change_filter = {x_change_filter}\n"
-		# f"x_volume_filter = {x_volume_filter}\n"
-		# f"x_trades_filter = {x_trades_filter}\n"
-		# f"x_atr_per_filter = {x_atr_per_filter}\n"
-		# f"ts_percent_filter = {ts_percent_filter}\n\n"
 		f"search_distance = {search_distance}\n"
 		f"multiplier = {multiplier}\n"
 		f"seconds_approve = {seconds_approve}\n"
@@ -171,8 +156,6 @@ if __name__ == '__main__':
 	reload = seconds_approve / ((1100 / 14) / len(pairs)) - 3
 	reload_time = reload if reload >= 1 else 1
 	level_repeat = int(seconds_approve / (reload_time + 3))
-	
-	# bot1.send_message(662482931, f"Here is your {len(pairs)} pairs: \n {str(pairs)}")
 			
 	manager = Manager()
 	shared_queue = manager.Queue()
