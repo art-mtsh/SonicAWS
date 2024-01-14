@@ -1,94 +1,51 @@
-import os
-import glob
-import csv
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
 
-def find_files_by_date(chunks, directory, symbol, timeframe, year, month):
-
-    if symbol != None:
-        pattern = os.path.join(directory, f"{symbol}\{symbol}-{timeframe}-{year}-{month:02}.csv")
-        files = glob.glob(pattern)
-
-        return [files]
-
-    else:
-        pattern = os.path.join(directory, f"*\*-{timeframe}-{year}-{month:02}.csv")
-        files = glob.glob(pattern)
-
-        # Calculate the chunk size
-        chunk_size = len(files) // chunks
-
-        # Split symbols_from_bi into chunks
-        chunked_symbols = [files[i:i + chunk_size] for i in range(0, len(files), chunk_size)]
-
-        return chunked_symbols
-
-chunks = 16
-directory = r"D:\Binance_DATA"
-s = "ZENUSDT"
-timeframe = "1m"
-year = 2023
-month = 1
-
-matching_files = find_files_by_date(chunks, directory, None, timeframe, year, month)
+# Define your token and bot
+TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
+updater = Updater(token=TOKEN, use_context=True)
+dispatcher = updater.dispatcher
 
 
-# # print(matching_files)
-# for i in matching_files:
-#     print(i)
-#     print(len(i))
+# Handler for the /start command to initiate the bot
+def start(update, context):
+    user_id = update.effective_user.id
+    context.bot.send_message(chat_id=user_id, text="Welcome to your bot!")
 
-# def read_csv_transposed(file_path, column_names):
-#     # Initialize a dictionary to store lists for each column
-#     columns = {name: [] for name in column_names}
-#
-#     with open(file_path, 'r') as file:
-#         csv_reader = csv.DictReader(file)
-#
-#         # Read the rows and append data to respective columns
-#         for row in csv_reader:
-#             for column_name in column_names:
-#                 columns[column_name].append(row[column_name])
-#
-#     # Convert the dictionary values to a list of lists
-#     result = [columns[name] for name in column_names]
-#
-#     return result
-#
-# # Example usage
-# directory = r"D:\Binance_DATA"
-# symbol = "ZENUSDT"
-# timeframe = "1m"
-# year = 2023
-# month = 1
-#
-#
-#
-#
-# if matching_files:
-#     print("Matching files:")
-#     for file_path in matching_files:
-#
-#         column_indexes = [
-#             "open_time",
-#             "open",
-#             "high",
-#             "low",
-#             "close",
-#             "volume",
-#             "close_time",
-#             "quote_volume",
-#             "count",
-#             "taker_buy_volume",
-#             "taker_buy_quote_volume",
-#             "ignore"
-#         ]
-#
-#         # Get CSV data as a list of lists without column names
-#         result = read_csv_transposed(file_path, column_indexes)
-#
-#         # Display the result
-#         for column_data in result:
-#             print(column_data[0: 20])
-#
-# else:
-#     print("No matching files found.")
+
+# Handler for the command triggered by the button
+def custom_command(update, context):
+    query = update.callback_query
+    user_id = query.from_user.id
+
+    # Perform your custom commands here
+    # ...
+
+    # Send a response after the button is pressed
+    context.bot.send_message(chat_id=user_id, text="Custom commands executed!")
+
+
+# Handler for the main script
+def main_script_command(update, context):
+    user_id = update.effective_user.id
+    symbol = "BTC"  # Replace this with the actual symbol
+    keyboard = [[InlineKeyboardButton("Execute Commands", callback_data='execute_commands')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    # Send the message with the button
+    context.bot.send_message(chat_id=user_id, text=f"{symbol} BULLISH divergence 10", reply_markup=reply_markup)
+
+
+# Add handlers to the dispatcher
+start_handler = CommandHandler('start', start)
+dispatcher.add_handler(start_handler)
+
+custom_command_handler = CallbackQueryHandler(custom_command, pattern='execute_commands')
+dispatcher.add_handler(custom_command_handler)
+
+main_script_handler = MessageHandler(Filters.text & ~Filters.command, main_script_command)
+dispatcher.add_handler(main_script_handler)
+
+# Start the bot
+updater.start_polling()
+updater.idle()

@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
 	search_distance = 1 # float(input(Search distance (def. 1.0%): ") or 1.0)
 	multiplier = 4 # int(input("Multiplier (def. x4): ") or 4)
-	seconds_approve = 30 # int(input("Lifetime of size, seconds (def. 30): ") or 30)
+	seconds_approve = 30 # int(input(Lifetime of size, seconds (def. 30): ") or 30)
 	time_log = int(input("Print time log? (def. 0): ") or 0)
 	
 	msg_parameters = (
