@@ -55,14 +55,14 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 											count = sum(value == c_high[-i] for value in levels_dict.values())
 
 											if count >= level_repeat:
-												print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+												# print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
 
 												msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
 												screenshoter_send(symbol, market_type, item[0], msg)
 
 												levels_dict.clear()
-											else:
-												print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+											# else:
+											# 	print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
 									break
 
 						if c_low[-i] <= min(c_low[-1: -i - c_room: -1]):
@@ -83,14 +83,14 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 											count = sum(value == c_low[-i] for value in levels_dict.values())
 
 											if count >= level_repeat:
-												print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+												# print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
 
 												msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
 												screenshoter_send(symbol, market_type, item[0], msg)
 
 												levels_dict.clear()
-											else:
-												print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+											# else:
+											# 	print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
 									break
 
 			elif market_type == "f" and (depth == None or the_klines == None):
