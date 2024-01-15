@@ -11,17 +11,10 @@ TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
 	
-def search(
-		symbol,
-		reload_time,
-		request_limit_length,
-		search_distance,
-		multiplier,
-		level_repeat,
-		time_log
-):
+def search(symbol, reload_time, search_distance, level_repeat, time_log):
 	
-	levels_check = []
+	levels_f = {}
+	levels_s = {}
 
 	c_room = 30
 	d_room = 10
@@ -49,18 +42,28 @@ def search(
 
 									lower_sizes = [depth[k][1] for k in range(depth.index(item) - d_room, depth.index(item))]
 									higher_sizes = [depth[k][1] for k in range(depth.index(item) + 1, depth.index(item) + d_room + 1)]
-									distance_per = abs(c_high[i] - c_close[-1]) / (c_close[-1] / 100)
+									distance_per = abs(c_high[-i] - c_close[-1]) / (c_close[-1] / 100)
 									distance_per = float('{:.2f}'.format(distance_per))
 
-									if item[1] >= max(lower_sizes) and item[1] >= max(higher_sizes) and distance_per <= search_distance:
+									if item[1] >= max(lower_sizes) and item[1] >= max(higher_sizes) and distance_per <= search_distance and item[1] >= avg_vol:
 
-										if levels_check.count(c_high[-i]) >= level_repeat:
-											print(f"Found size on high {symbol} ({market_type}) at {c_high[-i]} size {item[1]} (${int(item[0] * item[1])})")
-											msg = f"{market_type.capitalize()} #{symbol}: {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
-											screenshoter_send(symbol, market_type, item[0], msg)
-											levels_check.clear()
-										else:
-											levels_check.append(c_high[-i])
+										levels_dict = levels_f if market_type == "f" else levels_s
+										now_stamp = datetime.now().strftime('%H:%M:%S')
+
+										if now_stamp not in levels_dict.keys():
+											levels_dict.update({now_stamp: c_high[-i]})
+											count = sum(value == c_high[-i] for value in levels_dict.values())
+
+											if count >= level_repeat:
+												print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+
+												msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
+												screenshoter_send(symbol, market_type, item[0], msg)
+
+												levels_dict.clear()
+											else:
+												print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+									break
 
 						if c_low[-i] <= min(c_low[-1: -i - c_room: -1]):
 							for item in depth:
@@ -68,18 +71,27 @@ def search(
 
 									lower_sizes = [depth[k][1] for k in range(depth.index(item) - d_room, depth.index(item))]
 									higher_sizes = [depth[k][1] for k in range(depth.index(item) + 1, depth.index(item) + d_room + 1)]
-									distance_per = abs(c_low[i] - c_close[-1]) / (c_close[-1] / 100)
+									distance_per = abs(c_low[-i] - c_close[-1]) / (c_close[-1] / 100)
 									distance_per = float('{:.2f}'.format(distance_per))
 
-									if item[1] >= max(lower_sizes) and item[1] >= max(higher_sizes) and distance_per <= search_distance:
+									if item[1] >= max(lower_sizes) and item[1] >= max(higher_sizes) and distance_per <= search_distance and item[1] >= avg_vol:
 
-										if levels_check.count(c_low[-i]) >= level_repeat:
-											print(f"Found size on low {symbol} ({market_type}) at {c_low[-i]} size {item[1]} (${int(item[0] * item[1])})")
-											msg = f"{market_type.capitalize()} #{symbol}: {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
-											screenshoter_send(symbol, market_type, item[0], msg)
-											levels_check.clear()
-										else:
-											levels_check.append(c_low[-i])
+										levels_dict = levels_f if market_type == "f" else levels_s
+										now_stamp = datetime.now().strftime('%H:%M:%S')
+										if now_stamp not in levels_dict.keys():
+											levels_dict.update({now_stamp: c_low[-i]})
+											count = sum(value == c_low[-i] for value in levels_dict.values())
+
+											if count >= level_repeat:
+												print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+
+												msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
+												screenshoter_send(symbol, market_type, item[0], msg)
+
+												levels_dict.clear()
+											else:
+												print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+									break
 
 			elif market_type == "f" and (depth == None or the_klines == None):
 				msg = (f"-----------------> \n"
@@ -93,7 +105,7 @@ def search(
 		time3 = float('{:.2f}'.format(time3))
 		
 		if time_log > 0:
-			print(f"{symbol}: {time3} + {float('{:.2f}'.format(reload_time))} s, levels: {len(levels_check)}")
+			print(f"{symbol}: {time3} + {float('{:.2f}'.format(reload_time))} s, levels: {len(levels_f)}/{len(levels_s)}")
 			sys.stdout.flush()
 		
 		time.sleep(reload_time)
@@ -102,9 +114,8 @@ if __name__ == '__main__':
 	
 	request_limit_length = 100
 
-	search_distance = 1 # float(input(Search distance (def. 1.0%): ") or 1.0)
-	multiplier = 4 # int(input("Multiplier (def. x4): ") or 4)
-	seconds_approve = 60 # int(input(Lifetime of size, seconds (def. 30): ") or 30)
+	search_distance = 1
+	seconds_approve = 60
 	time_log = int(input("Print time log? (def. 0): ") or 0)
 
 	print("\nGetting pairs...")
@@ -125,16 +136,7 @@ if __name__ == '__main__':
 
 	the_processes = []
 	for pair in pairs:
-		process = Process(target=search,
-		                  args=(
-			                  pair,
-			                  reload_time,
-			                  request_limit_length,
-			                  search_distance,
-			                  multiplier,
-			                  level_repeat,
-			                  time_log,
-		                      ))
+		process = Process(target=search, args=(pair, reload_time, search_distance, level_repeat, time_log,))
 		the_processes.append(process)
 
 	for pro in the_processes:
