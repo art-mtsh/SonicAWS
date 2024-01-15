@@ -22,7 +22,6 @@ def search(
 ):
 	
 	levels_check = []
-	# levels_check_spot = []
 
 	c_room = 30
 	d_room = 10
@@ -51,12 +50,13 @@ def search(
 									lower_sizes = [depth[k][1] for k in range(depth.index(item) - d_room, depth.index(item))]
 									higher_sizes = [depth[k][1] for k in range(depth.index(item) + 1, depth.index(item) + d_room + 1)]
 									distance_per = abs(c_high[i] - c_close[-1]) / (c_close[-1] / 100)
+									distance_per = float('{:.2f}'.format(distance_per))
 
 									if item[1] >= max(lower_sizes) and item[1] >= max(higher_sizes) and distance_per <= search_distance:
 
 										if levels_check.count(c_high[-i]) >= level_repeat:
 											print(f"Found size on high {symbol} ({market_type}) at {c_high[-i]} size {item[1]} (${int(item[0] * item[1])})")
-											msg = f"{market_type.capitalize()} #{symbol}: {item[0]} * {item[1]} = ${int(item[0] * item[1])}"
+											msg = f"{market_type.capitalize()} #{symbol}: {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
 											screenshoter_send(symbol, market_type, item[0], msg)
 											levels_check.clear()
 										else:
@@ -69,12 +69,13 @@ def search(
 									lower_sizes = [depth[k][1] for k in range(depth.index(item) - d_room, depth.index(item))]
 									higher_sizes = [depth[k][1] for k in range(depth.index(item) + 1, depth.index(item) + d_room + 1)]
 									distance_per = abs(c_low[i] - c_close[-1]) / (c_close[-1] / 100)
+									distance_per = float('{:.2f}'.format(distance_per))
 
 									if item[1] >= max(lower_sizes) and item[1] >= max(higher_sizes) and distance_per <= search_distance:
 
 										if levels_check.count(c_low[-i]) >= level_repeat:
 											print(f"Found size on low {symbol} ({market_type}) at {c_low[-i]} size {item[1]} (${int(item[0] * item[1])})")
-											msg = f"{market_type.capitalize()} #{symbol}: {item[0]} * {item[1]} = ${int(item[0] * item[1])}"
+											msg = f"{market_type.capitalize()} #{symbol}: {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
 											screenshoter_send(symbol, market_type, item[0], msg)
 											levels_check.clear()
 										else:
