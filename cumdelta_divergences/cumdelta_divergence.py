@@ -18,9 +18,9 @@ def search(symbol, request_limit_length):
 
 	while True:
 
-		if int(datetime.now().strftime('%S')) == 1:
+		if int(datetime.now().strftime('%S')) in [10, 20, 30]:
 
-			print(f"Its {datetime.now().strftime('%H:%M:%S')}, {symbol}")
+			print(".")
 
 			frame = "1m"
 			market_type = "f"
@@ -64,8 +64,8 @@ def search(symbol, request_limit_length):
 						bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 60")  # , c_high[-3]: {c_high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
 					elif c_high[-1] >= max(c_high[-1:-31:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-31:-1]):
 						bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 30")  # , c_high[-3]: {c_high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-					# elif c_high[-1] >= max(c_high[-1:-11:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-11:-1]):
-					# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 10")  # , c_high[-3]: {c_high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+					elif c_high[-1] >= max(c_high[-1:-11:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-11:-1]):
+						bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 10")  # , c_high[-3]: {c_high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
 
 					elif c_low[-1] <= min(c_low[-1:-181:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-181:-1]):
 						bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 180")  # , c_low[-3]: {c_low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
@@ -75,10 +75,10 @@ def search(symbol, request_limit_length):
 						bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 60")  # , c_low[-3]: {c_low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
 					elif c_low[-1] <= min(c_low[-1:-31:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-31:-1]):
 						bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 30")  # , c_low[-3]: {c_low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-					# elif c_low[-1] <= min(c_low[-1:-11:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-11:-1]):
-					# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 10")  # , c_low[-3]: {c_low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+					elif c_low[-1] <= min(c_low[-1:-11:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-11:-1]):
+						bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 10")  # , c_low[-3]: {c_low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
 
-					time.sleep(20)
+					time.sleep(5)
 		else:
 			time.sleep(0.2)
 		

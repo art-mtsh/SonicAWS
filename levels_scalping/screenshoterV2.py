@@ -7,7 +7,7 @@ import requests
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
-def screenshoter_send(symbol, type, level, chart_title, msg):
+def screenshoter_send(symbol, type, level, msg):
     
     r_length = 180
     
@@ -16,6 +16,11 @@ def screenshoter_send(symbol, type, level, chart_title, msg):
     
     
     klines = requests.get(futures_klines) if type == 'f' else requests.get(spot_klines)
+
+    cOpen = []
+    cHigh = []
+    cLow = []
+    cClose = []
     
     if klines.status_code == 200:
         response_length = len(klines.json()) if klines.json() is not None else 0

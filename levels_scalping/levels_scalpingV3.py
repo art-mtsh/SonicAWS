@@ -28,17 +28,14 @@ def search(
 		
 		time1 = time.perf_counter()
 		# ==== DATA REQUEST ====
-		futures_order_book = f"https://fapi.binance.com/fapi/v1/depth?symbol={symbol}&limit={request_limit_length}"
-		spot_order_book = f"https://api.binance.com/api/v3/depth?symbol={symbol}&limit={request_limit_length}"
-		
-		futures_data = order_book(futures_order_book)
-		spot_data = order_book(spot_order_book)
+		futures_data = order_book(symbol, request_limit_length, "f")
+		spot_data = order_book(symbol, request_limit_length, "s")
 		
 		if futures_data != None:
 		
 			f_close = futures_data[0]
-			f_combined_list = futures_data[1]
-			f_max_decimal = futures_data[2]
+			f_combined_list = futures_data[2]
+			f_max_decimal = futures_data[3]
 			f_max_avg_size = f_combined_list[-4][1] * multiplier
 			
 			f_distances = three_distances(symbol, f_close, f_combined_list, f_max_avg_size, search_distance, "f")
@@ -80,8 +77,8 @@ def search(
 		if spot_data != None:
 			
 			s_close = spot_data[0]
-			s_combined_list = spot_data[1]
-			s_max_decimal = spot_data[2]
+			s_combined_list = spot_data[2]
+			s_max_decimal = spot_data[3]
 			s_max_avg_size = s_combined_list[-4][1] * multiplier
 			
 			s_distances = three_distances(symbol, s_close, s_combined_list, s_max_avg_size, search_distance, "s")

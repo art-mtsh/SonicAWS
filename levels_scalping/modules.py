@@ -9,7 +9,7 @@ bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 DIV_TOKEN = '5657267406:AAExhEvjG3tjb0KL6mTM9otoFiL6YJ_1aSA'
 bot2 = telebot.TeleBot(DIV_TOKEN)
 
-def extremum(symbol, frame, request_limit_length, market_type: str):
+def klines(symbol, frame, request_limit_length, market_type: str):
 	
 	futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
 	spot_klines = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'
@@ -32,23 +32,26 @@ def extremum(symbol, frame, request_limit_length, market_type: str):
 			buy_volume = list(float(i[9]) for i in binance_candle_data)
 			sell_volume = [c_volume[0] - buy_volume[0]]
 
-			cumulative_delta = [int(buy_volume[0] - (c_volume[0] - buy_volume[0]))]
-
-			for i in range(1, len(c_close)):
-				b_vol = buy_volume[i]
-				s_vol = c_volume[i] - buy_volume[i]
-				new_delta = b_vol - s_vol
-				new_delta = cumulative_delta[-1] + new_delta
-				sell_volume.append(s_vol)
-				cumulative_delta.append(int(new_delta))
+			# cumulative_delta = [int(buy_volume[0] - (c_volume[0] - buy_volume[0]))]
+			#
+			# for i in range(1, len(c_close)):
+			# 	b_vol = buy_volume[i]
+			# 	s_vol = c_volume[i] - buy_volume[i]
+			# 	new_delta = b_vol - s_vol
+			# 	new_delta = cumulative_delta[-1] + new_delta
+			# 	sell_volume.append(s_vol)
+			# 	cumulative_delta.append(int(new_delta))
 			
 			avg_vol = sum(c_volume) / len(c_volume)
 			avg_vol = avg_vol * c_close[-1]
-			
-			return [c_high, c_low, avg_vol, cumulative_delta, buy_volume, sell_volume]
+
+			if len(c_open) != len(c_high) != len(c_low) != len(c_close) != len(c_volume):
+				print(f"Length error for klines data for {symbol}!")
+
+			return [c_open, c_high, c_low, c_close, avg_vol, buy_volume, sell_volume]
 		
 		else:
-			msg = f"Not enough data for {symbol} on 1m"
+			msg = f"Not enough klines for {symbol} on 1m"
 			bot1.send_message(662482931, msg)
 			print(msg)
 			
@@ -59,16 +62,18 @@ def extremum(symbol, frame, request_limit_length, market_type: str):
 		bot1.send_message(662482931, msg)
 		print(msg)
 	
-	else:
-		msg = f"Troubles with {symbol} data request on 1m, status code {response.status_code}"
-		bot1.send_message(662482931, msg)
-		print(msg)
+	# else:
+	# 	msg = f"No klines data for {symbol}, status code {response.status_code}"
+	# 	bot1.send_message(662482931, msg)
+	# 	print(msg)
 
-# for i in extremum("TIAUSDT", "1m", 10, "f"):
-# 	print(i)
 
-def order_book(url):
+def order_book(symbol, request_limit_length, market_type: str):
 
+	futures_order_book = f"https://fapi.binance.com/fapi/v1/depth?symbol={symbol}&limit={request_limit_length}"
+	spot_order_book = f"https://api.binance.com/api/v3/depth?symbol={symbol}&limit={request_limit_length}"
+
+	url = futures_order_book if market_type == "f" else spot_order_book
 	response = requests.get(url)
 	
 	if response.status_code == 200:
@@ -79,33 +84,51 @@ def order_book(url):
 		asks = response_data.get('asks')
 		close = float(asks[0][0])
 		
-		combined_list = bids + asks
-		combined_list = list(combined_list)
-		combined_list = [[float(item[0]), float(item[1])] for item in combined_list]
-		combined_list = sorted(combined_list, key=lambda x: x[1])
+		# combined_list = asks + bids
+		# combined_list = list(combined_list)
+		# combined_list = [[float(item[0]), float(item[1])] for item in combined_list]
+		combined_list = [[float(item[0]), float(item[1])] for item in reversed(asks)]
+		for item in bids: combined_list.append([float(item[0]), float(item[1])])
+		combined_list_sorted = sorted(combined_list, key=lambda x: x[1])
 		
 		decimal_1 = len(str(combined_list[12][0]).split('.')[-1].rstrip('0'))
 		decimal_2 = len(str(combined_list[34][0]).split('.')[-1].rstrip('0'))
 		decimal_3 = len(str(combined_list[23][0]).split('.')[-1].rstrip('0'))
 		max_decimal = max([decimal_1, decimal_2, decimal_3])
 
-		return [close, combined_list, max_decimal]
-	
+		if len(bids) == 0 or len(asks) == 0:
+			msg = f"Not enough depth for {symbol} on 1m"
+			bot1.send_message(662482931, msg)
+			print(msg)
+
+		return [close, combined_list, combined_list_sorted, max_decimal]
+
 	elif response.status_code == 429:
-		bot1.send_message(662482931, "LIMITS REACHED !!!! 429 CODE !!!!")
-		bot1.send_message(662482931, "LIMITS REACHED !!!! 429 CODE !!!!")
-		bot1.send_message(662482931, "LIMITS REACHED !!!! 429 CODE !!!!")
-		print(f"LIMITS REACHED !!!! 429 CODE !!!!")
+
+		msg = f"{url} LIMITS REACHED !!!! 429 CODE !!!!"
+		bot1.send_message(662482931, msg)
+		bot1.send_message(662482931, msg)
+		bot1.send_message(662482931, msg)
+		print(msg)
+
+	# else:
+	# 	msg = f"No depth data for {symbol}, status code {response.status_code}"
+	# 	bot1.send_message(662482931, msg)
+	# 	print(msg)
+
+# print(klines("1000RATSUSDT", "1m", 100, "s"))
+# print(order_book("1000RATSUSDT", 100, "s"))
+
 
 def three_distances(symbol, close, combined_list, max_avg_size, search_distance, market_type: str):
 	
-	max_min = extremum(symbol, '1m', 186, market_type)
-	high = max_min[0]
-	low = max_min[1]
-	avg_vol_60 = max_min[2] / 1000
-	cumulative_delta = max_min[3]
-	buy_vol = max_min[4]
-	sell_vol = max_min[5]
+	klines_data = klines(symbol, '1m', 186, market_type)
+	high = klines_data[1]
+	low = klines_data[2]
+	avg_vol_60 = klines_data[4] / 1000
+	# cumulative_delta = klines_data[5]
+	buy_vol = klines_data[5]
+	sell_vol = klines_data[6]
 	
 	price_1 = combined_list[-1][0]
 	size_1 = combined_list[-1][1]
@@ -189,28 +212,28 @@ def three_distances(symbol, close, combined_list, max_avg_size, search_distance,
 				res.append([distance_3, price_3, size_3, bigger_than])
 				break
 
-	if high[-1] >= max(high[-1:-181:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-181:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 180") #, high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-	elif high[-1] >= max(high[-1:-121:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-121:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 120") # high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-	elif high[-1] >= max(high[-1:-61:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-61:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 60") #, high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-	elif high[-1] >= max(high[-1:-31:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-31:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 30") #, high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-	elif high[-1] >= max(high[-1:-11:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-11:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 10") #, high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-
-
-	elif low[-1] <= min(low[-1:-181:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-181:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 180") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-	elif low[-1] <= min(low[-1:-121:-10]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-121:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 120") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-	elif low[-1] <= min(low[-1:-61:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-61:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 60") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-	elif low[-1] <= min(low[-1:-31:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-31:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 30") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
-	elif low[-1] <= min(low[-1:-11:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-11:-1]):
-		bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 10") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	# if high[-1] >= max(high[-1:-181:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-181:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 180") #, high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	# elif high[-1] >= max(high[-1:-121:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-121:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 120") # high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	# elif high[-1] >= max(high[-1:-61:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-61:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 60") #, high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	# elif high[-1] >= max(high[-1:-31:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-31:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 30") #, high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	# elif high[-1] >= max(high[-1:-11:-1]) and cumulative_delta[-1] <= min(cumulative_delta[-1:-11:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BEARISH 10") #, high[-3]: {high[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	#
+	#
+	# elif low[-1] <= min(low[-1:-181:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-181:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 180") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	# elif low[-1] <= min(low[-1:-121:-10]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-121:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 120") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	# elif low[-1] <= min(low[-1:-61:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-61:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 60") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	# elif low[-1] <= min(low[-1:-31:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-31:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 30") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
+	# elif low[-1] <= min(low[-1:-11:-1]) and cumulative_delta[-1] >= max(cumulative_delta[-1:-11:-1]):
+	# 	bot2.send_message(662482931, f"{datetime.now().strftime('%H:%M:%S')} {symbol} BULLISH 10") #, low[-3]: {low[-1]}: {int(buy_vol[-1])}, {int(sell_vol[-1])}")
 
 	# for i in range(2, len(high)):
 	#
