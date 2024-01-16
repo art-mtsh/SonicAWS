@@ -103,7 +103,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 
 												if c_low[-i] not in static_dict:
 													bot2.send_message(662482931, msg)
-													static_dict.append(c_high[-i])
+													static_dict.append(c_low[-i])
 
 												levels_dict.clear()
 											# else:
