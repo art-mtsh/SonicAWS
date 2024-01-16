@@ -72,7 +72,9 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 													static_dict.append(c_high[-i])
 
 												levels_dict.clear()
+
 											# else:
+											# 1213hdgdfh
 											# 	print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
 									break
 
