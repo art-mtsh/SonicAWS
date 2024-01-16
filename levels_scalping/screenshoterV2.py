@@ -34,7 +34,8 @@ def screenshoter_send(symbol, type, level, msg):
     # Create a Matplotlib figure for the candlestick chart
     fig, ax = plt.subplots(figsize=(10, 4))
     fig.set_facecolor("#F0F0F0")
-    ax.set_facecolor("#E6E1BE")
+    bg_color = "#E0D1B4" if type == "f" else "#E0DFB4"
+    ax.set_facecolor(bg_color)
     
 
     for i in range(len(cClose)):
