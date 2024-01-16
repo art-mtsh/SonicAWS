@@ -40,7 +40,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 				depth = depth[1]
 
 				if len(c_high) == len(c_low):
-					for i in range(2, len(c_low)):
+					for i in range(2, len(c_low)-c_room):
 
 						if c_high[-i] >= max(c_high[-1: -i - c_room: -1]):
 							for item in depth:
@@ -55,27 +55,20 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 
 										levels_dict = levels_f if market_type == "f" else levels_s
 										static_dict = static_f if market_type == "f" else static_s
-										now_stamp = datetime.now().strftime('%H:%M:%S')
 
+										now_stamp = datetime.now().strftime('%H:%M')
 										if now_stamp not in levels_dict.keys():
 											levels_dict.update({now_stamp: c_high[-i]})
-											count = sum(value == c_high[-i] for value in levels_dict.values())
+											# count = sum(value == c_high[-i] for value in levels_dict.values())
 
-											if count >= level_repeat:
-												# print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+											print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
 
-												msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
-												screenshoter_send(symbol, market_type, item[0], msg)
+											msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
+											screenshoter_send(symbol, market_type, item[0], msg)
 
-												if c_high[-i] not in static_dict:
-													bot2.send_message(662482931, msg)
-													static_dict.append(c_high[-i])
-
-												levels_dict.clear()
-
-											# else:
-											# 1213hdgdfh
-											# 	print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+											if c_high[-i] not in static_dict:
+												bot2.send_message(662482931, msg)
+												static_dict.append(c_high[-i])
 									break
 
 						if c_low[-i] <= min(c_low[-1: -i - c_room: -1]):
@@ -92,24 +85,19 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 										levels_dict = levels_f if market_type == "f" else levels_s
 										static_dict = static_f if market_type == "f" else static_s
 
-										now_stamp = datetime.now().strftime('%H:%M:%S')
+										now_stamp = datetime.now().strftime('%H:%M')
 										if now_stamp not in levels_dict.keys():
 											levels_dict.update({now_stamp: c_low[-i]})
-											count = sum(value == c_low[-i] for value in levels_dict.values())
+											# count = sum(value == c_low[-i] for value in levels_dict.values())
 
-											if count >= level_repeat:
-												# print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+											print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
 
-												msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
-												screenshoter_send(symbol, market_type, item[0], msg)
+											msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
+											screenshoter_send(symbol, market_type, item[0], msg)
 
-												if c_low[-i] not in static_dict:
-													bot2.send_message(662482931, msg)
-													static_dict.append(c_low[-i])
-
-												levels_dict.clear()
-											# else:
-											# 	print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
+											if c_low[-i] not in static_dict:
+												bot2.send_message(662482931, msg)
+												static_dict.append(c_low[-i])
 									break
 
 			elif market_type == "f" and (depth == None or the_klines == None):
@@ -142,9 +130,11 @@ if __name__ == '__main__':
 	print(pairs)
 	print("")
 
-	reload = 60 / (1100 / (14 * len(pairs))) - 2
-	reload_time = reload if reload >= 1 else 1
-	level_repeat = int(seconds_approve / (reload_time + 2))
+	# reload = 60 / (1100 / (14 * len(pairs))) - 2
+	# reload_time = reload if reload >= 1 else 1
+	# level_repeat = int(seconds_approve / (reload_time + 2))
+	reload_time = 60
+	level_repeat = 1
 			
 	manager = Manager()
 	shared_queue = manager.Queue()

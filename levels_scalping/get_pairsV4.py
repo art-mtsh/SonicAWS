@@ -15,7 +15,6 @@ trades daily
 
 """
 
-# excluded = ["USTCUSDT"]
 excluded = []
 
 
@@ -61,18 +60,6 @@ def calculate(dict_of_pairs,
                 ts_percent = float('{:.4f}'.format(ts_percent))
 
                 shared_queue.put([symbol, ts_percent, x_trades, x_atr_per])
-                # if ts_percent <= 0.05 and x_atr_per >= 0.25:
-                    # print(f"{symbol}, "
-                    #       f"range {x_range}, "
-                    #       f"change {x_change}, "
-                    #       f"volume {x_volume}, "
-                    #       f"trades {x_trades}, "
-                    #       f"avg ATR {x_atr_per}, "
-                    #       f"ticksize {ts_percent}")
-                    # print(symbol, end=", ")
-                    # shared_queue.put([symbol, x_trades])
-                # else:
-                #     print(f"Else {symbol} ts: {ts_percent}%, atr: {x_atr_per}%")
 
 def split_dict(input_dict, num_parts):
     avg = len(input_dict) // num_parts
@@ -139,9 +126,9 @@ def get_pairs():
     pairs_to_message = "".join(f"{i[0]}, {i[2]}K, {i[3]}%\n" for i in sorted_res)
     result = [inner_list[0] for inner_list in sorted_res[:30]]
 
-    msg = (f"We have {total_sorted} pairs in total\n"
-           f"(tick < 0.05%, ATR > 0.25)\n\n"
-           f"{pairs_to_message} \n"
+    msg = (# f"We have {total_sorted} pairs in total\n"
+           # f"(tick < 0.05%, ATR > 0.25)\n\n"
+           # f"{pairs_to_message} \n"
            f"{len(result)}/{len(sorted_res)} pairs taken to calculate...")
 
     bot1.send_message(662482931, msg)
