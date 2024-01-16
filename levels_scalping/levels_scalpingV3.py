@@ -10,6 +10,8 @@ from screenshoterV2 import screenshoter_send
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
+DIV_TOKEN = '5657267406:AAExhEvjG3tjb0KL6mTM9otoFiL6YJ_1aSA'
+bot2 = telebot.TeleBot(DIV_TOKEN)
 	
 def search(
 		symbol,

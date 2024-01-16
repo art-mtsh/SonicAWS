@@ -10,11 +10,17 @@ from screenshoterV2 import screenshoter_send
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
+DIV_TOKEN = '5657267406:AAExhEvjG3tjb0KL6mTM9otoFiL6YJ_1aSA'
+bot2 = telebot.TeleBot(DIV_TOKEN)
+
 	
 def search(symbol, reload_time, search_distance, level_repeat, time_log):
 	
 	levels_f = {}
 	levels_s = {}
+
+	static_f = []
+	static_s = []
 
 	c_room = 30
 	d_room = 10
@@ -48,6 +54,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 									if item[1] >= max(lower_sizes) and item[1] >= max(higher_sizes) and distance_per <= search_distance and item[1] >= avg_vol:
 
 										levels_dict = levels_f if market_type == "f" else levels_s
+										static_dict = static_f if market_type == "f" else static_s
 										now_stamp = datetime.now().strftime('%H:%M:%S')
 
 										if now_stamp not in levels_dict.keys():
@@ -59,6 +66,10 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 
 												msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
 												screenshoter_send(symbol, market_type, item[0], msg)
+
+												if c_high[-i] not in static_dict:
+													bot2.send_message(662482931, msg)
+													static_dict.append(c_high[-i])
 
 												levels_dict.clear()
 											# else:
@@ -77,6 +88,8 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 									if item[1] >= max(lower_sizes) and item[1] >= max(higher_sizes) and distance_per <= search_distance and item[1] >= avg_vol:
 
 										levels_dict = levels_f if market_type == "f" else levels_s
+										static_dict = static_f if market_type == "f" else static_s
+
 										now_stamp = datetime.now().strftime('%H:%M:%S')
 										if now_stamp not in levels_dict.keys():
 											levels_dict.update({now_stamp: c_low[-i]})
@@ -87,6 +100,10 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 
 												msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int(item[0] * item[1])} ({distance_per}%)"
 												screenshoter_send(symbol, market_type, item[0], msg)
+
+												if c_high[-i] not in static_dict:
+													bot2.send_message(662482931, msg)
+													static_dict.append(c_high[-i])
 
 												levels_dict.clear()
 											# else:
@@ -132,6 +149,7 @@ if __name__ == '__main__':
 
 	print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, level repeat: {level_repeat}, sleep time {float('{:.2f}'.format(reload_time))} s.")
 	print("Sleep 20 seconds...")
+	bot2.send_message(662482931, "New start...")
 	time.sleep(20)
 
 	the_processes = []
