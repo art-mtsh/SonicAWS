@@ -43,7 +43,7 @@ def klines(symbol, frame, request_limit_length, market_type: str):
 			# 	cumulative_delta.append(int(new_delta))
 			
 			avg_vol = sum(c_volume) / len(c_volume)
-			avg_vol = avg_vol * c_close[-1]
+			avg_vol = avg_vol
 
 			if len(c_open) != len(c_high) != len(c_low) != len(c_close) != len(c_volume):
 				print(f"Length error for klines data for {symbol}!")
