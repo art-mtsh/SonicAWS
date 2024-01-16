@@ -63,7 +63,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 
 											print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
 
-											msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
+											msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]} / {avg_vol}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
 											screenshoter_send(symbol, market_type, item[0], msg)
 
 											if c_high[-i] not in static_dict:
@@ -92,7 +92,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 
 											print(f"{datetime.now().strftime('%H:%M:%S')} {symbol} levels_{market_type} {levels_dict}")
 
-											msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
+											msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]} / {avg_vol}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
 											screenshoter_send(symbol, market_type, item[0], msg)
 
 											if c_low[-i] not in static_dict:
