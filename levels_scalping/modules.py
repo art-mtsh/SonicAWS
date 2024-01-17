@@ -23,6 +23,7 @@ def klines(symbol, frame, request_limit_length, market_type: str):
 		
 		if response_length == request_limit_length:
 			binance_candle_data = response.json()
+			c_time = list(float(i[0]) for i in binance_candle_data)
 			c_open = list(float(i[1]) for i in binance_candle_data)
 			c_high = list(float(i[2]) for i in binance_candle_data)
 			c_low = list(float(i[3]) for i in binance_candle_data)
@@ -48,7 +49,7 @@ def klines(symbol, frame, request_limit_length, market_type: str):
 			if len(c_open) != len(c_high) != len(c_low) != len(c_close) != len(c_volume):
 				print(f"Length error for klines data for {symbol}!")
 
-			return [c_open, c_high, c_low, c_close, avg_vol, buy_volume, sell_volume]
+			return [c_time, c_open, c_high, c_low, c_close, avg_vol, buy_volume, sell_volume]
 		
 		else:
 			msg = f"Not enough klines for {symbol} on 1m"

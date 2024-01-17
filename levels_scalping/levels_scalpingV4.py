@@ -28,9 +28,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 	
 	while True:
 
-		now_stamp = datetime.now().strftime('%H:%M')
 		time1 = time.perf_counter()
-
 
 		for market_type in ["f", "s"]:
 
@@ -39,7 +37,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 
 			if depth != None and the_klines != None:
 
-				c_open, c_high, c_low, c_close, avg_vol = the_klines[0], the_klines[1], the_klines[2], the_klines[3], the_klines[4]
+				c_time, c_open, c_high, c_low, c_close, avg_vol = the_klines[0], the_klines[1], the_klines[2], the_klines[3], the_klines[4], the_klines[5]
 				depth = depth[1]
 
 				avg_atr_per = [(c_high[-c] - c_low[-c]) / (c_close[-c] / 100) for c in range(30)]
@@ -47,6 +45,8 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 
 				if len(c_high) == len(c_low):
 					for i in range(2, len(c_low)-c_room):
+
+						now_stamp = c_time[-i]
 
 						if c_high[-i] >= max(c_high[-1: -i - c_room: -1]):
 							for item in depth:
@@ -62,27 +62,19 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 										levels_dict = levels_f if market_type == "f" else levels_s
 										static_dict = static_f if market_type == "f" else static_s
 
-										if now_stamp not in levels_dict.keys() and c_high[-i] not in levels_dict.values():
-											print(symbol + f" {now_stamp} not in levels_dict.keys() and {c_high[-i]} not in levels_dict.values()")
-											levels_dict.update({now_stamp: c_high[-i]})
+										if c_high[-i] not in levels_dict.keys():
+											levels_dict.update({c_high[-i]: c_time[-i]})
 
-										elif now_stamp not in levels_dict.keys() and c_high[-i] in levels_dict.values():
-											print(symbol + f" {now_stamp} not in levels_dict.keys() and {c_high[-i]} in levels_dict.values()")
+										else:
+											if levels_dict.get(c_high[-i]) == c_time[-i]:
+												msg = f"{market_type.capitalize()} #{symbol}: {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
+												screenshoter_send(symbol, market_type, item[0], msg)
+												if c_high[-i] not in static_dict:
+													bot2.send_message(662482931, msg)
+													static_dict.append(c_high[-i])
+											# else:
+											# 	print(f"{symbol} level {c_high[-i]} duplicate")
 
-											msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
-											screenshoter_send(symbol, market_type, item[0], msg)
-
-											if c_high[-i] not in static_dict:
-												bot2.send_message(662482931, msg)
-												static_dict.append(c_high[-i])
-
-										elif now_stamp in levels_dict.keys() and c_high[-i] not in levels_dict.values():
-											print(symbol + f" {now_stamp} in levels_dict.keys() and {c_high[-i]} not in levels_dict.values()")
-											levels_dict.update({now_stamp: c_high[-i]})
-
-										elif now_stamp in levels_dict.keys() and c_high[-i] in levels_dict.values():
-											print(symbol + f" {now_stamp} in levels_dict.keys() and {c_high[-i]} in levels_dict.values()")
-											continue
 									break
 
 						if c_low[-i] <= min(c_low[-1: -i - c_room: -1]):
@@ -99,27 +91,19 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 										levels_dict = levels_f if market_type == "f" else levels_s
 										static_dict = static_f if market_type == "f" else static_s
 
-										if now_stamp not in levels_dict.keys() and c_low[-i] not in levels_dict.values():
-											print(symbol + f" {now_stamp} not in levels_dict.keys() and {c_low[-i]} not in levels_dict.values()")
-											levels_dict.update({now_stamp: c_low[-i]})
+										if c_low[-i] not in levels_dict.keys():
+											levels_dict.update({c_low[-i]: c_time[-i]})
 
-										elif now_stamp not in levels_dict.keys() and c_low[-i] in levels_dict.values():
-											print(symbol + f" {now_stamp} not in levels_dict.keys() and {c_low[-i]} in levels_dict.values()")
+										else:
+											if levels_dict.get(c_low[-i]) == c_time[-i]:
+												msg = f"{market_type.capitalize()} #{symbol}: {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
+												screenshoter_send(symbol, market_type, item[0], msg)
+												if c_low[-i] not in static_dict:
+													bot2.send_message(662482931, msg)
+													static_dict.append(c_low[-i])
+											# else:
+											# 	print(f"{symbol} level {c_low[-i]} duplicate")
 
-											msg = f"{market_type.capitalize()} #{symbol} ({c_close[-1]}): {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
-											screenshoter_send(symbol, market_type, item[0], msg)
-
-											if c_low[-i] not in static_dict:
-												bot2.send_message(662482931, msg)
-												static_dict.append(c_low[-i])
-
-										elif now_stamp in levels_dict.keys() and c_low[-i] not in levels_dict.values():
-											print(symbol + f" {now_stamp} in levels_dict.keys() and {c_low[-i]} not in levels_dict.values()")
-											levels_dict.update({now_stamp: c_low[-i]})
-
-										elif now_stamp in levels_dict.keys() and c_low[-i] in levels_dict.values():
-											print(symbol + f" {now_stamp} in levels_dict.keys() and {c_low[-i]} in levels_dict.values()")
-											continue
 									break
 
 			elif market_type == "f" and (depth == None or the_klines == None):
