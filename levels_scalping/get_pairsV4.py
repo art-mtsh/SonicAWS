@@ -5,6 +5,9 @@ import telebot
 TELEGRAM_TOKEN = '6077915522:AAFuMUVPhw-cEaX4gCuPOa-chVwwMTpsUz8'
 bot1 = telebot.TeleBot(TELEGRAM_TOKEN)
 
+DIV_TOKEN = '5657267406:AAExhEvjG3tjb0KL6mTM9otoFiL6YJ_1aSA'
+bot2 = telebot.TeleBot(DIV_TOKEN)
+
 """
 volatility = (max(day) - min(day) / 100%
 volume daily = 20+ M
@@ -132,6 +135,7 @@ def get_pairs():
            f"{len(result)}/{len(sorted_res)} pairs taken to calculate...")
 
     bot1.send_message(662482931, msg)
+    bot2.send_message(662482931, msg)
 
     return result
 

@@ -147,7 +147,6 @@ if __name__ == '__main__':
 
 	print(f"START at {datetime.now().strftime('%H:%M:%S')}, {len(pairs)} pairs, level repeat: {level_repeat}, sleep time {float('{:.2f}'.format(reload_time))} s.")
 	print("Sleep 20 seconds...")
-	bot2.send_message(662482931, "New start...")
 	time.sleep(20)
 
 	the_processes = []
