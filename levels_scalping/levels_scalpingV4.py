@@ -22,6 +22,8 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 	static_f = []
 	static_s = []
 
+
+
 	c_room = 30
 	d_room = 10
 	atr_dis = 3
@@ -33,7 +35,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 		for market_type in ["f", "s"]:
 
 			depth = order_book(symbol, 500, market_type)
-			the_klines = klines(symbol, "1m", 100, market_type)
+			the_klines = klines(symbol, "5m", 100, market_type)
 
 			if depth != None and the_klines != None:
 
@@ -45,7 +47,6 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 
 				if len(c_high) == len(c_low):
 					for i in range(2, len(c_low)-c_room):
-
 						now_stamp = c_time[-i]
 
 						if c_high[-i] >= max(c_high[-1: -i - c_room: -1]):
@@ -69,6 +70,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 											if levels_dict.get(c_high[-i]) == c_time[-i]:
 												msg = f"{market_type.capitalize()} #{symbol}: {item[0]} * {item[1]} = ${int((item[0] * item[1]) / 1000)}K ({distance_per}%)"
 												screenshoter_send(symbol, market_type, item[0], msg)
+
 												if c_high[-i] not in static_dict:
 													bot2.send_message(662482931, msg)
 													static_dict.append(c_high[-i])
