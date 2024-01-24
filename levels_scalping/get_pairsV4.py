@@ -26,7 +26,7 @@ def calculate(dict_of_pairs,
               ):
 
     request_limit_length = 240
-    frame = '5m'
+    frame = '1m'
 
     for symbol, ts in dict_of_pairs.items():
         futures_klines = f'https://fapi.binance.com/fapi/v1/klines?symbol={symbol}&interval={frame}&limit={request_limit_length}'

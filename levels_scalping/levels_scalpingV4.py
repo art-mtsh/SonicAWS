@@ -22,8 +22,6 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 	static_f = []
 	static_s = []
 
-
-
 	c_room = 30
 	d_room = 10
 	atr_dis = 3
@@ -35,7 +33,7 @@ def search(symbol, reload_time, search_distance, level_repeat, time_log):
 		for market_type in ["f", "s"]:
 
 			depth = order_book(symbol, 500, market_type)
-			the_klines = klines(symbol, "5m", 100, market_type)
+			the_klines = klines(symbol, "1m", 100, market_type)
 
 			if depth != None and the_klines != None:
 
