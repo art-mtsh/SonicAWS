@@ -127,7 +127,7 @@ def get_pairs():
 
     total_sorted = len(sorted_res)
     pairs_to_message = "".join(f"{i[0]}, {i[2]}K, {i[3]}%\n" for i in sorted_res)
-    result = [inner_list[0] for inner_list in sorted_res[:30]]
+    result = [inner_list[0] for inner_list in sorted_res[:49]]
 
     msg = (# f"We have {total_sorted} pairs in total\n"
            # f"(tick < 0.05%, ATR > 0.25)\n\n"
